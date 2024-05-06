@@ -1,5 +1,6 @@
 /swagger_flat.json
 /swagger_go.json
+/.env
 
 *.dll
 *.exe
