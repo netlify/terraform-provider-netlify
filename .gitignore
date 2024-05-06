@@ -1,3 +1,6 @@
+/swagger_flat.json
+/swagger_go.json
+
 *.dll
 *.exe
 .DS_Store
