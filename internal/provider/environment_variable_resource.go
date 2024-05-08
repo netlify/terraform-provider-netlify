@@ -18,6 +18,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/netlify/terraform-provider-netlify/internal/models"
 	"github.com/netlify/terraform-provider-netlify/internal/plumbing/operations"
 )
 
@@ -48,7 +49,6 @@ type environmentVariableResourceModel struct {
 }
 
 type environmentVariableValueModel struct {
-	ID               types.String `tfsdk:"id"`
 	Value            types.String `tfsdk:"value"`
 	Context          types.String `tfsdk:"context"`
 	ContextParameter types.String `tfsdk:"context_parameter"`
@@ -74,7 +74,6 @@ func (r *environmentVariableResource) Configure(_ context.Context, req resource.
 			"Unexpected Resource Configure Type",
 			fmt.Sprintf("Expected NetlifyProviderData, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
-
 		return
 	}
 
@@ -125,12 +124,7 @@ func (r *environmentVariableResource) Schema(_ context.Context, _ resource.Schem
 				Required: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"id": schema.StringAttribute{
-							Computed: true,
-							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
-							},
-						},
+						// TODO: confirm it's OK that we aren't tracking the ID of value items
 						"value": schema.StringAttribute{
 							Required:  true,
 							Sensitive: r.is_secret,
@@ -163,6 +157,39 @@ func (r *environmentVariableResource) Create(ctx context.Context, req resource.C
 		return
 	}
 
+	scopes := []string{}
+	for _, scope := range plan.Scopes {
+		scopes = append(scopes, scope.ValueString())
+	}
+	createEnvVarsParams := operations.
+		NewCreateEnvVarsParams().
+		WithAccountID(plan.AccountID.ValueString()).
+		WithEnvVars([]*models.CreateEnvVarsParamsBodyItems{
+			{
+				Key:      plan.Key.ValueString(),
+				Scopes:   scopes,
+				Values:   serializeValues(plan.Value),
+				IsSecret: r.is_secret,
+			},
+		})
+	if plan.SiteID.ValueString() != "" {
+		createEnvVarsParams.SetSiteID(plan.SiteID.ValueStringPointer())
+	}
+	envVar, err := r.data.client.Operations.CreateEnvVars(createEnvVarsParams, r.data.authInfo)
+	if err != nil || len(envVar.Payload) == 0 {
+		resp.Diagnostics.AddError(
+			"Error creating Netlify environment variable",
+			fmt.Sprintf(
+				"Could not create Netlify environment variable order ID %q (account ID: %q, site ID: %q, secret: %v): %q",
+				plan.Key.ValueString(),
+				plan.AccountID.ValueString(),
+				plan.SiteID.ValueString(),
+				r.is_secret,
+				err.Error(),
+			),
+		)
+		return
+	}
 	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 
 	diags = resp.State.Set(ctx, plan)
@@ -180,16 +207,17 @@ func (r *environmentVariableResource) Read(ctx context.Context, req resource.Rea
 		return
 	}
 
-	getEnvVarParams := operations.NewGetEnvVarParams()
-	getEnvVarParams.SetAccountID(state.AccountID.ValueString())
+	getEnvVarParams := operations.
+		NewGetEnvVarParams().
+		WithAccountID(state.AccountID.ValueString()).
+		WithKey(state.Key.ValueString())
 	if state.SiteID.ValueString() != "" {
 		getEnvVarParams.SetSiteID(state.SiteID.ValueStringPointer())
 	}
-	getEnvVarParams.SetKey(state.Key.ValueString())
 	envVar, err := r.data.client.Operations.GetEnvVar(getEnvVarParams, r.data.authInfo)
 	if err != nil || envVar.Payload.IsSecret != r.is_secret {
 		resp.Diagnostics.AddError(
-			"Error Reading Netlify Environment Variable",
+			"Error reading Netlify environment variable",
 			fmt.Sprintf(
 				"Could not read Netlify environment variable order ID %q (account ID: %q, site ID: %q, secret: %v): %q",
 				state.Key.ValueString(),
@@ -206,15 +234,7 @@ func (r *environmentVariableResource) Read(ctx context.Context, req resource.Rea
 	for _, scope := range envVar.Payload.Scopes {
 		state.Scopes = append(state.Scopes, types.StringValue(strings.ReplaceAll(strings.ReplaceAll(scope, " ", "-"), "_", "-")))
 	}
-	state.Value = []environmentVariableValueModel{}
-	for _, value := range envVar.Payload.Values {
-		state.Value = append(state.Value, environmentVariableValueModel{
-			ID:               types.StringValue(value.ID),
-			Value:            types.StringValue(value.Value),
-			Context:          types.StringValue(value.Context),
-			ContextParameter: types.StringValue(value.ContextParameter),
-		})
-	}
+	state.Value = parseValues(envVar.Payload.Values)
 
 	diags = resp.State.Set(ctx, &state)
 	resp.Diagnostics.Append(diags...)
@@ -231,6 +251,38 @@ func (r *environmentVariableResource) Update(ctx context.Context, req resource.U
 		return
 	}
 
+	scopes := []string{}
+	for _, scope := range plan.Scopes {
+		scopes = append(scopes, scope.ValueString())
+	}
+	updateEnvVarParams := operations.
+		NewUpdateEnvVarParams().
+		WithAccountID(plan.AccountID.ValueString()).
+		WithKey(plan.Key.ValueString()).
+		WithEnvVar(&models.UpdateEnvVarParamsBody{
+			Key:      plan.Key.ValueString(),
+			Scopes:   scopes,
+			Values:   serializeValues(plan.Value),
+			IsSecret: r.is_secret,
+		})
+	if plan.SiteID.ValueString() != "" {
+		updateEnvVarParams.SetSiteID(plan.SiteID.ValueStringPointer())
+	}
+	_, err := r.data.client.Operations.UpdateEnvVar(updateEnvVarParams, r.data.authInfo)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Error updating Netlify environment variable",
+			fmt.Sprintf(
+				"Could not update Netlify environment variable order ID %q (account ID: %q, site ID: %q, secret: %v): %q",
+				plan.Key.ValueString(),
+				plan.AccountID.ValueString(),
+				plan.SiteID.ValueString(),
+				r.is_secret,
+				err.Error(),
+			),
+		)
+		return
+	}
 	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 
 	diags = resp.State.Set(ctx, plan)
@@ -245,6 +297,29 @@ func (r *environmentVariableResource) Delete(ctx context.Context, req resource.D
 	diags := req.State.Get(ctx, &state)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	deleteEnvVarParams := operations.
+		NewDeleteEnvVarParams().
+		WithAccountID(state.AccountID.ValueString()).
+		WithKey(state.Key.ValueString())
+	if state.SiteID.ValueString() != "" {
+		deleteEnvVarParams.SetSiteID(state.SiteID.ValueStringPointer())
+	}
+	_, err := r.data.client.Operations.DeleteEnvVar(deleteEnvVarParams, r.data.authInfo)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Error deleting Netlify environment variable",
+			fmt.Sprintf(
+				"Could not delete Netlify environment variable order ID %q (account ID: %q, site ID: %q, secret: %v): %q",
+				state.Key.ValueString(),
+				state.AccountID.ValueString(),
+				state.SiteID.ValueString(),
+				r.is_secret,
+				err.Error(),
+			),
+		)
 		return
 	}
 }
@@ -273,4 +348,29 @@ func (r *environmentVariableResource) ImportState(ctx context.Context, req resou
 		resp.Diagnostics.AddError("Unexpected Import Identifier", errorMessage)
 		return
 	}
+}
+
+func serializeValues(values []environmentVariableValueModel) []*models.EnvVarValue {
+	envVarValues := []*models.EnvVarValue{}
+	for _, value := range values {
+		envVarValue := &models.EnvVarValue{
+			Value:            value.Value.ValueString(),
+			Context:          value.Context.ValueString(),
+			ContextParameter: value.ContextParameter.ValueString(),
+		}
+		envVarValues = append(envVarValues, envVarValue)
+	}
+	return envVarValues
+}
+
+func parseValues(values []*models.EnvVarValue) []environmentVariableValueModel {
+	envVarValues := []environmentVariableValueModel{}
+	for _, value := range values {
+		envVarValues = append(envVarValues, environmentVariableValueModel{
+			Value:            types.StringValue(value.Value),
+			Context:          types.StringValue(value.Context),
+			ContextParameter: types.StringValue(value.ContextParameter),
+		})
+	}
+	return envVarValues
 }

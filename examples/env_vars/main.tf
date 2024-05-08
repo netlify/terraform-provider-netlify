@@ -9,17 +9,17 @@ terraform {
 
 provider "netlify" {}
 
-# resource "netlify_environment_variable" "woof" {
-#   account_id = "ramon-test-1"
-#   site_id    = "platform-test-1"
-#   key        = "WOOF"
-#   value = [
-#     {
-#       value   = "dogs are here",
-#       context = "all",
-#     }
-#   ]
-# }
+resource "netlify_environment_variable" "woof" {
+  account_id = "65aaff3a32bdb71d9c4861d5"
+  site_id    = "120a8a22-c806-4deb-b152-6e71b7ae3a16"
+  key        = "WOOF"
+  value = [
+    {
+      value   = "dogs are here",
+      context = "all",
+    }
+  ]
+}
 
 resource "netlify_environment_variable" "meow" {
   account_id = "65aaff3a32bdb71d9c4861d5"
@@ -27,7 +27,34 @@ resource "netlify_environment_variable" "meow" {
   key        = "TEST_MEOW"
   value = [
     {
-      value   = "roflmao",
+      value   = "roflmaocopter",
+      context = "all",
+    }
+  ]
+}
+
+resource "netlify_secret_environment_variable" "meow" {
+  account_id = "65aaff3a32bdb71d9c4861d5"
+  site_id    = "120a8a22-c806-4deb-b152-6e71b7ae3a16"
+  key        = "SECRET_TEST_MEOW"
+  value = [
+    {
+      value   = "secret roflmaocopter",
+      context = "production",
+    },
+    {
+      value   = "secret roflmaocopter",
+      context = "deploy-preview",
+    }
+  ]
+}
+
+resource "netlify_environment_variable" "global_meow" {
+  account_id = "65aaff3a32bdb71d9c4861d5"
+  key        = "TEST_MEOW"
+  value = [
+    {
+      value   = "global roflmaocopter",
       context = "all",
     }
   ]
