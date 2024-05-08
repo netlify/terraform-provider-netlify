@@ -88,7 +88,10 @@ func (p *NetlifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 		return
 	}
 
-	endpoint := os.Getenv("NETLIFY_API_ENDPOINT")
+	endpoint, noEndpointEnvVar := os.LookupEnv("NETLIFY_API_ENDPOINT")
+	if !noEndpointEnvVar {
+		endpoint = "https://api.netlify.com/api/v1/"
+	}
 	if !config.Endpoint.IsNull() {
 		endpoint = config.Endpoint.ValueString()
 	}
@@ -146,7 +149,8 @@ func (p *NetlifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 func (p *NetlifyProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
-		NewEnvironmentVariableResource,
+		func() resource.Resource { return NewEnvironmentVariableResource(false) },
+		func() resource.Resource { return NewEnvironmentVariableResource(true) },
 	}
 }
 
