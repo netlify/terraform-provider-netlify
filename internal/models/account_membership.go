@@ -18,9 +18,6 @@ import (
 // swagger:model accountMembership
 type AccountMembership struct {
 
-	// billing details
-	BillingDetails string `json:"billing_details,omitempty"`
-
 	// billing email
 	BillingEmail string `json:"billing_email,omitempty"`
 

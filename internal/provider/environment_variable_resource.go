@@ -151,8 +151,7 @@ func (r *environmentVariableResource) Schema(_ context.Context, _ resource.Schem
 
 func (r *environmentVariableResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan environmentVariableResourceModel
-	diags := req.Plan.Get(ctx, &plan)
-	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -192,8 +191,7 @@ func (r *environmentVariableResource) Create(ctx context.Context, req resource.C
 	}
 	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 
-	diags = resp.State.Set(ctx, plan)
-	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -201,8 +199,7 @@ func (r *environmentVariableResource) Create(ctx context.Context, req resource.C
 
 func (r *environmentVariableResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state environmentVariableResourceModel
-	diags := req.State.Get(ctx, &state)
-	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -234,10 +231,11 @@ func (r *environmentVariableResource) Read(ctx context.Context, req resource.Rea
 	for _, scope := range envVar.Payload.Scopes {
 		state.Scopes = append(state.Scopes, types.StringValue(strings.ReplaceAll(strings.ReplaceAll(scope, " ", "-"), "_", "-")))
 	}
-	state.Value = parseValues(envVar.Payload.Values)
+	if !r.is_secret {
+		state.Value = parseValues(envVar.Payload.Values)
+	}
 
-	diags = resp.State.Set(ctx, &state)
-	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -245,8 +243,7 @@ func (r *environmentVariableResource) Read(ctx context.Context, req resource.Rea
 
 func (r *environmentVariableResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan environmentVariableResourceModel
-	diags := req.Plan.Get(ctx, &plan)
-	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -285,8 +282,7 @@ func (r *environmentVariableResource) Update(ctx context.Context, req resource.U
 	}
 	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 
-	diags = resp.State.Set(ctx, plan)
-	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -294,8 +290,7 @@ func (r *environmentVariableResource) Update(ctx context.Context, req resource.U
 
 func (r *environmentVariableResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state environmentVariableResourceModel
-	diags := req.State.Get(ctx, &state)
-	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}

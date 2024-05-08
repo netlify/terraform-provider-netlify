@@ -49,7 +49,6 @@ func (r *xyzResource) Configure(_ context.Context, req resource.ConfigureRequest
 			"Unexpected Resource Configure Type",
 			fmt.Sprintf("Expected NetlifyProviderData, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
-
 		return
 	}
 
@@ -74,8 +73,7 @@ func (r *xyzResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *
 
 func (r *xyzResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan xyzResourceModel
-	diags := req.Plan.Get(ctx, &plan)
-	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -83,8 +81,7 @@ func (r *xyzResource) Create(ctx context.Context, req resource.CreateRequest, re
 	plan.ID = types.StringValue(strconv.Itoa(00000000))
 	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 
-	diags = resp.State.Set(ctx, plan)
-	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -92,14 +89,12 @@ func (r *xyzResource) Create(ctx context.Context, req resource.CreateRequest, re
 
 func (r *xyzResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state xyzResourceModel
-	diags := req.State.Get(ctx, &state)
-	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	diags = resp.State.Set(ctx, &state)
-	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -107,16 +102,14 @@ func (r *xyzResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 
 func (r *xyzResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan xyzResourceModel
-	diags := req.Plan.Get(ctx, &plan)
-	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 
-	diags = resp.State.Set(ctx, plan)
-	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -124,8 +117,7 @@ func (r *xyzResource) Update(ctx context.Context, req resource.UpdateRequest, re
 
 func (r *xyzResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state xyzResourceModel
-	diags := req.State.Get(ctx, &state)
-	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
