@@ -27,6 +27,7 @@ type accountDataSource struct {
 type accountDataSourceModel struct {
 	ID   types.String `tfsdk:"id"`
 	Slug types.String `tfsdk:"slug"`
+	Name types.String `tfsdk:"name"`
 }
 
 func (d *accountDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
@@ -59,6 +60,9 @@ func (d *accountDataSource) Schema(_ context.Context, _ datasource.SchemaRequest
 			},
 			"slug": schema.StringAttribute{
 				Optional: true,
+				Computed: true,
+			},
+			"name": schema.StringAttribute{
 				Computed: true,
 			},
 		},
@@ -113,6 +117,7 @@ func (d *accountDataSource) Read(ctx context.Context, req datasource.ReadRequest
 
 	config.ID = types.StringValue(account.ID)
 	config.Slug = types.StringValue(account.Slug)
+	config.Name = types.StringValue(account.Name)
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &config)...)
 	if resp.Diagnostics.HasError() {

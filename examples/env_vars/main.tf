@@ -7,15 +7,21 @@ terraform {
   required_version = ">= 1.6.0"
 }
 
+# `token` comes from NETLIFY_API_TOKEN, but can be specified with a Terraform variable
 provider "netlify" {}
 
 data "netlify_account" "current" {
   slug = "ramon-test-1"
 }
 
+data "netlify_site" "platform_test" {
+  account_slug = data.netlify_account.current.slug
+  name         = "platform-test-1"
+}
+
 resource "netlify_environment_variable" "woof" {
   account_id = data.netlify_account.current.id
-  site_id    = "120a8a22-c806-4deb-b152-6e71b7ae3a16"
+  site_id    = data.netlify_site.platform_test.id
   key        = "WOOF"
   value = [
     {
@@ -27,7 +33,7 @@ resource "netlify_environment_variable" "woof" {
 
 resource "netlify_environment_variable" "meow" {
   account_id = data.netlify_account.current.id
-  site_id    = "120a8a22-c806-4deb-b152-6e71b7ae3a16"
+  site_id    = data.netlify_site.platform_test.id
   key        = "TEST_MEOW"
   value = [
     {
@@ -39,7 +45,7 @@ resource "netlify_environment_variable" "meow" {
 
 resource "netlify_secret_environment_variable" "meow" {
   account_id = data.netlify_account.current.id
-  site_id    = "120a8a22-c806-4deb-b152-6e71b7ae3a16"
+  site_id    = data.netlify_site.platform_test.id
   key        = "SECRET_TEST_MEOW"
   value = [
     {
