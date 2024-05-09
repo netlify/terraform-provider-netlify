@@ -24,7 +24,7 @@ type siteDataSource struct {
 	data NetlifyProviderData
 }
 
-type siteDataSourceModel struct {
+type NetlifySiteModel struct {
 	ID            types.String   `tfsdk:"id"`
 	AccountSlug   types.String   `tfsdk:"account_slug"`
 	Name          types.String   `tfsdk:"name"`
@@ -80,7 +80,7 @@ func (d *siteDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, r
 }
 
 func (d *siteDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config siteDataSourceModel
+	var config NetlifySiteModel
 	resp.Diagnostics.Append(req.Config.Get(ctx, &config)...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -88,7 +88,7 @@ func (d *siteDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 
 	if (config.ID.IsUnknown() || config.ID.IsNull()) &&
 		(config.AccountSlug.IsUnknown() || config.AccountSlug.IsNull() || config.Name.IsUnknown() || config.Name.IsNull()) {
-		resp.Diagnostics.AddError("Error reading Netlify site", "Either id, or account slug and site name, must be specified for an site search")
+		resp.Diagnostics.AddError("Error reading Netlify site", "Either id, or account slug and site name, must be specified for a site search")
 		return
 	}
 

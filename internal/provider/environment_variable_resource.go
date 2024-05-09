@@ -156,9 +156,9 @@ func (r *environmentVariableResource) Create(ctx context.Context, req resource.C
 		return
 	}
 
-	scopes := []string{}
-	for _, scope := range plan.Scopes {
-		scopes = append(scopes, scope.ValueString())
+	scopes := make([]string, len(plan.Scopes))
+	for i, scope := range plan.Scopes {
+		scopes[i] = scope.ValueString()
 	}
 	createEnvVarsParams := operations.
 		NewCreateEnvVarsParams().
@@ -227,9 +227,9 @@ func (r *environmentVariableResource) Read(ctx context.Context, req resource.Rea
 		return
 	}
 
-	state.Scopes = []types.String{}
-	for _, scope := range envVar.Payload.Scopes {
-		state.Scopes = append(state.Scopes, types.StringValue(strings.ReplaceAll(strings.ReplaceAll(scope, " ", "-"), "_", "-")))
+	state.Scopes = make([]types.String, len(envVar.Payload.Scopes))
+	for i, scope := range envVar.Payload.Scopes {
+		state.Scopes[i] = types.StringValue(strings.ReplaceAll(strings.ReplaceAll(scope, " ", "-"), "_", "-"))
 	}
 	if !r.is_secret {
 		state.Value = parseValues(envVar.Payload.Values)
@@ -248,9 +248,9 @@ func (r *environmentVariableResource) Update(ctx context.Context, req resource.U
 		return
 	}
 
-	scopes := []string{}
-	for _, scope := range plan.Scopes {
-		scopes = append(scopes, scope.ValueString())
+	scopes := make([]string, len(plan.Scopes))
+	for i, scope := range plan.Scopes {
+		scopes[i] = scope.ValueString()
 	}
 	updateEnvVarParams := operations.
 		NewUpdateEnvVarParams().
@@ -346,26 +346,25 @@ func (r *environmentVariableResource) ImportState(ctx context.Context, req resou
 }
 
 func serializeValues(values []environmentVariableValueModel) []*models.EnvVarValue {
-	envVarValues := []*models.EnvVarValue{}
-	for _, value := range values {
-		envVarValue := &models.EnvVarValue{
+	envVarValues := make([]*models.EnvVarValue, len(values))
+	for i, value := range values {
+		envVarValues[i] = &models.EnvVarValue{
 			Value:            value.Value.ValueString(),
 			Context:          value.Context.ValueString(),
 			ContextParameter: value.ContextParameter.ValueString(),
 		}
-		envVarValues = append(envVarValues, envVarValue)
 	}
 	return envVarValues
 }
 
 func parseValues(values []*models.EnvVarValue) []environmentVariableValueModel {
-	envVarValues := []environmentVariableValueModel{}
-	for _, value := range values {
-		envVarValues = append(envVarValues, environmentVariableValueModel{
+	envVarValues := make([]environmentVariableValueModel, len(values))
+	for i, value := range values {
+		envVarValues[i] = environmentVariableValueModel{
 			Value:            types.StringValue(value.Value),
 			Context:          types.StringValue(value.Context),
 			ContextParameter: types.StringValue(value.ContextParameter),
-		})
+		}
 	}
 	return envVarValues
 }

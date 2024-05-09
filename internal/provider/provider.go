@@ -164,6 +164,7 @@ func (p *NetlifyProvider) DataSources(ctx context.Context) []func() datasource.D
 	return []func() datasource.DataSource{
 		NewAccountDataSource,
 		NewSiteDataSource,
+		NewSitesDataSource,
 	}
 }
 
