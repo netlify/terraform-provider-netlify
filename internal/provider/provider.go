@@ -138,8 +138,14 @@ func (p *NetlifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 			},
 		}), strfmt.Default)
 	data.authInfo = runtime.ClientAuthInfoWriterFunc(func(r runtime.ClientRequest, _ strfmt.Registry) error {
-		r.SetHeaderParam("User-Agent", "Terraform")
-		r.SetHeaderParam("Authorization", "Bearer "+token)
+		err := r.SetHeaderParam("User-Agent", "Terraform")
+		if err != nil {
+			return err
+		}
+		err = r.SetHeaderParam("Authorization", "Bearer "+token)
+		if err != nil {
+			return err
+		}
 		return nil
 	})
 
