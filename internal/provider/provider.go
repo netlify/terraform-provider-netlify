@@ -133,6 +133,7 @@ func (p *NetlifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 	data.client = plumbing.New(openApiClient.NewWithClient(
 		url.Host, url.Path, []string{url.Scheme},
 		&http.Client{
+			// TODO: This logging transport does not seem to work.
 			Transport: &loggingTransport{
 				Transport: cleanhttp.DefaultClient().Transport,
 			},
