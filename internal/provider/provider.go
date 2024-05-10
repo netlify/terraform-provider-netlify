@@ -155,8 +155,18 @@ func (p *NetlifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 func (p *NetlifyProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
-		func() resource.Resource { return NewEnvironmentVariableResource(false) },
-		func() resource.Resource { return NewEnvironmentVariableResource(true) },
+		NewDnsRecordResource("A"),
+		NewDnsRecordResource("AAAA"),
+		NewDnsRecordResource("ALIAS"),
+		NewDnsRecordResource("CAA"),
+		NewDnsRecordResource("CNAME"),
+		NewDnsRecordResource("MX"),
+		NewDnsRecordResource("NS"),
+		NewDnsRecordResource("SPF"),
+		NewDnsRecordResource("TXT"),
+		NewDnsZoneResource,
+		NewEnvironmentVariableResource(false),
+		NewEnvironmentVariableResource(true),
 	}
 }
 

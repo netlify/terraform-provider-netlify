@@ -28,15 +28,17 @@ var (
 	_ resource.ResourceWithImportState = &environmentVariableResource{}
 )
 
-func NewEnvironmentVariableResource(is_secret bool) resource.Resource {
-	return &environmentVariableResource{
-		is_secret: is_secret,
+var NewEnvironmentVariableResource = func(isSecret bool) func() resource.Resource {
+	return func() resource.Resource {
+		return &environmentVariableResource{
+			isSecret: isSecret,
+		}
 	}
 }
 
 type environmentVariableResource struct {
-	data      NetlifyProviderData
-	is_secret bool
+	data     NetlifyProviderData
+	isSecret bool
 }
 
 type environmentVariableResourceModel struct {
@@ -55,7 +57,7 @@ type environmentVariableValueModel struct {
 }
 
 func (r *environmentVariableResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	if r.is_secret {
+	if r.isSecret {
 		resp.TypeName = req.ProviderTypeName + "_secret_environment_variable"
 	} else {
 		resp.TypeName = req.ProviderTypeName + "_environment_variable"
@@ -127,7 +129,7 @@ func (r *environmentVariableResource) Schema(_ context.Context, _ resource.Schem
 						// TODO: confirm it's OK that we aren't tracking the ID of value items
 						"value": schema.StringAttribute{
 							Required:  true,
-							Sensitive: r.is_secret,
+							Sensitive: r.isSecret,
 						},
 						"context": schema.StringAttribute{
 							Required: true,
@@ -168,7 +170,7 @@ func (r *environmentVariableResource) Create(ctx context.Context, req resource.C
 				Key:      plan.Key.ValueString(),
 				Scopes:   scopes,
 				Values:   serializeValues(plan.Value),
-				IsSecret: r.is_secret,
+				IsSecret: r.isSecret,
 			},
 		})
 	if plan.SiteID.ValueString() != "" {
@@ -183,7 +185,7 @@ func (r *environmentVariableResource) Create(ctx context.Context, req resource.C
 				plan.Key.ValueString(),
 				plan.AccountID.ValueString(),
 				plan.SiteID.ValueString(),
-				r.is_secret,
+				r.isSecret,
 				err.Error(),
 			),
 		)
@@ -212,7 +214,7 @@ func (r *environmentVariableResource) Read(ctx context.Context, req resource.Rea
 		getEnvVarParams.SetSiteID(state.SiteID.ValueStringPointer())
 	}
 	envVar, err := r.data.client.Operations.GetEnvVar(getEnvVarParams, r.data.authInfo)
-	if err != nil || envVar.Payload.IsSecret != r.is_secret {
+	if err != nil || envVar.Payload.IsSecret != r.isSecret {
 		resp.Diagnostics.AddError(
 			"Error reading Netlify environment variable",
 			fmt.Sprintf(
@@ -220,7 +222,7 @@ func (r *environmentVariableResource) Read(ctx context.Context, req resource.Rea
 				state.Key.ValueString(),
 				state.AccountID.ValueString(),
 				state.SiteID.ValueString(),
-				r.is_secret,
+				r.isSecret,
 				err.Error(),
 			),
 		)
@@ -231,7 +233,7 @@ func (r *environmentVariableResource) Read(ctx context.Context, req resource.Rea
 	for i, scope := range envVar.Payload.Scopes {
 		state.Scopes[i] = types.StringValue(strings.ReplaceAll(strings.ReplaceAll(scope, " ", "-"), "_", "-"))
 	}
-	if !r.is_secret {
+	if !r.isSecret {
 		state.Value = parseValues(envVar.Payload.Values)
 	}
 
@@ -260,7 +262,7 @@ func (r *environmentVariableResource) Update(ctx context.Context, req resource.U
 			Key:      plan.Key.ValueString(),
 			Scopes:   scopes,
 			Values:   serializeValues(plan.Value),
-			IsSecret: r.is_secret,
+			IsSecret: r.isSecret,
 		})
 	if plan.SiteID.ValueString() != "" {
 		updateEnvVarParams.SetSiteID(plan.SiteID.ValueStringPointer())
@@ -274,7 +276,7 @@ func (r *environmentVariableResource) Update(ctx context.Context, req resource.U
 				plan.Key.ValueString(),
 				plan.AccountID.ValueString(),
 				plan.SiteID.ValueString(),
-				r.is_secret,
+				r.isSecret,
 				err.Error(),
 			),
 		)
@@ -311,7 +313,7 @@ func (r *environmentVariableResource) Delete(ctx context.Context, req resource.D
 				state.Key.ValueString(),
 				state.AccountID.ValueString(),
 				state.SiteID.ValueString(),
-				r.is_secret,
+				r.isSecret,
 				err.Error(),
 			),
 		)

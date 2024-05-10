@@ -24,14 +24,6 @@ type siteDataSource struct {
 	data NetlifyProviderData
 }
 
-type NetlifySiteModel struct {
-	ID            types.String   `tfsdk:"id"`
-	AccountSlug   types.String   `tfsdk:"account_slug"`
-	Name          types.String   `tfsdk:"name"`
-	CustomDomain  types.String   `tfsdk:"custom_domain"`
-	DomainAliases []types.String `tfsdk:"domain_aliases"`
-}
-
 func (d *siteDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return

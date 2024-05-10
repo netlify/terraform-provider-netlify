@@ -3392,11 +3392,44 @@ definitions:
       account_name:
         type: string
       domain:
-        type: string
+        $ref: '#/definitions/domain'
       ipv6_enabled:
         type: boolean
       dedicated:
         type: boolean
+  domain:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      user_id:
+        type: string
+      created_at:
+        type: string
+        format: dateTime
+      updated_at:
+        type: string
+        format: dateTime
+      expires_at:
+        type: string
+        format: dateTime
+      registered_at:
+        type: string
+        format: dateTime
+      renewal_price:
+        type: string
+      auto_renew:
+        type: boolean
+      auth_code:
+        type: string
+      transferred_at:
+        type: string
+        format: dateTime
+      auto_renew_at:
+        type: string
+        format: dateTime
   dnsRecordCreate:
     type: object
     properties:
