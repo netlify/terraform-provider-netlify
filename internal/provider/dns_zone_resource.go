@@ -38,15 +38,7 @@ type dnsZoneResourceModel struct {
 	AccountID   types.String        `tfsdk:"account_id"`
 	AccountSlug types.String        `tfsdk:"account_slug"`
 	DnsServers  types.List          `tfsdk:"dns_servers"`
-	Domain      *dnsZoneDomainModel `tfsdk:"domain"`
-}
-
-type dnsZoneDomainModel struct {
-	RegisteredAt types.String `tfsdk:"registered_at"`
-	ExpiresAt    types.String `tfsdk:"expires_at"`
-	RenewalPrice types.String `tfsdk:"renewal_price"`
-	AutoRenew    types.Bool   `tfsdk:"auto_renew"`
-	AutoRenewAt  types.String `tfsdk:"auto_renew_at"`
+	Domain      *NetlifyDomainModel `tfsdk:"domain"`
 }
 
 func (r *dnsZoneResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -112,6 +104,12 @@ func (r *dnsZoneResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 		Blocks: map[string]schema.Block{
 			"domain": schema.SingleNestedBlock{
 				Attributes: map[string]schema.Attribute{
+					"id": schema.StringAttribute{
+						Computed: true,
+					},
+					"name": schema.StringAttribute{
+						Computed: true,
+					},
 					"registered_at": schema.StringAttribute{
 						Computed: true,
 					},
@@ -174,7 +172,9 @@ func (r *dnsZoneResource) Create(ctx context.Context, req resource.CreateRequest
 	if dnsZone.Payload.Domain == nil {
 		plan.Domain = nil
 	} else {
-		plan.Domain = &dnsZoneDomainModel{
+		plan.Domain = &NetlifyDomainModel{
+			ID:           types.StringValue(dnsZone.Payload.Domain.ID),
+			Name:         types.StringValue(dnsZone.Payload.Domain.Name),
 			RegisteredAt: types.StringValue(dnsZone.Payload.Domain.RegisteredAt),
 			ExpiresAt:    types.StringValue(dnsZone.Payload.Domain.ExpiresAt),
 			RenewalPrice: types.StringValue(dnsZone.Payload.Domain.RenewalPrice),
@@ -226,7 +226,9 @@ func (r *dnsZoneResource) Read(ctx context.Context, req resource.ReadRequest, re
 	if dnsZone.Payload.Domain == nil {
 		state.Domain = nil
 	} else {
-		state.Domain = &dnsZoneDomainModel{
+		state.Domain = &NetlifyDomainModel{
+			ID:           types.StringValue(dnsZone.Payload.Domain.ID),
+			Name:         types.StringValue(dnsZone.Payload.Domain.Name),
 			RegisteredAt: types.StringValue(dnsZone.Payload.Domain.RegisteredAt),
 			ExpiresAt:    types.StringValue(dnsZone.Payload.Domain.ExpiresAt),
 			RenewalPrice: types.StringValue(dnsZone.Payload.Domain.RenewalPrice),

@@ -47,3 +47,17 @@ resource "netlify_dns_mx_record" "fish" {
   value    = "mail.example-tf-test-test.com"
   priority = 10
 }
+
+data "netlify_dns_zone" "example" {
+  name = "example-tf-test-test.com"
+  depends_on = [
+    netlify_dns_a_record.cat,
+    netlify_dns_cname_record.dog,
+    netlify_dns_txt_record.bird,
+    netlify_dns_mx_record.fish,
+  ]
+}
+
+output "zone" {
+  value = data.netlify_dns_zone.example
+}

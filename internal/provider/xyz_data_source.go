@@ -58,9 +58,13 @@ func (d *xyzDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, re
 }
 
 func (d *xyzDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var state xyzDataSourceModel
+	var config xyzDataSourceModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &config)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
-	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &config)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
