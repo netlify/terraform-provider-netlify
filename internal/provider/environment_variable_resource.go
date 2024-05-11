@@ -20,6 +20,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/netlify/terraform-provider-netlify/internal/models"
 	"github.com/netlify/terraform-provider-netlify/internal/plumbing/operations"
+	"github.com/netlify/terraform-provider-netlify/internal/provider/netlify_validators"
 )
 
 var (
@@ -141,9 +142,13 @@ func (r *environmentVariableResource) Schema(_ context.Context, _ resource.Schem
 							Optional: true,
 							Computed: true,
 							Default:  stringdefault.StaticString(""),
+							Validators: []validator.String{
+								netlify_validators.EnvironmentVariableContextParameterValidator{
+									ContextPathExpression: path.MatchRelative().AtParent().AtName("context"),
+								},
+							},
 						},
 					},
-					// TODO: validate that context_parameter is not empty iff context is "branch"
 				},
 				// TODO: validate that values don't overlap
 			},

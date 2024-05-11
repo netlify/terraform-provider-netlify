@@ -4,8 +4,11 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/netlify/terraform-provider-netlify/internal/models"
 	"github.com/netlify/terraform-provider-netlify/internal/plumbing/operations"
@@ -57,6 +60,9 @@ func (d *accountDataSource) Schema(_ context.Context, _ datasource.SchemaRequest
 			"id": schema.StringAttribute{
 				Optional: true,
 				Computed: true,
+				Validators: []validator.String{
+					stringvalidator.AtLeastOneOf(path.MatchRoot("slug")),
+				},
 			},
 			"slug": schema.StringAttribute{
 				Optional: true,
@@ -73,11 +79,6 @@ func (d *accountDataSource) Read(ctx context.Context, req datasource.ReadRequest
 	var config accountDataSourceModel
 	resp.Diagnostics.Append(req.Config.Get(ctx, &config)...)
 	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	if (config.ID.IsUnknown() || config.ID.IsNull()) && (config.Slug.IsUnknown() || config.Slug.IsNull()) {
-		resp.Diagnostics.AddError("Error reading Netlify account", "Either id or slug must be specified for an account search")
 		return
 	}
 

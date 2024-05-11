@@ -4,8 +4,11 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/netlify/terraform-provider-netlify/internal/models"
 	"github.com/netlify/terraform-provider-netlify/internal/plumbing/operations"
@@ -51,6 +54,9 @@ func (d *siteDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, r
 			"id": schema.StringAttribute{
 				Optional: true,
 				Computed: true,
+				Validators: []validator.String{
+					stringvalidator.AtLeastOneOf(path.MatchRoot("name")),
+				},
 			},
 			"account_slug": schema.StringAttribute{
 				Optional: true,
@@ -59,6 +65,9 @@ func (d *siteDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, r
 			"name": schema.StringAttribute{
 				Optional: true,
 				Computed: true,
+				Validators: []validator.String{
+					stringvalidator.AlsoRequires(path.MatchRoot("account_slug")),
+				},
 			},
 			"custom_domain": schema.StringAttribute{
 				Computed: true,
@@ -75,12 +84,6 @@ func (d *siteDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 	var config NetlifySiteModel
 	resp.Diagnostics.Append(req.Config.Get(ctx, &config)...)
 	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	if (config.ID.IsUnknown() || config.ID.IsNull()) &&
-		(config.AccountSlug.IsUnknown() || config.AccountSlug.IsNull() || config.Name.IsUnknown() || config.Name.IsNull()) {
-		resp.Diagnostics.AddError("Error reading Netlify site", "Either id, or account slug and site name, must be specified for a site search")
 		return
 	}
 

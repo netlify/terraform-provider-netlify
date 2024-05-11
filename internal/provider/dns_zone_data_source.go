@@ -4,9 +4,12 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/netlify/terraform-provider-netlify/internal/models"
 	"github.com/netlify/terraform-provider-netlify/internal/plumbing/operations"
@@ -73,6 +76,9 @@ func (d *dnsZoneDataSource) Schema(_ context.Context, _ datasource.SchemaRequest
 			"id": schema.StringAttribute{
 				Optional: true,
 				Computed: true,
+				Validators: []validator.String{
+					stringvalidator.AtLeastOneOf(path.MatchRoot("name")),
+				},
 			},
 			"name": schema.StringAttribute{
 				Optional: true,
@@ -154,11 +160,6 @@ func (d *dnsZoneDataSource) Read(ctx context.Context, req datasource.ReadRequest
 	var config dnsZoneDataSourceModel
 	resp.Diagnostics.Append(req.Config.Get(ctx, &config)...)
 	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	if (config.ID.IsUnknown() || config.ID.IsNull()) && (config.Name.IsUnknown() || config.Name.IsNull()) {
-		resp.Diagnostics.AddError("Error reading Netlify DNS zone", "Either id or name must be specified for a DNS zone search")
 		return
 	}
 
