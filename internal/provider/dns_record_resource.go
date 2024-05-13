@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -13,9 +14,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/netlify/terraform-provider-netlify/internal/models"
 	"github.com/netlify/terraform-provider-netlify/internal/plumbing/operations"
+	"github.com/netlify/terraform-provider-netlify/internal/provider/netlify_validators"
 )
 
 var (
@@ -24,23 +27,19 @@ var (
 	_ resource.ResourceWithImportState = &dnsRecordResource{}
 )
 
-var NewDnsRecordResource = func(recordType string) func() resource.Resource {
-	return func() resource.Resource {
-		return &dnsRecordResource{
-			recordType: recordType,
-		}
-	}
+func NewDnsRecordResource() resource.Resource {
+	return &dnsRecordResource{}
 }
 
 type dnsRecordResource struct {
-	data       NetlifyProviderData
-	recordType string
+	data NetlifyProviderData
 }
 
 type dnsRecordResourceModel struct {
 	ZoneID      types.String `tfsdk:"zone_id"`
 	ID          types.String `tfsdk:"id"`
 	LastUpdated types.String `tfsdk:"last_updated"`
+	Type        types.String `tfsdk:"type"`
 	Hostname    types.String `tfsdk:"hostname"`
 	Value       types.String `tfsdk:"value"`
 	TTL         types.Int64  `tfsdk:"ttl"`
@@ -50,7 +49,7 @@ type dnsRecordResourceModel struct {
 }
 
 func (r *dnsRecordResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = fmt.Sprintf("%s_dns_%s_record", req.ProviderTypeName, strings.ToLower(r.recordType))
+	resp.TypeName = req.ProviderTypeName + "_dns_record"
 }
 
 func (r *dnsRecordResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
@@ -89,6 +88,24 @@ func (r *dnsRecordResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 			"last_updated": schema.StringAttribute{
 				Computed: true,
 			},
+			"type": schema.StringAttribute{
+				Required: true,
+				Validators: []validator.String{
+					stringvalidator.OneOf(
+						"A",
+						"AAAA",
+						"ALIAS",
+						"CAA",
+						"CNAME",
+						"MX",
+						"NS",
+						"SPF",
+						"TXT",
+					),
+					netlify_validators.RequiredIfEquals("CAA", path.MatchRoot("flag"), path.MatchRoot("tag")),
+					netlify_validators.RequiredIfEquals("MX", path.MatchRoot("priority")),
+				},
+			},
 			"hostname": schema.StringAttribute{
 				Required: true,
 				PlanModifiers: []planmodifier.String{
@@ -110,37 +127,27 @@ func (r *dnsRecordResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				},
 			},
 			"flag": schema.Int64Attribute{
+				Optional: true,
 				Computed: true,
+				PlanModifiers: []planmodifier.Int64{
+					int64planmodifier.RequiresReplace(),
+				},
 			},
 			"tag": schema.StringAttribute{
+				Optional: true,
 				Computed: true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"priority": schema.Int64Attribute{
+				Optional: true,
 				Computed: true,
+				PlanModifiers: []planmodifier.Int64{
+					int64planmodifier.RequiresReplace(),
+				},
 			},
 		},
-	}
-	if r.recordType == "CAA" {
-		resp.Schema.Attributes["flag"] = schema.Int64Attribute{
-			Required: true,
-			PlanModifiers: []planmodifier.Int64{
-				int64planmodifier.RequiresReplace(),
-			},
-		}
-		resp.Schema.Attributes["tag"] = schema.StringAttribute{
-			Required: true,
-			PlanModifiers: []planmodifier.String{
-				stringplanmodifier.RequiresReplace(),
-			},
-		}
-	}
-	if r.recordType == "MX" {
-		resp.Schema.Attributes["priority"] = schema.Int64Attribute{
-			Required: true,
-			PlanModifiers: []planmodifier.Int64{
-				int64planmodifier.RequiresReplace(),
-			},
-		}
 	}
 }
 
@@ -151,17 +158,18 @@ func (r *dnsRecordResource) Create(ctx context.Context, req resource.CreateReque
 		return
 	}
 
+	recordType := plan.Type.ValueString()
 	dnsRecordCreate := models.DNSRecordCreate{
-		Type:     r.recordType,
+		Type:     recordType,
 		Hostname: plan.Hostname.ValueString(),
 		Value:    plan.Value.ValueString(),
 		TTL:      plan.TTL.ValueInt64(),
 	}
-	if r.recordType == "CAA" {
+	if recordType == "CAA" {
 		dnsRecordCreate.Flag = plan.Flag.ValueInt64()
 		dnsRecordCreate.Tag = plan.Tag.ValueString()
 	}
-	if r.recordType == "MX" {
+	if recordType == "MX" {
 		dnsRecordCreate.Priority = plan.Priority.ValueInt64()
 	}
 	dnsRecord, err := r.data.client.Operations.CreateDNSRecord(
@@ -185,11 +193,11 @@ func (r *dnsRecordResource) Create(ctx context.Context, req resource.CreateReque
 	}
 	plan.ID = types.StringValue(dnsRecord.Payload.ID)
 	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
-	if r.recordType != "CAA" {
+	if recordType != "CAA" {
 		plan.Flag = types.Int64Null()
 		plan.Tag = types.StringNull()
 	}
-	if r.recordType != "MX" {
+	if recordType != "MX" {
 		plan.Priority = types.Int64Null()
 	}
 
@@ -212,7 +220,7 @@ func (r *dnsRecordResource) Read(ctx context.Context, req resource.ReadRequest, 
 			WithDNSRecordID(state.ID.ValueString()),
 		r.data.authInfo,
 	)
-	if err != nil || dnsRecord.Payload.Type != r.recordType {
+	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading Netlify DNS record",
 			fmt.Sprintf(
@@ -224,17 +232,19 @@ func (r *dnsRecordResource) Read(ctx context.Context, req resource.ReadRequest, 
 		)
 		return
 	}
+	recordType := dnsRecord.Payload.Type
+	state.Type = types.StringValue(recordType)
 	state.Hostname = types.StringValue(dnsRecord.Payload.Hostname)
 	state.Value = types.StringValue(dnsRecord.Payload.Value)
 	state.TTL = types.Int64Value(dnsRecord.Payload.TTL)
-	if r.recordType == "CAA" {
+	if recordType == "CAA" {
 		state.Flag = types.Int64Value(dnsRecord.Payload.Flag)
 		state.Tag = types.StringValue(dnsRecord.Payload.Tag)
 	} else {
 		state.Flag = types.Int64Null()
 		state.Tag = types.StringNull()
 	}
-	if r.recordType == "MX" {
+	if recordType == "MX" {
 		state.Priority = types.Int64Value(dnsRecord.Payload.Priority)
 	} else {
 		state.Priority = types.Int64Null()
