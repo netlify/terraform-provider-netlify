@@ -327,7 +327,7 @@ func (r *environmentVariableResource) Delete(ctx context.Context, req resource.D
 }
 
 func (r *environmentVariableResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	idParts := strings.Split(req.ID, ",")
+	idParts := strings.Split(req.ID, ":")
 
 	errorMessage := fmt.Sprintf("Expected import identifier with one of these formats: account_id,key or account_id,site_id,key. Got: %q", req.ID)
 

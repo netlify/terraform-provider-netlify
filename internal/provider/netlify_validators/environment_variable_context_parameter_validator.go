@@ -50,7 +50,6 @@ func (av EnvironmentVariableContextParameterValidator) Validate(ctx context.Cont
 	isNonEmpty := !req.ConfigValue.IsNull() && !req.ConfigValue.Equal(types.StringValue(""))
 
 	matchedPaths, diags := req.Config.PathMatches(ctx, req.PathExpression.Merge(av.ContextPathExpression))
-
 	res.Diagnostics.Append(diags...)
 	if diags.HasError() {
 		return
@@ -58,7 +57,7 @@ func (av EnvironmentVariableContextParameterValidator) Validate(ctx context.Cont
 
 	for _, mp := range matchedPaths {
 		var mpVal attr.Value
-		diags := req.Config.GetAttribute(ctx, mp, &mpVal)
+		diags = req.Config.GetAttribute(ctx, mp, &mpVal)
 		res.Diagnostics.Append(diags...)
 
 		// Collect all errors

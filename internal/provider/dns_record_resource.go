@@ -281,7 +281,7 @@ func (r *dnsRecordResource) Delete(ctx context.Context, req resource.DeleteReque
 }
 
 func (r *dnsRecordResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	idParts := strings.Split(req.ID, ",")
+	idParts := strings.Split(req.ID, ":")
 
 	errorMessage := fmt.Sprintf("Expected import identifier in the formats: zone_id,record_id. Got: %q", req.ID)
 
