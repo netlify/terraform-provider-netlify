@@ -29,17 +29,12 @@ var (
 	_ resource.ResourceWithImportState = &environmentVariableResource{}
 )
 
-var NewEnvironmentVariableResource = func(isSecret bool) func() resource.Resource {
-	return func() resource.Resource {
-		return &environmentVariableResource{
-			isSecret: isSecret,
-		}
-	}
+func NewEnvironmentVariableResource() resource.Resource {
+	return &environmentVariableResource{}
 }
 
 type environmentVariableResource struct {
-	data     NetlifyProviderData
-	isSecret bool
+	data NetlifyProviderData
 }
 
 type environmentVariableResourceModel struct {
@@ -49,6 +44,7 @@ type environmentVariableResourceModel struct {
 	Key         types.String                    `tfsdk:"key"`
 	Scopes      []types.String                  `tfsdk:"scopes"`
 	Value       []environmentVariableValueModel `tfsdk:"value"`
+	SecretValue []environmentVariableValueModel `tfsdk:"secret_value"`
 }
 
 type environmentVariableValueModel struct {
@@ -58,11 +54,7 @@ type environmentVariableValueModel struct {
 }
 
 func (r *environmentVariableResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	if r.isSecret {
-		resp.TypeName = req.ProviderTypeName + "_secret_environment_variable"
-	} else {
-		resp.TypeName = req.ProviderTypeName + "_environment_variable"
-	}
+	resp.TypeName = req.ProviderTypeName + "_environment_variable"
 }
 
 func (r *environmentVariableResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
@@ -124,13 +116,44 @@ func (r *environmentVariableResource) Schema(_ context.Context, _ resource.Schem
 				})),
 			},
 			"value": schema.SetNestedAttribute{
-				Required: true,
+				Optional: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						// TODO: confirm it's OK that we aren't tracking the ID of value items
+						"value": schema.StringAttribute{
+							Required: true,
+						},
+						"context": schema.StringAttribute{
+							Required: true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("all", "dev", "branch-deploy", "deploy-preview", "production", "branch"),
+							},
+						},
+						"context_parameter": schema.StringAttribute{
+							Optional: true,
+							Computed: true,
+							Default:  stringdefault.StaticString(""),
+							Validators: []validator.String{
+								netlify_validators.EnvironmentVariableContextParameterValidator{
+									ContextPathExpression: path.MatchRelative().AtParent().AtName("context"),
+								},
+							},
+						},
+					},
+				},
+				// TODO: validate that values don't overlap
+			},
+			"secret_value": schema.SetNestedAttribute{
+				Optional: true,
+				Validators: []validator.Set{
+					setvalidator.ExactlyOneOf(path.MatchRoot("value")),
+				},
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						// TODO: confirm it's OK that we aren't tracking the ID of value items
 						"value": schema.StringAttribute{
 							Required:  true,
-							Sensitive: r.isSecret,
+							Sensitive: true,
 						},
 						"context": schema.StringAttribute{
 							Required: true,
@@ -167,6 +190,15 @@ func (r *environmentVariableResource) Create(ctx context.Context, req resource.C
 	for i, scope := range plan.Scopes {
 		scopes[i] = scope.ValueString()
 	}
+	var values []*models.EnvVarValue
+	var isSecret bool
+	if plan.SecretValue != nil && len(plan.SecretValue) > 0 {
+		values = serializeValues(plan.SecretValue)
+		isSecret = true
+	} else {
+		values = serializeValues(plan.Value)
+		isSecret = false
+	}
 	createEnvVarsParams := operations.
 		NewCreateEnvVarsParams().
 		WithAccountID(plan.AccountID.ValueString()).
@@ -174,8 +206,8 @@ func (r *environmentVariableResource) Create(ctx context.Context, req resource.C
 			{
 				Key:      plan.Key.ValueString(),
 				Scopes:   scopes,
-				Values:   serializeValues(plan.Value),
-				IsSecret: r.isSecret,
+				Values:   values,
+				IsSecret: isSecret,
 			},
 		})
 	if plan.SiteID.ValueString() != "" {
@@ -190,7 +222,7 @@ func (r *environmentVariableResource) Create(ctx context.Context, req resource.C
 				plan.Key.ValueString(),
 				plan.AccountID.ValueString(),
 				plan.SiteID.ValueString(),
-				r.isSecret,
+				isSecret,
 				err.Error(),
 			),
 		)
@@ -219,7 +251,7 @@ func (r *environmentVariableResource) Read(ctx context.Context, req resource.Rea
 		getEnvVarParams.SetSiteID(state.SiteID.ValueStringPointer())
 	}
 	envVar, err := r.data.client.Operations.GetEnvVar(getEnvVarParams, r.data.authInfo)
-	if err != nil || envVar.Payload.IsSecret != r.isSecret {
+	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading Netlify environment variable",
 			fmt.Sprintf(
@@ -227,7 +259,7 @@ func (r *environmentVariableResource) Read(ctx context.Context, req resource.Rea
 				state.Key.ValueString(),
 				state.AccountID.ValueString(),
 				state.SiteID.ValueString(),
-				r.isSecret,
+				envVar.Payload.IsSecret,
 				err.Error(),
 			),
 		)
@@ -238,7 +270,7 @@ func (r *environmentVariableResource) Read(ctx context.Context, req resource.Rea
 	for i, scope := range envVar.Payload.Scopes {
 		state.Scopes[i] = types.StringValue(strings.ReplaceAll(strings.ReplaceAll(scope, " ", "-"), "_", "-"))
 	}
-	if !r.isSecret {
+	if !envVar.Payload.IsSecret {
 		state.Value = parseValues(envVar.Payload.Values)
 	}
 
@@ -259,6 +291,15 @@ func (r *environmentVariableResource) Update(ctx context.Context, req resource.U
 	for i, scope := range plan.Scopes {
 		scopes[i] = scope.ValueString()
 	}
+	var values []*models.EnvVarValue
+	var isSecret bool
+	if plan.SecretValue != nil && len(plan.SecretValue) > 0 {
+		values = serializeValues(plan.SecretValue)
+		isSecret = true
+	} else {
+		values = serializeValues(plan.Value)
+		isSecret = false
+	}
 	updateEnvVarParams := operations.
 		NewUpdateEnvVarParams().
 		WithAccountID(plan.AccountID.ValueString()).
@@ -266,8 +307,8 @@ func (r *environmentVariableResource) Update(ctx context.Context, req resource.U
 		WithEnvVar(&models.UpdateEnvVarParamsBody{
 			Key:      plan.Key.ValueString(),
 			Scopes:   scopes,
-			Values:   serializeValues(plan.Value),
-			IsSecret: r.isSecret,
+			Values:   values,
+			IsSecret: isSecret,
 		})
 	if plan.SiteID.ValueString() != "" {
 		updateEnvVarParams.SetSiteID(plan.SiteID.ValueStringPointer())
@@ -281,7 +322,7 @@ func (r *environmentVariableResource) Update(ctx context.Context, req resource.U
 				plan.Key.ValueString(),
 				plan.AccountID.ValueString(),
 				plan.SiteID.ValueString(),
-				r.isSecret,
+				isSecret,
 				err.Error(),
 			),
 		)
@@ -314,11 +355,10 @@ func (r *environmentVariableResource) Delete(ctx context.Context, req resource.D
 		resp.Diagnostics.AddError(
 			"Error deleting Netlify environment variable",
 			fmt.Sprintf(
-				"Could not delete Netlify environment variable order ID %q (account ID: %q, site ID: %q, secret: %v): %q",
+				"Could not delete Netlify environment variable order ID %q (account ID: %q, site ID: %q): %q",
 				state.Key.ValueString(),
 				state.AccountID.ValueString(),
 				state.SiteID.ValueString(),
-				r.isSecret,
 				err.Error(),
 			),
 		)

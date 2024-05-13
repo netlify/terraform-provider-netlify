@@ -19,16 +19,30 @@ description: |-
 
 - `account_id` (String)
 - `key` (String)
-- `value` (Attributes Set) (see [below for nested schema](#nestedatt--value))
 
 ### Optional
 
 - `scopes` (Set of String)
+- `secret_value` (Attributes Set) (see [below for nested schema](#nestedatt--secret_value))
 - `site_id` (String)
+- `value` (Attributes Set) (see [below for nested schema](#nestedatt--value))
 
 ### Read-Only
 
 - `last_updated` (String)
+
+<a id="nestedatt--secret_value"></a>
+### Nested Schema for `secret_value`
+
+Required:
+
+- `context` (String)
+- `value` (String, Sensitive)
+
+Optional:
+
+- `context_parameter` (String)
+
 
 <a id="nestedatt--value"></a>
 ### Nested Schema for `value`
