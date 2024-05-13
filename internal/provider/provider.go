@@ -166,8 +166,7 @@ func (p *NetlifyProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewDnsRecordResource("SPF"),
 		NewDnsRecordResource("TXT"),
 		NewDnsZoneResource,
-		NewEnvironmentVariableResource(false),
-		NewEnvironmentVariableResource(true),
+		NewEnvironmentVariableResource,
 	}
 }
 

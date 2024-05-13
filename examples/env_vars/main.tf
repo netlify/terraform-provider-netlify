@@ -43,11 +43,11 @@ resource "netlify_environment_variable" "meow" {
   ]
 }
 
-resource "netlify_secret_environment_variable" "meow" {
+resource "netlify_environment_variable" "secret_meow" {
   account_id = data.netlify_account.current.id
   site_id    = data.netlify_site.platform_test.id
   key        = "SECRET_TEST_MEOW"
-  value = [
+  secret_value = [
     {
       value   = "secret roflmaocopter",
       context = "production",
