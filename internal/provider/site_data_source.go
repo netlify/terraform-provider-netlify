@@ -10,8 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netlify/terraform-provider-netlify/internal/models"
-	"github.com/netlify/terraform-provider-netlify/internal/plumbing/operations"
+	"github.com/netlify/terraform-provider-netlify/internal/netlifyapi"
 )
 
 var (
@@ -87,31 +86,29 @@ func (d *siteDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 		return
 	}
 
-	var site *models.Site
+	var site *netlifyapi.Site
 	if !config.ID.IsUnknown() && !config.ID.IsNull() {
-		siteOk, err := d.data.client.Operations.GetSite(
-			operations.NewGetSiteParams().WithSiteID(config.ID.ValueString()),
-			d.data.authInfo,
-		)
+		var err error
+		site, _, err = d.data.client.SitesAPI.GetSite(ctx, config.ID.ValueString()).Execute()
 		if err != nil {
 			resp.Diagnostics.AddError("Error reading Netlify site", fmt.Sprintf("Could not read Netlify site ID %q: %q",
 				config.ID.ValueString(), err.Error()))
 			return
 		}
-		site = siteOk.Payload
 	} else {
-		sitesOk, err := d.data.client.Operations.ListSitesForAccount(
-			operations.NewListSitesForAccountParams().WithAccountSlug(config.AccountSlug.ValueString()),
-			d.data.authInfo,
-		)
+		sites, _, err := d.data.client.SitesAPI.
+			ListSitesForAccount(ctx, config.AccountSlug.ValueString()).
+			Name(config.Name.ValueString()).
+			Execute()
 		if err != nil {
 			resp.Diagnostics.AddError("Error reading Netlify account", fmt.Sprintf("Could not list Netlify sites in account %q: %q", config.AccountSlug.ValueString(), err.Error()))
 			return
 		}
 		nameString := config.Name.ValueString()
-		for _, a := range sitesOk.Payload {
-			if a.Name == nameString {
-				site = a
+		for _, s := range sites {
+			if s.Name == nameString {
+				sit := s
+				site = &sit
 				break
 			}
 		}
@@ -121,7 +118,7 @@ func (d *siteDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 		}
 	}
 
-	config.ID = types.StringValue(site.ID)
+	config.ID = types.StringValue(site.Id)
 	config.AccountSlug = types.StringValue(site.AccountSlug)
 	config.Name = types.StringValue(site.Name)
 	config.CustomDomain = types.StringValue(site.CustomDomain)

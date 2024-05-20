@@ -13,8 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netlify/terraform-provider-netlify/internal/models"
-	"github.com/netlify/terraform-provider-netlify/internal/plumbing/operations"
+	"github.com/netlify/terraform-provider-netlify/internal/netlifyapi"
 )
 
 var (
@@ -138,15 +137,13 @@ func (r *dnsZoneResource) Create(ctx context.Context, req resource.CreateRequest
 		return
 	}
 
-	dnsZone, err := r.data.client.Operations.CreateDNSZone(
-		operations.
-			NewCreateDNSZoneParams().
-			WithDNSZoneParams(&models.DNSZoneSetup{
-				AccountSlug: plan.AccountSlug.ValueString(),
-				Name:        plan.Name.ValueString(),
-			}),
-		r.data.authInfo,
-	)
+	dnsZone, _, err := r.data.client.DNSZonesAPI.
+		CreateDnsZone(ctx).
+		DnsZoneCreateParams(netlifyapi.DnsZoneCreateParams{
+			AccountSlug: plan.AccountSlug.ValueStringPointer(),
+			Name:        plan.Name.ValueStringPointer(),
+		}).
+		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error creating Netlify DNS zone",
@@ -159,27 +156,27 @@ func (r *dnsZoneResource) Create(ctx context.Context, req resource.CreateRequest
 		)
 		return
 	}
-	plan.ID = types.StringValue(dnsZone.Payload.ID)
-	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
-	plan.AccountID = types.StringValue(dnsZone.Payload.AccountID)
-	dnsServers := make([]types.String, len(dnsZone.Payload.DNSServers))
-	for i, dnsServer := range dnsZone.Payload.DNSServers {
+	plan.ID = types.StringValue(dnsZone.Id)
+	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC3339))
+	plan.AccountID = types.StringValue(dnsZone.AccountId)
+	dnsServers := make([]types.String, len(dnsZone.DnsServers))
+	for i, dnsServer := range dnsZone.DnsServers {
 		dnsServers[i] = types.StringValue(dnsServer)
 	}
 	var diags diag.Diagnostics
 	plan.DnsServers, diags = types.ListValueFrom(ctx, types.StringType, dnsServers)
 	resp.Diagnostics.Append(diags...)
-	if dnsZone.Payload.Domain == nil {
+	if dnsZone.Domain == nil {
 		plan.Domain = nil
 	} else {
 		plan.Domain = &NetlifyDomainModel{
-			ID:           types.StringValue(dnsZone.Payload.Domain.ID),
-			Name:         types.StringValue(dnsZone.Payload.Domain.Name),
-			RegisteredAt: types.StringValue(dnsZone.Payload.Domain.RegisteredAt),
-			ExpiresAt:    types.StringValue(dnsZone.Payload.Domain.ExpiresAt),
-			RenewalPrice: types.StringValue(dnsZone.Payload.Domain.RenewalPrice),
-			AutoRenew:    types.BoolValue(dnsZone.Payload.Domain.AutoRenew),
-			AutoRenewAt:  types.StringValue(dnsZone.Payload.Domain.AutoRenewAt),
+			ID:           types.StringValue(dnsZone.Domain.Id),
+			Name:         types.StringValue(dnsZone.Domain.Name),
+			RegisteredAt: types.StringValue(dnsZone.Domain.RegisteredAt.Format(time.RFC3339)),
+			ExpiresAt:    types.StringValue(dnsZone.Domain.ExpiresAt.Format(time.RFC3339)),
+			RenewalPrice: types.StringValue(dnsZone.Domain.RenewalPrice),
+			AutoRenew:    types.BoolValue(dnsZone.Domain.AutoRenew),
+			AutoRenewAt:  types.StringValue(dnsZone.Domain.AutoRenewAt.Format(time.RFC3339)),
 		}
 	}
 
@@ -196,12 +193,7 @@ func (r *dnsZoneResource) Read(ctx context.Context, req resource.ReadRequest, re
 		return
 	}
 
-	dnsZone, err := r.data.client.Operations.GetDNSZone(
-		operations.
-			NewGetDNSZoneParams().
-			WithZoneID(state.ID.ValueString()),
-		r.data.authInfo,
-	)
+	dnsZone, _, err := r.data.client.DNSZonesAPI.GetDnsZone(ctx, state.ID.ValueString()).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading Netlify DNS zone",
@@ -213,27 +205,27 @@ func (r *dnsZoneResource) Read(ctx context.Context, req resource.ReadRequest, re
 		)
 		return
 	}
-	state.Name = types.StringValue(dnsZone.Payload.Name)
-	state.AccountID = types.StringValue(dnsZone.Payload.AccountID)
-	state.AccountSlug = types.StringValue(dnsZone.Payload.AccountSlug)
-	dnsServers := make([]types.String, len(dnsZone.Payload.DNSServers))
-	for i, dnsServer := range dnsZone.Payload.DNSServers {
+	state.Name = types.StringValue(dnsZone.Name)
+	state.AccountID = types.StringValue(dnsZone.AccountId)
+	state.AccountSlug = types.StringValue(dnsZone.AccountSlug)
+	dnsServers := make([]types.String, len(dnsZone.DnsServers))
+	for i, dnsServer := range dnsZone.DnsServers {
 		dnsServers[i] = types.StringValue(dnsServer)
 	}
 	var diags diag.Diagnostics
 	state.DnsServers, diags = types.ListValueFrom(ctx, types.StringType, dnsServers)
 	resp.Diagnostics.Append(diags...)
-	if dnsZone.Payload.Domain == nil {
+	if dnsZone.Domain == nil {
 		state.Domain = nil
 	} else {
 		state.Domain = &NetlifyDomainModel{
-			ID:           types.StringValue(dnsZone.Payload.Domain.ID),
-			Name:         types.StringValue(dnsZone.Payload.Domain.Name),
-			RegisteredAt: types.StringValue(dnsZone.Payload.Domain.RegisteredAt),
-			ExpiresAt:    types.StringValue(dnsZone.Payload.Domain.ExpiresAt),
-			RenewalPrice: types.StringValue(dnsZone.Payload.Domain.RenewalPrice),
-			AutoRenew:    types.BoolValue(dnsZone.Payload.Domain.AutoRenew),
-			AutoRenewAt:  types.StringValue(dnsZone.Payload.Domain.AutoRenewAt),
+			ID:           types.StringValue(dnsZone.Domain.Id),
+			Name:         types.StringValue(dnsZone.Domain.Name),
+			RegisteredAt: types.StringValue(dnsZone.Domain.RegisteredAt.Format(time.RFC3339)),
+			ExpiresAt:    types.StringValue(dnsZone.Domain.ExpiresAt.Format(time.RFC3339)),
+			RenewalPrice: types.StringValue(dnsZone.Domain.RenewalPrice),
+			AutoRenew:    types.BoolValue(dnsZone.Domain.AutoRenew),
+			AutoRenewAt:  types.StringValue(dnsZone.Domain.AutoRenewAt.Format(time.RFC3339)),
 		}
 	}
 
@@ -257,12 +249,7 @@ func (r *dnsZoneResource) Delete(ctx context.Context, req resource.DeleteRequest
 		return
 	}
 
-	_, err := r.data.client.Operations.DeleteDNSZone(
-		operations.
-			NewDeleteDNSZoneParams().
-			WithZoneID(state.ID.ValueString()),
-		r.data.authInfo,
-	)
+	_, err := r.data.client.DNSZonesAPI.DeleteDnsZone(ctx, state.ID.ValueString()).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error deleting Netlify DNS zone",

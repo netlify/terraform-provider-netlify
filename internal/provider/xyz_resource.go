@@ -79,7 +79,7 @@ func (r *xyzResource) Create(ctx context.Context, req resource.CreateRequest, re
 	}
 
 	plan.ID = types.StringValue(strconv.Itoa(00000000))
-	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
+	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC3339))
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 	if resp.Diagnostics.HasError() {
@@ -107,7 +107,7 @@ func (r *xyzResource) Update(ctx context.Context, req resource.UpdateRequest, re
 		return
 	}
 
-	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
+	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC3339))
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 	if resp.Diagnostics.HasError() {

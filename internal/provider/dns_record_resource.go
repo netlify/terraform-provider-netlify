@@ -16,8 +16,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netlify/terraform-provider-netlify/internal/models"
-	"github.com/netlify/terraform-provider-netlify/internal/plumbing/operations"
+	"github.com/netlify/terraform-provider-netlify/internal/netlifyapi"
 	"github.com/netlify/terraform-provider-netlify/internal/provider/netlify_validators"
 )
 
@@ -159,26 +158,23 @@ func (r *dnsRecordResource) Create(ctx context.Context, req resource.CreateReque
 	}
 
 	recordType := plan.Type.ValueString()
-	dnsRecordCreate := models.DNSRecordCreate{
-		Type:     recordType,
-		Hostname: plan.Hostname.ValueString(),
-		Value:    plan.Value.ValueString(),
-		TTL:      plan.TTL.ValueInt64(),
+	dnsRecordCreateParams := netlifyapi.DnsRecordCreateParams{
+		Type:     &recordType,
+		Hostname: plan.Hostname.ValueStringPointer(),
+		Value:    plan.Value.ValueStringPointer(),
+		Ttl:      plan.TTL.ValueInt64Pointer(),
 	}
 	if recordType == "CAA" {
-		dnsRecordCreate.Flag = plan.Flag.ValueInt64()
-		dnsRecordCreate.Tag = plan.Tag.ValueString()
+		dnsRecordCreateParams.Flag = plan.Flag.ValueInt64Pointer()
+		dnsRecordCreateParams.Tag = plan.Tag.ValueStringPointer()
 	}
 	if recordType == "MX" {
-		dnsRecordCreate.Priority = plan.Priority.ValueInt64()
+		dnsRecordCreateParams.Priority = plan.Priority.ValueInt64Pointer()
 	}
-	dnsRecord, err := r.data.client.Operations.CreateDNSRecord(
-		operations.
-			NewCreateDNSRecordParams().
-			WithZoneID(plan.ZoneID.ValueString()).
-			WithDNSRecord(&dnsRecordCreate),
-		r.data.authInfo,
-	)
+	dnsRecord, _, err := r.data.client.DNSZonesAPI.
+		CreateDnsRecord(ctx, plan.ZoneID.ValueString()).
+		DnsRecordCreateParams(dnsRecordCreateParams).
+		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error creating Netlify DNS record",
@@ -191,8 +187,8 @@ func (r *dnsRecordResource) Create(ctx context.Context, req resource.CreateReque
 		)
 		return
 	}
-	plan.ID = types.StringValue(dnsRecord.Payload.ID)
-	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
+	plan.ID = types.StringValue(dnsRecord.Id)
+	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC3339))
 	if recordType != "CAA" {
 		plan.Flag = types.Int64Null()
 		plan.Tag = types.StringNull()
@@ -214,12 +210,9 @@ func (r *dnsRecordResource) Read(ctx context.Context, req resource.ReadRequest, 
 		return
 	}
 
-	dnsRecord, err := r.data.client.Operations.GetIndividualDNSRecord(
-		operations.NewGetIndividualDNSRecordParams().
-			WithZoneID(state.ZoneID.ValueString()).
-			WithDNSRecordID(state.ID.ValueString()),
-		r.data.authInfo,
-	)
+	dnsRecord, _, err := r.data.client.DNSZonesAPI.
+		GetIndividualDnsRecord(ctx, state.ID.ValueString(), state.ZoneID.ValueString()).
+		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading Netlify DNS record",
@@ -232,20 +225,20 @@ func (r *dnsRecordResource) Read(ctx context.Context, req resource.ReadRequest, 
 		)
 		return
 	}
-	recordType := dnsRecord.Payload.Type
+	recordType := dnsRecord.Type
 	state.Type = types.StringValue(recordType)
-	state.Hostname = types.StringValue(dnsRecord.Payload.Hostname)
-	state.Value = types.StringValue(dnsRecord.Payload.Value)
-	state.TTL = types.Int64Value(dnsRecord.Payload.TTL)
+	state.Hostname = types.StringValue(dnsRecord.Hostname)
+	state.Value = types.StringValue(dnsRecord.Value)
+	state.TTL = types.Int64Value(dnsRecord.Ttl)
 	if recordType == "CAA" {
-		state.Flag = types.Int64Value(dnsRecord.Payload.Flag)
-		state.Tag = types.StringValue(dnsRecord.Payload.Tag)
+		state.Flag = types.Int64Value(dnsRecord.Flag)
+		state.Tag = types.StringValue(dnsRecord.Tag)
 	} else {
 		state.Flag = types.Int64Null()
 		state.Tag = types.StringNull()
 	}
 	if recordType == "MX" {
-		state.Priority = types.Int64Value(dnsRecord.Payload.Priority)
+		state.Priority = types.Int64Value(dnsRecord.Priority)
 	} else {
 		state.Priority = types.Int64Null()
 	}
@@ -270,12 +263,9 @@ func (r *dnsRecordResource) Delete(ctx context.Context, req resource.DeleteReque
 		return
 	}
 
-	_, err := r.data.client.Operations.DeleteDNSRecord(
-		operations.NewDeleteDNSRecordParams().
-			WithZoneID(state.ZoneID.ValueString()).
-			WithDNSRecordID(state.ID.ValueString()),
-		r.data.authInfo,
-	)
+	_, err := r.data.client.DNSZonesAPI.
+		DeleteDnsRecord(ctx, state.ID.ValueString(), state.ZoneID.ValueString()).
+		Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error deleting Netlify DNS record",
