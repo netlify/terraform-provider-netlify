@@ -18,8 +18,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netlify/terraform-provider-netlify/internal/models"
-	"github.com/netlify/terraform-provider-netlify/internal/plumbing/operations"
+	"github.com/netlify/terraform-provider-netlify/internal/netlifyapi"
 	"github.com/netlify/terraform-provider-netlify/internal/provider/netlify_validators"
 )
 
@@ -131,8 +130,6 @@ func (r *environmentVariableResource) Schema(_ context.Context, _ resource.Schem
 						},
 						"context_parameter": schema.StringAttribute{
 							Optional: true,
-							Computed: true,
-							Default:  stringdefault.StaticString(""),
 							Validators: []validator.String{
 								netlify_validators.EnvironmentVariableContextParameterValidator{
 									ContextPathExpression: path.MatchRelative().AtParent().AtName("context"),
@@ -190,7 +187,7 @@ func (r *environmentVariableResource) Create(ctx context.Context, req resource.C
 	for i, scope := range plan.Scopes {
 		scopes[i] = scope.ValueString()
 	}
-	var values []*models.EnvVarValue
+	var values []netlifyapi.EnvVarValue
 	var isSecret bool
 	if plan.SecretValue != nil && len(plan.SecretValue) > 0 {
 		values = serializeValues(plan.SecretValue)
@@ -199,22 +196,21 @@ func (r *environmentVariableResource) Create(ctx context.Context, req resource.C
 		values = serializeValues(plan.Value)
 		isSecret = false
 	}
-	createEnvVarsParams := operations.
-		NewCreateEnvVarsParams().
-		WithAccountID(plan.AccountID.ValueString()).
-		WithEnvVars([]*models.CreateEnvVarsParamsBodyItems{
+	createEnvVars := r.data.client.EnvironmentVariablesAPI.
+		CreateEnvVars(ctx, plan.AccountID.ValueString()).
+		EnvVar([]netlifyapi.EnvVar{
 			{
 				Key:      plan.Key.ValueString(),
 				Scopes:   scopes,
 				Values:   values,
-				IsSecret: isSecret,
+				IsSecret: &isSecret,
 			},
 		})
 	if plan.SiteID.ValueString() != "" {
-		createEnvVarsParams.SetSiteID(plan.SiteID.ValueStringPointer())
+		createEnvVars = createEnvVars.SiteId(plan.SiteID.ValueString())
 	}
-	envVar, err := r.data.client.Operations.CreateEnvVars(createEnvVarsParams, r.data.authInfo)
-	if err != nil || len(envVar.Payload) == 0 {
+	envVars, _, err := createEnvVars.Execute()
+	if err != nil || len(envVars) == 0 {
 		resp.Diagnostics.AddError(
 			"Error creating Netlify environment variable",
 			fmt.Sprintf(
@@ -228,7 +224,7 @@ func (r *environmentVariableResource) Create(ctx context.Context, req resource.C
 		)
 		return
 	}
-	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
+	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC3339))
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 	if resp.Diagnostics.HasError() {
@@ -243,35 +239,31 @@ func (r *environmentVariableResource) Read(ctx context.Context, req resource.Rea
 		return
 	}
 
-	getEnvVarParams := operations.
-		NewGetEnvVarParams().
-		WithAccountID(state.AccountID.ValueString()).
-		WithKey(state.Key.ValueString())
+	getEnvVar := r.data.client.EnvironmentVariablesAPI.GetEnvVar(ctx, state.AccountID.ValueString(), state.Key.ValueString())
 	if state.SiteID.ValueString() != "" {
-		getEnvVarParams.SetSiteID(state.SiteID.ValueStringPointer())
+		getEnvVar = getEnvVar.SiteId(state.SiteID.ValueString())
 	}
-	envVar, err := r.data.client.Operations.GetEnvVar(getEnvVarParams, r.data.authInfo)
+	envVar, _, err := getEnvVar.Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading Netlify environment variable",
 			fmt.Sprintf(
-				"Could not read Netlify environment variable order ID %q (account ID: %q, site ID: %q, secret: %v): %q",
+				"Could not read Netlify environment variable order ID %q (account ID: %q, site ID: %q): %q",
 				state.Key.ValueString(),
 				state.AccountID.ValueString(),
 				state.SiteID.ValueString(),
-				envVar.Payload.IsSecret,
 				err.Error(),
 			),
 		)
 		return
 	}
 
-	state.Scopes = make([]types.String, len(envVar.Payload.Scopes))
-	for i, scope := range envVar.Payload.Scopes {
+	state.Scopes = make([]types.String, len(envVar.Scopes))
+	for i, scope := range envVar.Scopes {
 		state.Scopes[i] = types.StringValue(strings.ReplaceAll(strings.ReplaceAll(scope, " ", "-"), "_", "-"))
 	}
-	if !envVar.Payload.IsSecret {
-		state.Value = parseValues(envVar.Payload.Values)
+	if !*envVar.IsSecret {
+		state.Value = parseValues(envVar.Values)
 	}
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
@@ -291,7 +283,7 @@ func (r *environmentVariableResource) Update(ctx context.Context, req resource.U
 	for i, scope := range plan.Scopes {
 		scopes[i] = scope.ValueString()
 	}
-	var values []*models.EnvVarValue
+	var values []netlifyapi.EnvVarValue
 	var isSecret bool
 	if plan.SecretValue != nil && len(plan.SecretValue) > 0 {
 		values = serializeValues(plan.SecretValue)
@@ -300,20 +292,17 @@ func (r *environmentVariableResource) Update(ctx context.Context, req resource.U
 		values = serializeValues(plan.Value)
 		isSecret = false
 	}
-	updateEnvVarParams := operations.
-		NewUpdateEnvVarParams().
-		WithAccountID(plan.AccountID.ValueString()).
-		WithKey(plan.Key.ValueString()).
-		WithEnvVar(&models.UpdateEnvVarParamsBody{
-			Key:      plan.Key.ValueString(),
-			Scopes:   scopes,
-			Values:   values,
-			IsSecret: isSecret,
-		})
+	updateEnvVar := r.data.client.EnvironmentVariablesAPI.
+		UpdateEnvVar(ctx, plan.AccountID.ValueString(), plan.Key.ValueString()).
+		Key(plan.Key.ValueString()).UpdateEnvVarRequest(netlifyapi.UpdateEnvVarRequest{
+		Scopes:   scopes,
+		Values:   values,
+		IsSecret: &isSecret,
+	})
 	if plan.SiteID.ValueString() != "" {
-		updateEnvVarParams.SetSiteID(plan.SiteID.ValueStringPointer())
+		updateEnvVar = updateEnvVar.SiteId(plan.SiteID.ValueString())
 	}
-	_, err := r.data.client.Operations.UpdateEnvVar(updateEnvVarParams, r.data.authInfo)
+	_, _, err := updateEnvVar.Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error updating Netlify environment variable",
@@ -328,7 +317,7 @@ func (r *environmentVariableResource) Update(ctx context.Context, req resource.U
 		)
 		return
 	}
-	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
+	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC3339))
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 	if resp.Diagnostics.HasError() {
@@ -343,14 +332,12 @@ func (r *environmentVariableResource) Delete(ctx context.Context, req resource.D
 		return
 	}
 
-	deleteEnvVarParams := operations.
-		NewDeleteEnvVarParams().
-		WithAccountID(state.AccountID.ValueString()).
-		WithKey(state.Key.ValueString())
+	deleteEnvVar := r.data.client.EnvironmentVariablesAPI.
+		DeleteEnvVar(ctx, state.AccountID.ValueString(), state.Key.ValueString())
 	if state.SiteID.ValueString() != "" {
-		deleteEnvVarParams.SetSiteID(state.SiteID.ValueStringPointer())
+		deleteEnvVar = deleteEnvVar.SiteId(state.SiteID.ValueString())
 	}
-	_, err := r.data.client.Operations.DeleteEnvVar(deleteEnvVarParams, r.data.authInfo)
+	_, err := deleteEnvVar.Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error deleting Netlify environment variable",
@@ -392,25 +379,31 @@ func (r *environmentVariableResource) ImportState(ctx context.Context, req resou
 	}
 }
 
-func serializeValues(values []environmentVariableValueModel) []*models.EnvVarValue {
-	envVarValues := make([]*models.EnvVarValue, len(values))
+func serializeValues(values []environmentVariableValueModel) []netlifyapi.EnvVarValue {
+	envVarValues := make([]netlifyapi.EnvVarValue, len(values))
 	for i, value := range values {
-		envVarValues[i] = &models.EnvVarValue{
-			Value:            value.Value.ValueString(),
-			Context:          value.Context.ValueString(),
-			ContextParameter: value.ContextParameter.ValueString(),
+		envVarValues[i] = netlifyapi.EnvVarValue{
+			Value:            value.Value.ValueStringPointer(),
+			Context:          value.Context.ValueStringPointer(),
+			ContextParameter: value.ContextParameter.ValueStringPointer(),
+		}
+		if envVarValues[i].ContextParameter != nil && *envVarValues[i].ContextParameter == "" {
+			envVarValues[i].ContextParameter = nil
 		}
 	}
 	return envVarValues
 }
 
-func parseValues(values []*models.EnvVarValue) []environmentVariableValueModel {
+func parseValues(values []netlifyapi.EnvVarValue) []environmentVariableValueModel {
 	envVarValues := make([]environmentVariableValueModel, len(values))
 	for i, value := range values {
 		envVarValues[i] = environmentVariableValueModel{
-			Value:            types.StringValue(value.Value),
-			Context:          types.StringValue(value.Context),
-			ContextParameter: types.StringValue(value.ContextParameter),
+			Value:            types.StringPointerValue(value.Value),
+			Context:          types.StringPointerValue(value.Context),
+			ContextParameter: types.StringPointerValue(value.ContextParameter),
+		}
+		if envVarValues[i].ContextParameter.ValueString() == "" {
+			envVarValues[i].ContextParameter = types.StringPointerValue(nil)
 		}
 	}
 	return envVarValues

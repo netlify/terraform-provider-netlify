@@ -14,5 +14,5 @@ The Netlify provider provides resources to interact with a Netlify account.
 
 ### Optional
 
-- `endpoint` (String) Defaults to: https://api.netlify.com/api/v1/
+- `endpoint` (String) Defaults to: https://api.netlify.com
 - `token` (String, Sensitive) Read: https://docs.netlify.com/api/get-started/

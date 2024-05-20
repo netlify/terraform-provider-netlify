@@ -2,23 +2,16 @@ package provider
 
 import (
 	"context"
-	"net/http"
-	"net/http/httputil"
 	"net/url"
 	"os"
 
-	"github.com/go-openapi/runtime"
-	openApiClient "github.com/go-openapi/runtime/client"
-	"github.com/go-openapi/strfmt"
-	"github.com/hashicorp/go-cleanhttp"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"github.com/netlify/terraform-provider-netlify/internal/plumbing"
+	"github.com/netlify/terraform-provider-netlify/internal/netlifyapi"
 )
 
 var _ provider.Provider = &NetlifyProvider{}
@@ -33,8 +26,7 @@ type NetlifyProviderModel struct {
 }
 
 type NetlifyProviderData struct {
-	client   *plumbing.Netlify
-	authInfo runtime.ClientAuthInfoWriter
+	client *netlifyapi.APIClient
 }
 
 func (p *NetlifyProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -46,7 +38,7 @@ func (p *NetlifyProvider) Schema(ctx context.Context, req provider.SchemaRequest
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"endpoint": schema.StringAttribute{
-				MarkdownDescription: "Defaults to: https://api.netlify.com/api/v1/",
+				MarkdownDescription: "Defaults to: https://api.netlify.com",
 				Optional:            true,
 			},
 			"token": schema.StringAttribute{
@@ -90,7 +82,7 @@ func (p *NetlifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 	endpoint, noEndpointEnvVar := os.LookupEnv("NETLIFY_API_ENDPOINT")
 	if !noEndpointEnvVar {
-		endpoint = "https://api.netlify.com/api/v1/"
+		endpoint = "https://api.netlify.com"
 	}
 	if !config.Endpoint.IsNull() {
 		endpoint = config.Endpoint.ValueString()
@@ -130,25 +122,12 @@ func (p *NetlifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 	var data NetlifyProviderData
 
-	data.client = plumbing.New(openApiClient.NewWithClient(
-		url.Host, url.Path, []string{url.Scheme},
-		&http.Client{
-			// TODO: This logging transport does not seem to work.
-			Transport: &loggingTransport{
-				Transport: cleanhttp.DefaultClient().Transport,
-			},
-		}), strfmt.Default)
-	data.authInfo = runtime.ClientAuthInfoWriterFunc(func(r runtime.ClientRequest, _ strfmt.Registry) error {
-		err := r.SetHeaderParam("User-Agent", "Terraform")
-		if err != nil {
-			return err
-		}
-		err = r.SetHeaderParam("Authorization", "Bearer "+token)
-		if err != nil {
-			return err
-		}
-		return nil
-	})
+	apiConfig := netlifyapi.NewConfiguration()
+	apiConfig.Servers[0].URL = url.String()
+	apiConfig.UserAgent = "Terraform Provider"
+	apiConfig.AddDefaultHeader("Authorization", "Bearer "+token)
+	// TODO: Add debug/trace logging to the API client, perhaps by overriding the behavior of apiConfig.Debug
+	data.client = netlifyapi.NewAPIClient(apiConfig)
 
 	resp.DataSourceData = data
 	resp.ResourceData = data
@@ -177,30 +156,4 @@ func New(version string) func() provider.Provider {
 			version: version,
 		}
 	}
-}
-
-type loggingTransport struct {
-	Transport http.RoundTripper
-}
-
-func (lt *loggingTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	ctx := req.Context()
-
-	requestDump, err := httputil.DumpRequestOut(req, true)
-	if err == nil {
-		tflog.Trace(ctx, "Netlify API Request", map[string]any{"request": string(requestDump)})
-	}
-
-	resp, err := lt.Transport.RoundTrip(req)
-	if err != nil {
-		tflog.Error(ctx, "Netlify API Request failed", map[string]any{"error": err.Error()})
-		return nil, err
-	}
-
-	responseDump, err := httputil.DumpResponse(resp, true)
-	if err == nil {
-		tflog.Trace(ctx, "Netlify API Response", map[string]any{"response": string(responseDump)})
-	}
-
-	return resp, nil
 }

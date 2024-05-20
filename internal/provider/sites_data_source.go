@@ -7,7 +7,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netlify/terraform-provider-netlify/internal/plumbing/operations"
 )
 
 var (
@@ -89,18 +88,15 @@ func (d *sitesDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		return
 	}
 
-	sites, err := d.data.client.Operations.ListSitesForAccount(
-		operations.NewListSitesForAccountParams().WithAccountSlug(config.AccountSlug.ValueString()),
-		d.data.authInfo,
-	)
+	sites, _, err := d.data.client.SitesAPI.ListSitesForAccount(ctx, config.AccountSlug.ValueString()).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError("Error reading Netlify account", fmt.Sprintf("Could not list Netlify sites in account %q: %q", config.AccountSlug.ValueString(), err.Error()))
 		return
 	}
-	config.Sites = make([]NetlifySiteModel, len(sites.Payload))
-	for i, site := range sites.Payload {
+	config.Sites = make([]NetlifySiteModel, len(sites))
+	for i, site := range sites {
 		config.Sites[i] = NetlifySiteModel{
-			ID:            types.StringValue(site.ID),
+			ID:            types.StringValue(site.Id),
 			AccountSlug:   types.StringValue(site.AccountSlug),
 			Name:          types.StringValue(site.Name),
 			CustomDomain:  types.StringValue(site.CustomDomain),

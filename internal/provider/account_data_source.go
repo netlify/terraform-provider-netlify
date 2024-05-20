@@ -10,8 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/netlify/terraform-provider-netlify/internal/models"
-	"github.com/netlify/terraform-provider-netlify/internal/plumbing/operations"
+	"github.com/netlify/terraform-provider-netlify/internal/netlifyapi"
 )
 
 var (
@@ -82,31 +81,26 @@ func (d *accountDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		return
 	}
 
-	var account *models.AccountMembership
+	var account *netlifyapi.Account
 	if !config.ID.IsUnknown() && !config.ID.IsNull() {
-		accountOk, err := d.data.client.Operations.GetAccount(
-			operations.NewGetAccountParams().WithAccountID(config.ID.ValueString()),
-			d.data.authInfo,
-		)
+		var err error
+		account, _, err = d.data.client.AccountsAPI.GetAccount(ctx, config.ID.ValueString()).Execute()
 		if err != nil {
 			resp.Diagnostics.AddError("Error reading Netlify account", fmt.Sprintf("Could not read Netlify account ID %q: %q",
 				config.ID.ValueString(), err.Error()))
 			return
 		}
-		account = accountOk.Payload
 	} else {
-		accountsOk, err := d.data.client.Operations.ListAccountsForUser(
-			operations.NewListAccountsForUserParams(),
-			d.data.authInfo,
-		)
+		accounts, _, err := d.data.client.AccountsAPI.ListAccountsForUser(ctx).Execute()
 		if err != nil {
 			resp.Diagnostics.AddError("Error reading Netlify account", fmt.Sprintf("Could not list Netlify accounts: %q", err.Error()))
 			return
 		}
 		slugString := config.Slug.ValueString()
-		for _, a := range accountsOk.Payload {
+		for _, a := range accounts {
 			if a.Slug == slugString {
-				account = a
+				acc := a
+				account = &acc
 				break
 			}
 		}
@@ -116,7 +110,7 @@ func (d *accountDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		}
 	}
 
-	config.ID = types.StringValue(account.ID)
+	config.ID = types.StringValue(account.Id)
 	config.Slug = types.StringValue(account.Slug)
 	config.Name = types.StringValue(account.Name)
 

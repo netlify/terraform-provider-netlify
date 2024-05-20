@@ -12,10 +12,6 @@ import (
 //go:generate terraform fmt -recursive ./examples/
 //go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs generate -provider-name netlify
 
-//go:generate go run github.com/go-swagger/go-swagger/cmd/swagger flatten swagger.yml -o swagger_flat.json
-//go:generate sh -c "cat swagger_flat.json | jq '[., (.paths | map_values(.[] |= del(.tags?)) | {paths: .})] | add' > swagger_go.json"
-//go:generate go run github.com/go-swagger/go-swagger/cmd/swagger generate client -A netlify -f swagger_go.json -t internal -c plumbing --default-scheme=https --with-flatten=full
-
 var (
 	// these will be set by the goreleaser configuration
 	// to appropriate values for the compiled binary.
