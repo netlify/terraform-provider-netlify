@@ -24,4 +24,5 @@ description: |-
 
 - `custom_domain` (String)
 - `domain_aliases` (List of String)
+- `git_deploy_key` (String)
 - `id` (String) The ID of this resource.

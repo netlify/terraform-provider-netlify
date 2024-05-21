@@ -37,7 +37,7 @@ type dnsZoneResourceModel struct {
 	AccountID   types.String        `tfsdk:"account_id"`
 	AccountSlug types.String        `tfsdk:"account_slug"`
 	DnsServers  types.List          `tfsdk:"dns_servers"`
-	Domain      *NetlifyDomainModel `tfsdk:"domain"`
+	Domain      *netlifyDomainModel `tfsdk:"domain"`
 }
 
 func (r *dnsZoneResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -169,7 +169,7 @@ func (r *dnsZoneResource) Create(ctx context.Context, req resource.CreateRequest
 	if dnsZone.Domain == nil {
 		plan.Domain = nil
 	} else {
-		plan.Domain = &NetlifyDomainModel{
+		plan.Domain = &netlifyDomainModel{
 			ID:           types.StringValue(dnsZone.Domain.Id),
 			Name:         types.StringValue(dnsZone.Domain.Name),
 			RegisteredAt: types.StringValue(dnsZone.Domain.RegisteredAt.Format(time.RFC3339)),
@@ -218,7 +218,7 @@ func (r *dnsZoneResource) Read(ctx context.Context, req resource.ReadRequest, re
 	if dnsZone.Domain == nil {
 		state.Domain = nil
 	} else {
-		state.Domain = &NetlifyDomainModel{
+		state.Domain = &netlifyDomainModel{
 			ID:           types.StringValue(dnsZone.Domain.Id),
 			Name:         types.StringValue(dnsZone.Domain.Name),
 			RegisteredAt: types.StringValue(dnsZone.Domain.RegisteredAt.Format(time.RFC3339)),

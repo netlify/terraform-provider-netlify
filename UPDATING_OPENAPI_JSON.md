@@ -11,3 +11,6 @@ This project uses a modified `openapi.json`. Please maintain these instructions 
 1. Remove the `domain` property from the `required` array of the `DnsZone` object.
 1. Remove the `values`, `scopes` and `is_secret` parameters from the `updateEnvVar` operation.
 1. Add a request body schema to the `updateEnvVar` operation, by copying it from an earlier version of the `openapi.json`.
+1. Add a `package_path` property of type string to the `Repo` object.
+1. Duplicate the `Site` object into `PartialSite` and remove the `required` properties.
+1. Change `updateSite` operation to use the `PartialSite` object as the request body schema (NOTE: not the response body schema).
