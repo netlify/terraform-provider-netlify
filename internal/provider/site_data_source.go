@@ -26,6 +26,15 @@ type siteDataSource struct {
 	data NetlifyProviderData
 }
 
+type siteModel struct {
+	ID            types.String   `tfsdk:"id"`
+	AccountSlug   types.String   `tfsdk:"account_slug"`
+	Name          types.String   `tfsdk:"name"`
+	CustomDomain  types.String   `tfsdk:"custom_domain"`
+	DomainAliases []types.String `tfsdk:"domain_aliases"`
+	GitDeployKey  types.String   `tfsdk:"git_deploy_key"`
+}
+
 func (d *siteDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
@@ -75,12 +84,15 @@ func (d *siteDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, r
 				Computed:    true,
 				ElementType: types.StringType,
 			},
+			"git_deploy_key": schema.StringAttribute{
+				Computed: true,
+			},
 		},
 	}
 }
 
 func (d *siteDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config NetlifySiteModel
+	var config siteModel
 	resp.Diagnostics.Append(req.Config.Get(ctx, &config)...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -118,6 +130,19 @@ func (d *siteDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 		}
 	}
 
+	var siteDeployKey *netlifyapi.DeployKey
+	if site.BuildSettings.DeployKeyId != nil {
+		var err error
+		siteDeployKey, _, err = d.data.client.DeployKeysAPI.GetDeployKey(ctx, *site.BuildSettings.DeployKeyId).Execute()
+		if siteDeployKey == nil || err != nil {
+			resp.Diagnostics.AddError(
+				"Error reading site deploy key",
+				fmt.Sprintf("Could not read site deploy key for site %q: %q", site.Id, err.Error()),
+			)
+			return
+		}
+	}
+
 	config.ID = types.StringValue(site.Id)
 	config.AccountSlug = types.StringValue(site.AccountSlug)
 	config.Name = types.StringValue(site.Name)
@@ -125,6 +150,11 @@ func (d *siteDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 	config.DomainAliases = make([]types.String, len(site.DomainAliases))
 	for i, alias := range site.DomainAliases {
 		config.DomainAliases[i] = types.StringValue(alias)
+	}
+	if siteDeployKey != nil {
+		config.GitDeployKey = types.StringValue(siteDeployKey.PublicKey)
+	} else {
+		config.GitDeployKey = types.StringNull()
 	}
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &config)...)

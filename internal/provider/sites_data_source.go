@@ -23,8 +23,16 @@ type sitesDataSource struct {
 }
 
 type sitesDataSourceModel struct {
-	AccountSlug types.String       `tfsdk:"account_slug"`
-	Sites       []NetlifySiteModel `tfsdk:"sites"`
+	AccountSlug types.String     `tfsdk:"account_slug"`
+	Sites       []sitesSiteModel `tfsdk:"sites"`
+}
+
+type sitesSiteModel struct {
+	ID            types.String   `tfsdk:"id"`
+	AccountSlug   types.String   `tfsdk:"account_slug"`
+	Name          types.String   `tfsdk:"name"`
+	CustomDomain  types.String   `tfsdk:"custom_domain"`
+	DomainAliases []types.String `tfsdk:"domain_aliases"`
 }
 
 func (d *sitesDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
@@ -93,9 +101,9 @@ func (d *sitesDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		resp.Diagnostics.AddError("Error reading Netlify account", fmt.Sprintf("Could not list Netlify sites in account %q: %q", config.AccountSlug.ValueString(), err.Error()))
 		return
 	}
-	config.Sites = make([]NetlifySiteModel, len(sites))
+	config.Sites = make([]sitesSiteModel, len(sites))
 	for i, site := range sites {
-		config.Sites[i] = NetlifySiteModel{
+		config.Sites[i] = sitesSiteModel{
 			ID:            types.StringValue(site.Id),
 			AccountSlug:   types.StringValue(site.AccountSlug),
 			Name:          types.StringValue(site.Name),

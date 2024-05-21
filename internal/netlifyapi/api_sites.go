@@ -1227,12 +1227,12 @@ type ApiUpdateSiteRequest struct {
 	ctx context.Context
 	ApiService *SitesAPIService
 	siteId string
-	site *Site
+	partialSite *PartialSite
 }
 
 // 
-func (r ApiUpdateSiteRequest) Site(site Site) ApiUpdateSiteRequest {
-	r.site = &site
+func (r ApiUpdateSiteRequest) PartialSite(partialSite PartialSite) ApiUpdateSiteRequest {
+	r.partialSite = &partialSite
 	return r
 }
 
@@ -1278,8 +1278,8 @@ func (a *SitesAPIService) UpdateSiteExecute(r ApiUpdateSiteRequest) (*Site, *htt
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.site == nil {
-		return localVarReturnValue, nil, reportError("site is required and must be specified")
+	if r.partialSite == nil {
+		return localVarReturnValue, nil, reportError("partialSite is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -1300,7 +1300,7 @@ func (a *SitesAPIService) UpdateSiteExecute(r ApiUpdateSiteRequest) (*Site, *htt
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.site
+	localVarPostBody = r.partialSite
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

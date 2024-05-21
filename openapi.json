@@ -5557,7 +5557,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Site"
+                "$ref": "#/components/schemas/PartialSite"
               }
             }
           }
@@ -12525,6 +12525,9 @@
           "installation_id": {
             "type": "integer"
           },
+          "package_path": {
+            "type": "string"
+          },
           "private_logs": {
             "type": "boolean"
           },
@@ -13077,6 +13080,141 @@
           "deploy_retention_in_days",
           "labels"
         ],
+        "description": "Site model definition"
+      },
+      "PartialSite": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "plan": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "default_domain": {
+            "type": "string"
+          },
+          "custom_domain": {
+            "type": "string"
+          },
+          "branch_deploy_custom_domain": {
+            "type": "string"
+          },
+          "deploy_preview_custom_domain": {
+            "type": "string"
+          },
+          "domain_aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "password": {
+            "type": "string"
+          },
+          "password_context": {
+            "type": "string"
+          },
+          "password_hash": {
+            "type": "string"
+          },
+          "sso_login": {
+            "type": "boolean"
+          },
+          "sso_login_context": {
+            "type": "string"
+          },
+          "notification_email": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "admin_url": {
+            "type": "string"
+          },
+          "deploy_url": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "screenshot_url": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ssl_url": {
+            "type": "string"
+          },
+          "force_ssl": {
+            "type": "boolean"
+          },
+          "build_settings": {
+            "$ref": "#/components/schemas/Repo"
+          },
+          "processing_settings": {
+            "type": "object",
+            "properties": {
+              "html": {
+                "type": "object",
+                "properties": {
+                  "pretty_urls": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "ignore_html_forms": {
+                "type": "boolean"
+              }
+            }
+          },
+          "deploy_hook": {
+            "type": "string"
+          },
+          "managed_dns": {
+            "type": "boolean"
+          },
+          "account_id": {
+            "type": "string"
+          },
+          "account_slug": {
+            "type": "string"
+          },
+          "account_name": {
+            "type": "string"
+          },
+          "capabilities": {
+            "type": "object"
+          },
+          "id_domain": {
+            "type": "string"
+          },
+          "build_image": {
+            "type": "string"
+          },
+          "build_timelimit": {
+            "type": "number"
+          },
+          "deploy_retention_in_days": {
+            "type": "number"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SiteLabel"
+            }
+          }
+        },
         "description": "Site model definition"
       },
       "SitesSummary": {

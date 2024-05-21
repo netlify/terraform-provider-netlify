@@ -4088,7 +4088,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Site'
+              $ref: '#/components/schemas/PartialSite'
         description: ""
         required: true
       responses:
@@ -9667,15 +9667,10 @@ components:
     Repo:
       description: Repo model definition
       example:
-        repo_url: repo_url
         repo_type: repo_type
-        stop_builds: true
-        skip_automatic_builds: true
-        deploy_key_id: deploy_key_id
         created_at: 2000-01-23T04:56:07.000+00:00
         installation_id: 0
         dir: dir
-        env: "{}"
         repo_branch: repo_branch
         base_rel_dir: true
         private_logs: true
@@ -9683,13 +9678,19 @@ components:
         - allowed_branches
         - allowed_branches
         functions_dir: functions_dir
-        repo_path: repo_path
-        untrusted_flow: untrusted_flow
         skip_prs: true
         updated_at: 2000-01-23T04:56:07.000+00:00
         provider: provider
         public_repo: true
         repo_owner_type: repo_owner_type
+        repo_url: repo_url
+        stop_builds: true
+        package_path: package_path
+        skip_automatic_builds: true
+        deploy_key_id: deploy_key_id
+        env: "{}"
+        repo_path: repo_path
+        untrusted_flow: untrusted_flow
         cmd: cmd
         base: base
         configuration_file_path: configuration_file_path
@@ -9719,6 +9720,8 @@ components:
           type: string
         installation_id:
           type: integer
+        package_path:
+          type: string
         private_logs:
           type: boolean
         provider:
@@ -10063,15 +10066,10 @@ components:
         capabilities: "{}"
         admin_url: admin_url
         build_settings:
-          repo_url: repo_url
           repo_type: repo_type
-          stop_builds: true
-          skip_automatic_builds: true
-          deploy_key_id: deploy_key_id
           created_at: 2000-01-23T04:56:07.000+00:00
           installation_id: 0
           dir: dir
-          env: "{}"
           repo_branch: repo_branch
           base_rel_dir: true
           private_logs: true
@@ -10079,13 +10077,19 @@ components:
           - allowed_branches
           - allowed_branches
           functions_dir: functions_dir
-          repo_path: repo_path
-          untrusted_flow: untrusted_flow
           skip_prs: true
           updated_at: 2000-01-23T04:56:07.000+00:00
           provider: provider
           public_repo: true
           repo_owner_type: repo_owner_type
+          repo_url: repo_url
+          stop_builds: true
+          package_path: package_path
+          skip_automatic_builds: true
+          deploy_key_id: deploy_key_id
+          env: "{}"
+          repo_path: repo_path
+          untrusted_flow: untrusted_flow
           cmd: cmd
           base: base
           configuration_file_path: configuration_file_path
@@ -10230,6 +10234,166 @@ components:
       - state
       - updated_at
       - url
+    PartialSite:
+      description: Site model definition
+      example:
+        sso_login: true
+        id_domain: id_domain
+        deploy_url: deploy_url
+        deploy_hook: deploy_hook
+        created_at: 2000-01-23T04:56:07.000+00:00
+        sso_login_context: sso_login_context
+        domain_aliases:
+        - domain_aliases
+        - domain_aliases
+        password: password
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        password_hash: password_hash
+        account_name: account_name
+        deploy_retention_in_days: 6.027456183070403
+        id: id
+        state: state
+        plan: plan
+        default_domain: default_domain
+        custom_domain: custom_domain
+        deploy_preview_custom_domain: deploy_preview_custom_domain
+        managed_dns: true
+        force_ssl: true
+        notification_email: notification_email
+        capabilities: "{}"
+        admin_url: admin_url
+        build_settings:
+          repo_type: repo_type
+          created_at: 2000-01-23T04:56:07.000+00:00
+          installation_id: 0
+          dir: dir
+          repo_branch: repo_branch
+          base_rel_dir: true
+          private_logs: true
+          allowed_branches:
+          - allowed_branches
+          - allowed_branches
+          functions_dir: functions_dir
+          skip_prs: true
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          provider: provider
+          public_repo: true
+          repo_owner_type: repo_owner_type
+          repo_url: repo_url
+          stop_builds: true
+          package_path: package_path
+          skip_automatic_builds: true
+          deploy_key_id: deploy_key_id
+          env: "{}"
+          repo_path: repo_path
+          untrusted_flow: untrusted_flow
+          cmd: cmd
+          base: base
+          configuration_file_path: configuration_file_path
+        password_context: password_context
+        url: url
+        labels:
+        - account_id: account_id
+          color: color
+          name: name
+          description: description
+          id: id
+        - account_id: account_id
+          color: color
+          name: name
+          description: description
+          id: id
+        account_slug: account_slug
+        account_id: account_id
+        ssl_url: ssl_url
+        name: name
+        processing_settings:
+          html:
+            pretty_urls: true
+          ignore_html_forms: true
+        build_image: build_image
+        branch_deploy_custom_domain: branch_deploy_custom_domain
+        screenshot_url: screenshot_url
+        build_timelimit: 0.8008281904610115
+      properties:
+        id:
+          type: string
+        plan:
+          type: string
+        name:
+          type: string
+        default_domain:
+          type: string
+        custom_domain:
+          type: string
+        branch_deploy_custom_domain:
+          type: string
+        deploy_preview_custom_domain:
+          type: string
+        domain_aliases:
+          items:
+            type: string
+          type: array
+        password:
+          type: string
+        password_context:
+          type: string
+        password_hash:
+          type: string
+        sso_login:
+          type: boolean
+        sso_login_context:
+          type: string
+        notification_email:
+          type: string
+        url:
+          type: string
+        admin_url:
+          type: string
+        deploy_url:
+          type: string
+        state:
+          type: string
+        screenshot_url:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        ssl_url:
+          type: string
+        force_ssl:
+          type: boolean
+        build_settings:
+          $ref: '#/components/schemas/Repo'
+        processing_settings:
+          $ref: '#/components/schemas/Site_processing_settings'
+        deploy_hook:
+          type: string
+        managed_dns:
+          type: boolean
+        account_id:
+          type: string
+        account_slug:
+          type: string
+        account_name:
+          type: string
+        capabilities:
+          type: object
+        id_domain:
+          type: string
+        build_image:
+          type: string
+        build_timelimit:
+          type: number
+        deploy_retention_in_days:
+          type: number
+        labels:
+          items:
+            $ref: '#/components/schemas/SiteLabel'
+          type: array
     SitesSummary:
       description: SitesSummary model definition
       properties:

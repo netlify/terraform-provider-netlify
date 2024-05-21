@@ -164,6 +164,7 @@ model_organization_account.go
 model_outgoing_hook.go
 model_outgoing_hook_type.go
 model_outgoing_hook_type_fields_inner.go
+model_partial_site.go
 model_payment_method.go
 model_payment_method_data.go
 model_plugin.go

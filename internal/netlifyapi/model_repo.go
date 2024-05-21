@@ -31,6 +31,7 @@ type Repo struct {
 	Env map[string]interface{} `json:"env,omitempty"`
 	FunctionsDir *string `json:"functions_dir,omitempty"`
 	InstallationId *int64 `json:"installation_id,omitempty"`
+	PackagePath *string `json:"package_path,omitempty"`
 	PrivateLogs *bool `json:"private_logs,omitempty"`
 	Provider *string `json:"provider,omitempty"`
 	PublicRepo *bool `json:"public_repo,omitempty"`
@@ -417,6 +418,38 @@ func (o *Repo) HasInstallationId() bool {
 // SetInstallationId gets a reference to the given int64 and assigns it to the InstallationId field.
 func (o *Repo) SetInstallationId(v int64) {
 	o.InstallationId = &v
+}
+
+// GetPackagePath returns the PackagePath field value if set, zero value otherwise.
+func (o *Repo) GetPackagePath() string {
+	if o == nil || IsNil(o.PackagePath) {
+		var ret string
+		return ret
+	}
+	return *o.PackagePath
+}
+
+// GetPackagePathOk returns a tuple with the PackagePath field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Repo) GetPackagePathOk() (*string, bool) {
+	if o == nil || IsNil(o.PackagePath) {
+		return nil, false
+	}
+	return o.PackagePath, true
+}
+
+// HasPackagePath returns a boolean if a field has been set.
+func (o *Repo) HasPackagePath() bool {
+	if o != nil && !IsNil(o.PackagePath) {
+		return true
+	}
+
+	return false
+}
+
+// SetPackagePath gets a reference to the given string and assigns it to the PackagePath field.
+func (o *Repo) SetPackagePath(v string) {
+	o.PackagePath = &v
 }
 
 // GetPrivateLogs returns the PrivateLogs field value if set, zero value otherwise.
@@ -878,6 +911,9 @@ func (o Repo) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.InstallationId) {
 		toSerialize["installation_id"] = o.InstallationId
 	}
+	if !IsNil(o.PackagePath) {
+		toSerialize["package_path"] = o.PackagePath
+	}
 	if !IsNil(o.PrivateLogs) {
 		toSerialize["private_logs"] = o.PrivateLogs
 	}
@@ -950,6 +986,7 @@ func (o *Repo) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "env")
 		delete(additionalProperties, "functions_dir")
 		delete(additionalProperties, "installation_id")
+		delete(additionalProperties, "package_path")
 		delete(additionalProperties, "private_logs")
 		delete(additionalProperties, "provider")
 		delete(additionalProperties, "public_repo")

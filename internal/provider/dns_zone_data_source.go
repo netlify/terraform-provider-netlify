@@ -34,7 +34,7 @@ type dnsZoneDataSourceModel struct {
 	AccountID   types.String        `tfsdk:"account_id"`
 	AccountSlug types.String        `tfsdk:"account_slug"`
 	DnsServers  types.List          `tfsdk:"dns_servers"`
-	Domain      *NetlifyDomainModel `tfsdk:"domain"`
+	Domain      *netlifyDomainModel `tfsdk:"domain"`
 	Records     []dnsRecordModel    `tfsdk:"records"`
 }
 
@@ -214,7 +214,7 @@ func (d *dnsZoneDataSource) Read(ctx context.Context, req datasource.ReadRequest
 	if zone.Domain == nil {
 		config.Domain = nil
 	} else {
-		config.Domain = &NetlifyDomainModel{
+		config.Domain = &netlifyDomainModel{
 			ID:           types.StringValue(zone.Domain.Id),
 			Name:         types.StringValue(zone.Domain.Name),
 			RegisteredAt: types.StringValue(zone.Domain.RegisteredAt.Format(time.RFC3339)),
