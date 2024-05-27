@@ -11,7 +11,7 @@ require (
 	github.com/go-swagger/go-swagger v0.30.5
 	github.com/hashicorp/terraform-plugin-docs v0.19.2
 	github.com/hashicorp/terraform-plugin-framework v1.8.0
-	golang.org/x/oauth2 v0.17.0
+	golang.org/x/oauth2 v0.20.0
 )
 
 require google.golang.org/appengine v1.6.8 // indirect
