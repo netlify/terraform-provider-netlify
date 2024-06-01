@@ -21,7 +21,7 @@ var _ MappedNullable = &LogDrain{}
 // LogDrain Log Drain model definition
 type LogDrain struct {
 	// The ID of the log drain
-	Id int64 `json:"id"`
+	Id string `json:"id"`
 	// The site ID
 	SiteId string `json:"site_id"`
 	// An array of the selected log types
@@ -42,7 +42,7 @@ type _LogDrain LogDrain
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewLogDrain(id int64, siteId string, logTypes string, format string, destination string, serviceConfig LogDrainServiceConfig) *LogDrain {
+func NewLogDrain(id string, siteId string, logTypes string, format string, destination string, serviceConfig LogDrainServiceConfig) *LogDrain {
 	this := LogDrain{}
 	this.Id = id
 	this.SiteId = siteId
@@ -62,9 +62,9 @@ func NewLogDrainWithDefaults() *LogDrain {
 }
 
 // GetId returns the Id field value
-func (o *LogDrain) GetId() int64 {
+func (o *LogDrain) GetId() string {
 	if o == nil {
-		var ret int64
+		var ret string
 		return ret
 	}
 
@@ -73,7 +73,7 @@ func (o *LogDrain) GetId() int64 {
 
 // GetIdOk returns a tuple with the Id field value
 // and a boolean to check if the value has been set.
-func (o *LogDrain) GetIdOk() (*int64, bool) {
+func (o *LogDrain) GetIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -81,7 +81,7 @@ func (o *LogDrain) GetIdOk() (*int64, bool) {
 }
 
 // SetId sets field value
-func (o *LogDrain) SetId(v int64) {
+func (o *LogDrain) SetId(v string) {
 	o.Id = v
 }
 

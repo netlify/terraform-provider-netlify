@@ -80,6 +80,8 @@ type APIClient struct {
 
 	HooksAPI *HooksAPIService
 
+	LogDrainsAPI *LogDrainsAPIService
+
 	MembersAPI *MembersAPIService
 
 	MetadataAPI *MetadataAPIService
@@ -142,6 +144,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.FormsAPI = (*FormsAPIService)(&c.common)
 	c.FunctionsAPI = (*FunctionsAPIService)(&c.common)
 	c.HooksAPI = (*HooksAPIService)(&c.common)
+	c.LogDrainsAPI = (*LogDrainsAPIService)(&c.common)
 	c.MembersAPI = (*MembersAPIService)(&c.common)
 	c.MetadataAPI = (*MetadataAPIService)(&c.common)
 	c.OAuthTicketsAPI = (*OAuthTicketsAPIService)(&c.common)
