@@ -12,7 +12,6 @@ package netlifyapi
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // checks if the LogDrainServiceConfig type satisfies the MappedNullable interface at compile time
@@ -20,8 +19,14 @@ var _ MappedNullable = &LogDrainServiceConfig{}
 
 // LogDrainServiceConfig The configuration for sending log drains to the destination service
 type LogDrainServiceConfig struct {
-	// The URL for the log drain
-	Url string `json:"url"`
+	Url *string `json:"url,omitempty"`
+	Tags map[string]string `json:"tags,omitempty"`
+	IntegrationName *string `json:"integration_name,omitempty"`
+	AuthorizationHeader *string `json:"authorization_header,omitempty"`
+	BucketName *string `json:"bucket_name,omitempty"`
+	BucketRegion *string `json:"bucket_region,omitempty"`
+	Path *string `json:"path,omitempty"`
+	VerificationFilename *string `json:"verification_filename,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -31,9 +36,8 @@ type _LogDrainServiceConfig LogDrainServiceConfig
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewLogDrainServiceConfig(url string) *LogDrainServiceConfig {
+func NewLogDrainServiceConfig() *LogDrainServiceConfig {
 	this := LogDrainServiceConfig{}
-	this.Url = url
 	return &this
 }
 
@@ -45,28 +49,260 @@ func NewLogDrainServiceConfigWithDefaults() *LogDrainServiceConfig {
 	return &this
 }
 
-// GetUrl returns the Url field value
+// GetUrl returns the Url field value if set, zero value otherwise.
 func (o *LogDrainServiceConfig) GetUrl() string {
-	if o == nil {
+	if o == nil || IsNil(o.Url) {
 		var ret string
 		return ret
 	}
-
-	return o.Url
+	return *o.Url
 }
 
-// GetUrlOk returns a tuple with the Url field value
+// GetUrlOk returns a tuple with the Url field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LogDrainServiceConfig) GetUrlOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Url) {
 		return nil, false
 	}
-	return &o.Url, true
+	return o.Url, true
 }
 
-// SetUrl sets field value
+// HasUrl returns a boolean if a field has been set.
+func (o *LogDrainServiceConfig) HasUrl() bool {
+	if o != nil && !IsNil(o.Url) {
+		return true
+	}
+
+	return false
+}
+
+// SetUrl gets a reference to the given string and assigns it to the Url field.
 func (o *LogDrainServiceConfig) SetUrl(v string) {
-	o.Url = v
+	o.Url = &v
+}
+
+// GetTags returns the Tags field value if set, zero value otherwise.
+func (o *LogDrainServiceConfig) GetTags() map[string]string {
+	if o == nil || IsNil(o.Tags) {
+		var ret map[string]string
+		return ret
+	}
+	return o.Tags
+}
+
+// GetTagsOk returns a tuple with the Tags field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LogDrainServiceConfig) GetTagsOk() (map[string]string, bool) {
+	if o == nil || IsNil(o.Tags) {
+		return map[string]string{}, false
+	}
+	return o.Tags, true
+}
+
+// HasTags returns a boolean if a field has been set.
+func (o *LogDrainServiceConfig) HasTags() bool {
+	if o != nil && !IsNil(o.Tags) {
+		return true
+	}
+
+	return false
+}
+
+// SetTags gets a reference to the given map[string]string and assigns it to the Tags field.
+func (o *LogDrainServiceConfig) SetTags(v map[string]string) {
+	o.Tags = v
+}
+
+// GetIntegrationName returns the IntegrationName field value if set, zero value otherwise.
+func (o *LogDrainServiceConfig) GetIntegrationName() string {
+	if o == nil || IsNil(o.IntegrationName) {
+		var ret string
+		return ret
+	}
+	return *o.IntegrationName
+}
+
+// GetIntegrationNameOk returns a tuple with the IntegrationName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LogDrainServiceConfig) GetIntegrationNameOk() (*string, bool) {
+	if o == nil || IsNil(o.IntegrationName) {
+		return nil, false
+	}
+	return o.IntegrationName, true
+}
+
+// HasIntegrationName returns a boolean if a field has been set.
+func (o *LogDrainServiceConfig) HasIntegrationName() bool {
+	if o != nil && !IsNil(o.IntegrationName) {
+		return true
+	}
+
+	return false
+}
+
+// SetIntegrationName gets a reference to the given string and assigns it to the IntegrationName field.
+func (o *LogDrainServiceConfig) SetIntegrationName(v string) {
+	o.IntegrationName = &v
+}
+
+// GetAuthorizationHeader returns the AuthorizationHeader field value if set, zero value otherwise.
+func (o *LogDrainServiceConfig) GetAuthorizationHeader() string {
+	if o == nil || IsNil(o.AuthorizationHeader) {
+		var ret string
+		return ret
+	}
+	return *o.AuthorizationHeader
+}
+
+// GetAuthorizationHeaderOk returns a tuple with the AuthorizationHeader field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LogDrainServiceConfig) GetAuthorizationHeaderOk() (*string, bool) {
+	if o == nil || IsNil(o.AuthorizationHeader) {
+		return nil, false
+	}
+	return o.AuthorizationHeader, true
+}
+
+// HasAuthorizationHeader returns a boolean if a field has been set.
+func (o *LogDrainServiceConfig) HasAuthorizationHeader() bool {
+	if o != nil && !IsNil(o.AuthorizationHeader) {
+		return true
+	}
+
+	return false
+}
+
+// SetAuthorizationHeader gets a reference to the given string and assigns it to the AuthorizationHeader field.
+func (o *LogDrainServiceConfig) SetAuthorizationHeader(v string) {
+	o.AuthorizationHeader = &v
+}
+
+// GetBucketName returns the BucketName field value if set, zero value otherwise.
+func (o *LogDrainServiceConfig) GetBucketName() string {
+	if o == nil || IsNil(o.BucketName) {
+		var ret string
+		return ret
+	}
+	return *o.BucketName
+}
+
+// GetBucketNameOk returns a tuple with the BucketName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LogDrainServiceConfig) GetBucketNameOk() (*string, bool) {
+	if o == nil || IsNil(o.BucketName) {
+		return nil, false
+	}
+	return o.BucketName, true
+}
+
+// HasBucketName returns a boolean if a field has been set.
+func (o *LogDrainServiceConfig) HasBucketName() bool {
+	if o != nil && !IsNil(o.BucketName) {
+		return true
+	}
+
+	return false
+}
+
+// SetBucketName gets a reference to the given string and assigns it to the BucketName field.
+func (o *LogDrainServiceConfig) SetBucketName(v string) {
+	o.BucketName = &v
+}
+
+// GetBucketRegion returns the BucketRegion field value if set, zero value otherwise.
+func (o *LogDrainServiceConfig) GetBucketRegion() string {
+	if o == nil || IsNil(o.BucketRegion) {
+		var ret string
+		return ret
+	}
+	return *o.BucketRegion
+}
+
+// GetBucketRegionOk returns a tuple with the BucketRegion field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LogDrainServiceConfig) GetBucketRegionOk() (*string, bool) {
+	if o == nil || IsNil(o.BucketRegion) {
+		return nil, false
+	}
+	return o.BucketRegion, true
+}
+
+// HasBucketRegion returns a boolean if a field has been set.
+func (o *LogDrainServiceConfig) HasBucketRegion() bool {
+	if o != nil && !IsNil(o.BucketRegion) {
+		return true
+	}
+
+	return false
+}
+
+// SetBucketRegion gets a reference to the given string and assigns it to the BucketRegion field.
+func (o *LogDrainServiceConfig) SetBucketRegion(v string) {
+	o.BucketRegion = &v
+}
+
+// GetPath returns the Path field value if set, zero value otherwise.
+func (o *LogDrainServiceConfig) GetPath() string {
+	if o == nil || IsNil(o.Path) {
+		var ret string
+		return ret
+	}
+	return *o.Path
+}
+
+// GetPathOk returns a tuple with the Path field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LogDrainServiceConfig) GetPathOk() (*string, bool) {
+	if o == nil || IsNil(o.Path) {
+		return nil, false
+	}
+	return o.Path, true
+}
+
+// HasPath returns a boolean if a field has been set.
+func (o *LogDrainServiceConfig) HasPath() bool {
+	if o != nil && !IsNil(o.Path) {
+		return true
+	}
+
+	return false
+}
+
+// SetPath gets a reference to the given string and assigns it to the Path field.
+func (o *LogDrainServiceConfig) SetPath(v string) {
+	o.Path = &v
+}
+
+// GetVerificationFilename returns the VerificationFilename field value if set, zero value otherwise.
+func (o *LogDrainServiceConfig) GetVerificationFilename() string {
+	if o == nil || IsNil(o.VerificationFilename) {
+		var ret string
+		return ret
+	}
+	return *o.VerificationFilename
+}
+
+// GetVerificationFilenameOk returns a tuple with the VerificationFilename field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *LogDrainServiceConfig) GetVerificationFilenameOk() (*string, bool) {
+	if o == nil || IsNil(o.VerificationFilename) {
+		return nil, false
+	}
+	return o.VerificationFilename, true
+}
+
+// HasVerificationFilename returns a boolean if a field has been set.
+func (o *LogDrainServiceConfig) HasVerificationFilename() bool {
+	if o != nil && !IsNil(o.VerificationFilename) {
+		return true
+	}
+
+	return false
+}
+
+// SetVerificationFilename gets a reference to the given string and assigns it to the VerificationFilename field.
+func (o *LogDrainServiceConfig) SetVerificationFilename(v string) {
+	o.VerificationFilename = &v
 }
 
 func (o LogDrainServiceConfig) MarshalJSON() ([]byte, error) {
@@ -79,7 +315,30 @@ func (o LogDrainServiceConfig) MarshalJSON() ([]byte, error) {
 
 func (o LogDrainServiceConfig) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["url"] = o.Url
+	if !IsNil(o.Url) {
+		toSerialize["url"] = o.Url
+	}
+	if !IsNil(o.Tags) {
+		toSerialize["tags"] = o.Tags
+	}
+	if !IsNil(o.IntegrationName) {
+		toSerialize["integration_name"] = o.IntegrationName
+	}
+	if !IsNil(o.AuthorizationHeader) {
+		toSerialize["authorization_header"] = o.AuthorizationHeader
+	}
+	if !IsNil(o.BucketName) {
+		toSerialize["bucket_name"] = o.BucketName
+	}
+	if !IsNil(o.BucketRegion) {
+		toSerialize["bucket_region"] = o.BucketRegion
+	}
+	if !IsNil(o.Path) {
+		toSerialize["path"] = o.Path
+	}
+	if !IsNil(o.VerificationFilename) {
+		toSerialize["verification_filename"] = o.VerificationFilename
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -89,27 +348,6 @@ func (o LogDrainServiceConfig) ToMap() (map[string]interface{}, error) {
 }
 
 func (o *LogDrainServiceConfig) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"url",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err;
-	}
-
-	for _, requiredProperty := range(requiredProperties) {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
 	varLogDrainServiceConfig := _LogDrainServiceConfig{}
 
 	err = json.Unmarshal(data, &varLogDrainServiceConfig)
@@ -124,6 +362,13 @@ func (o *LogDrainServiceConfig) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "url")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "integration_name")
+		delete(additionalProperties, "authorization_header")
+		delete(additionalProperties, "bucket_name")
+		delete(additionalProperties, "bucket_region")
+		delete(additionalProperties, "path")
+		delete(additionalProperties, "verification_filename")
 		o.AdditionalProperties = additionalProperties
 	}
 

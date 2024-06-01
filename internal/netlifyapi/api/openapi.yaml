@@ -4872,6 +4872,234 @@ paths:
       - WorkOSScim
       x-controller: api/v1/workos_scim
       x-action: delete_directory_sync
+  /api/v1/sites/{site_id}/log_drains:
+    get:
+      description: Returns a list of log drains for a site.
+      operationId: Log Drains-index
+      parameters:
+      - description: The site ID
+        explode: false
+        in: path
+        name: site_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogDrain'
+          description: Return log drains
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      summary: Return log drains
+      tags:
+      - Log Drains
+      x-internal: "true"
+      x-controller: api/v1/log_drains
+      x-action: index
+    post:
+      description: Creates a log drain configuration for a site.
+      operationId: Log Drains-create
+      parameters:
+      - description: The site ID
+        explode: false
+        in: path
+        name: site_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogDrain'
+        description: ""
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogDrain'
+          description: Create a log drain
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: URL is invalid
+      summary: Create a log drain
+      tags:
+      - Log Drains
+      x-internal: "true"
+      x-controller: api/v1/log_drains
+      x-action: create
+  /api/v1/sites/{site_id}/log_drains/{id}:
+    delete:
+      description: Deletes a log drain configuration for a site.
+      operationId: Log Drains-destroy
+      parameters:
+      - description: The ID of the log drain
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The site ID
+        explode: false
+        in: path
+        name: site_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Delete log drain
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      summary: Delete log drain
+      tags:
+      - Log Drains
+      x-internal: "true"
+      x-controller: api/v1/log_drains
+      x-action: destroy
+    get:
+      description: "Returns a log drain configuration for a site, that matches the\
+        \ log drain ID."
+      operationId: Log Drains-show
+      parameters:
+      - description: The ID of the log drain
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The site ID
+        explode: false
+        in: path
+        name: site_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogDrain'
+          description: Return a log drain
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      summary: Return a log drain
+      tags:
+      - Log Drains
+      x-internal: "true"
+      x-controller: api/v1/log_drains
+      x-action: show
+    put:
+      description: Updates the log drain configuration for a site.
+      operationId: Log Drains-update
+      parameters:
+      - description: The ID of the log drain
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The site ID
+        explode: false
+        in: path
+        name: site_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogDrain'
+        description: ""
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogDrain'
+          description: Update log drain
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: URL is invalid
+      summary: Update log drain
+      tags:
+      - Log Drains
+      x-internal: "true"
+      x-controller: api/v1/log_drains
+      x-action: update
+  /api/v1/sites/{site_id}/log_drains/{id}/verify:
+    post:
+      description: Verifies the token for an S3 log drain. The token is found in a
+        verification file in the connected S3 bucket.
+      operationId: Log Drains-verify
+      parameters:
+      - description: The ID of the log drain
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The site ID
+        explode: false
+        in: path
+        name: site_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Log_Drains_verify_request'
+        description: ""
+        required: true
+      responses:
+        "204":
+          description: Verify S3 log drain
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+      summary: Verify S3 log drain
+      tags:
+      - Log Drains
+      x-internal: "true"
+      x-controller: api/v1/log_drains
+      x-action: verify
 components:
   schemas:
     AccountBuild:
@@ -8779,10 +9007,27 @@ components:
           type: string
     LogDrain:
       description: Log Drain model definition
+      example:
+        log_types: log_types
+        site_id: site_id
+        format: json
+        destination: datadog
+        service_config:
+          integration_name: integration_name
+          path: path
+          bucket_region: bucket_region
+          bucket_name: bucket_name
+          verification_filename: verification_filename
+          url: url
+          authorization_header: authorization_header
+          tags:
+            key: tags
+        id: id
+        exclude_pii: true
       properties:
         id:
           description: The ID of the log drain
-          type: integer
+          type: string
         site_id:
           description: The site ID
           type: string
@@ -8814,12 +9059,34 @@ components:
       - site_id
     LogDrainServiceConfig:
       description: The configuration for sending log drains to the destination service
+      example:
+        integration_name: integration_name
+        path: path
+        bucket_region: bucket_region
+        bucket_name: bucket_name
+        verification_filename: verification_filename
+        url: url
+        authorization_header: authorization_header
+        tags:
+          key: tags
       properties:
         url:
-          description: The URL for the log drain
           type: string
-      required:
-      - url
+        tags:
+          additionalProperties:
+            type: string
+        integration_name:
+          type: string
+        authorization_header:
+          type: string
+        bucket_name:
+          type: string
+        bucket_region:
+          type: string
+        path:
+          type: string
+        verification_filename:
+          type: string
     Member:
       description: |-
         Member model definition. Similar to the User model, but includes the information
@@ -11369,6 +11636,10 @@ components:
         scim_configured:
           type: boolean
         status:
+          type: string
+    Log_Drains_verify_request:
+      properties:
+        token:
           type: string
     AccountBuild_priority:
       description: included if the build is prioritized

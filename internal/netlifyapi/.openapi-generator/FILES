@@ -15,6 +15,7 @@ api_form_submissions.go
 api_forms.go
 api_functions.go
 api_hooks.go
+api_log_drains.go
 api_members.go
 api_metadata.go
 api_o_auth_tickets.go
@@ -154,6 +155,7 @@ model_ip_target_config.go
 model_key_value_target_config.go
 model_log_drain.go
 model_log_drain_service_config.go
+model_log_drains_verify_request.go
 model_member.go
 model_member_committer_match_method.go
 model_mfa_confirmation.go

@@ -6648,6 +6648,315 @@
         "x-controller": "api/v1/workos_scim",
         "x-action": "delete_directory_sync"
       }
+    },
+    "/api/v1/sites/{site_id}/log_drains": {
+      "get": {
+        "tags": [
+          "Log Drains"
+        ],
+        "operationId": "Log Drains-index",
+        "parameters": [
+          {
+            "name": "site_id",
+            "description": "The site ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return log drains",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogDrain"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "description": "Returns a list of log drains for a site.",
+        "summary": "Return log drains",
+        "x-internal": "true",
+        "x-controller": "api/v1/log_drains",
+        "x-action": "index"
+      },
+      "post": {
+        "tags": [
+          "Log Drains"
+        ],
+        "operationId": "Log Drains-create",
+        "parameters": [
+          {
+            "name": "site_id",
+            "description": "The site ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Create a log drain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogDrain"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "URL is invalid"
+          }
+        },
+        "description": "Creates a log drain configuration for a site.",
+        "summary": "Create a log drain",
+        "x-internal": "true",
+        "x-controller": "api/v1/log_drains",
+        "x-action": "create",
+        "requestBody": { "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogDrain"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sites/{site_id}/log_drains/{id}": {
+      "get": {
+        "tags": [
+          "Log Drains"
+        ],
+        "operationId": "Log Drains-show",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The ID of the log drain",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "description": "The site ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a log drain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogDrain"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "description": "Returns a log drain configuration for a site, that matches the log drain ID.",
+        "summary": "Return a log drain",
+        "x-internal": "true",
+        "x-controller": "api/v1/log_drains",
+        "x-action": "show"
+      },
+      "put": {
+        "tags": [
+          "Log Drains"
+        ],
+        "operationId": "Log Drains-update",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The ID of the log drain",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "description": "The site ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update log drain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogDrain"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "URL is invalid"
+          }
+        },
+        "description": "Updates the log drain configuration for a site.",
+        "summary": "Update log drain",
+        "x-internal": "true",
+        "x-controller": "api/v1/log_drains",
+        "x-action": "update",
+        "requestBody": { "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogDrain"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Log Drains"
+        ],
+        "operationId": "Log Drains-destroy",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The ID of the log drain",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "description": "The site ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Delete log drain"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "description": "Deletes a log drain configuration for a site.",
+        "summary": "Delete log drain",
+        "x-internal": "true",
+        "x-controller": "api/v1/log_drains",
+        "x-action": "destroy"
+      }
+    },
+    "/api/v1/sites/{site_id}/log_drains/{id}/verify": {
+      "post": {
+        "tags": [
+          "Log Drains"
+        ],
+        "operationId": "Log Drains-verify",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The ID of the log drain",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "description": "The site ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Verify S3 log drain"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "description": "Verifies the token for an S3 log drain. The token is found in a verification file in the connected S3 bucket.",
+        "summary": "Verify S3 log drain",
+        "x-internal": "true",
+        "x-controller": "api/v1/log_drains",
+        "x-action": "verify",
+        "requestBody": { "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "tags": [
@@ -11459,7 +11768,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "description": "The ID of the log drain"
           },
           "site_id": {
@@ -11507,13 +11816,33 @@
         "type": "object",
         "properties": {
           "url": {
-            "type": "string",
-            "description": "The URL for the log drain"
+            "type": "string"
+          },
+          "tags": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "integration_name": {
+            "type": "string"
+          },
+          "authorization_header": {
+            "type": "string"
+          },
+          "bucket_name": {
+            "type": "string"
+          },
+          "bucket_region": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "verification_filename": {
+            "type": "string"
           }
         },
-        "required": [
-          "url"
-        ],
         "description": "The configuration for sending log drains to the destination service"
       },
       "Member": {
