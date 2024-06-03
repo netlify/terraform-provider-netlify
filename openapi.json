@@ -13369,6 +13369,18 @@
             "items": {
               "$ref": "#/components/schemas/SiteLabel"
             }
+          },
+          "functions_region": {
+            "type": "string"
+          },
+          "cdp_enabled_contexts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "hud_enabled": {
+            "type": "boolean"
           }
         },
         "required": [
@@ -13542,6 +13554,18 @@
             "items": {
               "$ref": "#/components/schemas/SiteLabel"
             }
+          },
+          "functions_region": {
+            "type": "string"
+          },
+          "cdp_enabled_contexts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "hud_enabled": {
+            "type": "boolean"
           }
         },
         "description": "Site model definition"

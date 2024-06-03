@@ -10311,8 +10311,12 @@ components:
         id_domain: id_domain
         deploy_url: deploy_url
         deploy_hook: deploy_hook
+        cdp_enabled_contexts:
+        - cdp_enabled_contexts
+        - cdp_enabled_contexts
         created_at: 2000-01-23T04:56:07.000+00:00
         sso_login_context: sso_login_context
+        functions_region: functions_region
         domain_aliases:
         - domain_aliases
         - domain_aliases
@@ -10331,6 +10335,7 @@ components:
         force_ssl: true
         notification_email: notification_email
         capabilities: "{}"
+        hud_enabled: true
         admin_url: admin_url
         build_settings:
           repo_type: repo_type
@@ -10464,6 +10469,14 @@ components:
           items:
             $ref: '#/components/schemas/SiteLabel'
           type: array
+        functions_region:
+          type: string
+        cdp_enabled_contexts:
+          items:
+            type: string
+          type: array
+        hud_enabled:
+          type: boolean
       required:
       - account_id
       - account_name
@@ -10508,8 +10521,12 @@ components:
         id_domain: id_domain
         deploy_url: deploy_url
         deploy_hook: deploy_hook
+        cdp_enabled_contexts:
+        - cdp_enabled_contexts
+        - cdp_enabled_contexts
         created_at: 2000-01-23T04:56:07.000+00:00
         sso_login_context: sso_login_context
+        functions_region: functions_region
         domain_aliases:
         - domain_aliases
         - domain_aliases
@@ -10528,6 +10545,7 @@ components:
         force_ssl: true
         notification_email: notification_email
         capabilities: "{}"
+        hud_enabled: true
         admin_url: admin_url
         build_settings:
           repo_type: repo_type
@@ -10661,6 +10679,14 @@ components:
           items:
             $ref: '#/components/schemas/SiteLabel'
           type: array
+        functions_region:
+          type: string
+        cdp_enabled_contexts:
+          items:
+            type: string
+          type: array
+        hud_enabled:
+          type: boolean
     SitesSummary:
       description: SitesSummary model definition
       properties:

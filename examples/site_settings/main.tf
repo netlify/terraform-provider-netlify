@@ -20,3 +20,13 @@ resource "netlify_site_build_settings" "platform_test" {
   build_command     = "npm run build"
   publish_directory = "dist"
 }
+
+resource "netlify_site_deploy_settings" "platform_test" {
+  site_id                      = data.netlify_site.platform_test.id
+  production_branch            = "main"
+  branch_deploy_branches       = ["meow", "woof"]
+  custom_domain                = "platform-test.example-tf-test-test.com"
+  domain_aliases               = ["meow.example-tf-test-test.com"]
+  branch_deploy_custom_domain  = "branch.example-tf-test-test.com"
+  deploy_preview_custom_domain = "dp.example-tf-test-test.com"
+}

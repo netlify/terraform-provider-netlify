@@ -56,6 +56,9 @@ type PartialSite struct {
 	BuildTimelimit *float32 `json:"build_timelimit,omitempty"`
 	DeployRetentionInDays *float32 `json:"deploy_retention_in_days,omitempty"`
 	Labels []SiteLabel `json:"labels,omitempty"`
+	FunctionsRegion *string `json:"functions_region,omitempty"`
+	CdpEnabledContexts []string `json:"cdp_enabled_contexts,omitempty"`
+	HudEnabled *bool `json:"hud_enabled,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -1230,6 +1233,102 @@ func (o *PartialSite) SetLabels(v []SiteLabel) {
 	o.Labels = v
 }
 
+// GetFunctionsRegion returns the FunctionsRegion field value if set, zero value otherwise.
+func (o *PartialSite) GetFunctionsRegion() string {
+	if o == nil || IsNil(o.FunctionsRegion) {
+		var ret string
+		return ret
+	}
+	return *o.FunctionsRegion
+}
+
+// GetFunctionsRegionOk returns a tuple with the FunctionsRegion field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PartialSite) GetFunctionsRegionOk() (*string, bool) {
+	if o == nil || IsNil(o.FunctionsRegion) {
+		return nil, false
+	}
+	return o.FunctionsRegion, true
+}
+
+// HasFunctionsRegion returns a boolean if a field has been set.
+func (o *PartialSite) HasFunctionsRegion() bool {
+	if o != nil && !IsNil(o.FunctionsRegion) {
+		return true
+	}
+
+	return false
+}
+
+// SetFunctionsRegion gets a reference to the given string and assigns it to the FunctionsRegion field.
+func (o *PartialSite) SetFunctionsRegion(v string) {
+	o.FunctionsRegion = &v
+}
+
+// GetCdpEnabledContexts returns the CdpEnabledContexts field value if set, zero value otherwise.
+func (o *PartialSite) GetCdpEnabledContexts() []string {
+	if o == nil || IsNil(o.CdpEnabledContexts) {
+		var ret []string
+		return ret
+	}
+	return o.CdpEnabledContexts
+}
+
+// GetCdpEnabledContextsOk returns a tuple with the CdpEnabledContexts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PartialSite) GetCdpEnabledContextsOk() ([]string, bool) {
+	if o == nil || IsNil(o.CdpEnabledContexts) {
+		return nil, false
+	}
+	return o.CdpEnabledContexts, true
+}
+
+// HasCdpEnabledContexts returns a boolean if a field has been set.
+func (o *PartialSite) HasCdpEnabledContexts() bool {
+	if o != nil && !IsNil(o.CdpEnabledContexts) {
+		return true
+	}
+
+	return false
+}
+
+// SetCdpEnabledContexts gets a reference to the given []string and assigns it to the CdpEnabledContexts field.
+func (o *PartialSite) SetCdpEnabledContexts(v []string) {
+	o.CdpEnabledContexts = v
+}
+
+// GetHudEnabled returns the HudEnabled field value if set, zero value otherwise.
+func (o *PartialSite) GetHudEnabled() bool {
+	if o == nil || IsNil(o.HudEnabled) {
+		var ret bool
+		return ret
+	}
+	return *o.HudEnabled
+}
+
+// GetHudEnabledOk returns a tuple with the HudEnabled field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PartialSite) GetHudEnabledOk() (*bool, bool) {
+	if o == nil || IsNil(o.HudEnabled) {
+		return nil, false
+	}
+	return o.HudEnabled, true
+}
+
+// HasHudEnabled returns a boolean if a field has been set.
+func (o *PartialSite) HasHudEnabled() bool {
+	if o != nil && !IsNil(o.HudEnabled) {
+		return true
+	}
+
+	return false
+}
+
+// SetHudEnabled gets a reference to the given bool and assigns it to the HudEnabled field.
+func (o *PartialSite) SetHudEnabled(v bool) {
+	o.HudEnabled = &v
+}
+
 func (o PartialSite) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -1348,6 +1447,15 @@ func (o PartialSite) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Labels) {
 		toSerialize["labels"] = o.Labels
 	}
+	if !IsNil(o.FunctionsRegion) {
+		toSerialize["functions_region"] = o.FunctionsRegion
+	}
+	if !IsNil(o.CdpEnabledContexts) {
+		toSerialize["cdp_enabled_contexts"] = o.CdpEnabledContexts
+	}
+	if !IsNil(o.HudEnabled) {
+		toSerialize["hud_enabled"] = o.HudEnabled
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -1406,6 +1514,9 @@ func (o *PartialSite) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "build_timelimit")
 		delete(additionalProperties, "deploy_retention_in_days")
 		delete(additionalProperties, "labels")
+		delete(additionalProperties, "functions_region")
+		delete(additionalProperties, "cdp_enabled_contexts")
+		delete(additionalProperties, "hud_enabled")
 		o.AdditionalProperties = additionalProperties
 	}
 
