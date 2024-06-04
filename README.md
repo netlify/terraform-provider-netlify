@@ -31,7 +31,13 @@ Then commit the changes to `go.mod` and `go.sum`.
 
 ## Using the provider
 
-Fill this in for each provider
+To use the provider, you must [generate a Netlify Personal Access Token](https://docs.netlify.com/cli/get-started/#obtain-a-token-in-the-netlify-ui). The token can be provided to the provider using the `NETLIFY_TOKEN` environment variable, or by using the `token` argument in the provider configuration block.
+
+```hcl
+provider "netlify" {
+  token = "YOUR_NETLIFY_TOKEN"
+}
+```
 
 ## Developing the Provider
 
@@ -39,7 +45,7 @@ If you wish to work on the provider, you'll first need [Go](http://www.golang.or
 
 To compile the provider, run `go install`. This will build the provider and put the provider binary in the `$GOPATH/bin` directory.
 
-To generate or update documentation, run `go generate`.
+To generate or update documentation, run `make generate`.
 
 In order to run the full suite of Acceptance tests, run `make testacc`.
 
