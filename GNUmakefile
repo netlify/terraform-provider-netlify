@@ -6,8 +6,8 @@ help: ## Show this help.
 
 all: deps openapi_generate generate test testacc # build
 
-# build: ## Build Terraform provider.
-# 	go build ???
+build: ## Build Terraform provider.
+	go install .
 
 deps: ## Install dependencies.
 	go mod download
