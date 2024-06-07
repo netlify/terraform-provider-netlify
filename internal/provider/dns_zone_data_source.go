@@ -90,6 +90,32 @@ func (d *dnsZoneDataSource) Schema(_ context.Context, _ datasource.SchemaRequest
 			"account_slug": schema.StringAttribute{
 				Computed: true,
 			},
+			"domain": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"id": schema.StringAttribute{
+						Computed: true,
+					},
+					"name": schema.StringAttribute{
+						Computed: true,
+					},
+					"registered_at": schema.StringAttribute{
+						Computed: true,
+					},
+					"expires_at": schema.StringAttribute{
+						Computed: true,
+					},
+					"renewal_price": schema.StringAttribute{
+						Computed: true,
+					},
+					"auto_renew": schema.BoolAttribute{
+						Computed: true,
+					},
+					"auto_renew_at": schema.StringAttribute{
+						Computed: true,
+					},
+				},
+			},
 			"dns_servers": schema.ListAttribute{
 				Computed:    true,
 				ElementType: types.StringType,
@@ -122,33 +148,6 @@ func (d *dnsZoneDataSource) Schema(_ context.Context, _ datasource.SchemaRequest
 						"tag": schema.StringAttribute{
 							Computed: true,
 						},
-					},
-				},
-			},
-		},
-		Blocks: map[string]schema.Block{
-			"domain": schema.SingleNestedBlock{
-				Attributes: map[string]schema.Attribute{
-					"id": schema.StringAttribute{
-						Computed: true,
-					},
-					"name": schema.StringAttribute{
-						Computed: true,
-					},
-					"registered_at": schema.StringAttribute{
-						Computed: true,
-					},
-					"expires_at": schema.StringAttribute{
-						Computed: true,
-					},
-					"renewal_price": schema.StringAttribute{
-						Computed: true,
-					},
-					"auto_renew": schema.BoolAttribute{
-						Computed: true,
-					},
-					"auto_renew_at": schema.StringAttribute{
-						Computed: true,
 					},
 				},
 			},

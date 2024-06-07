@@ -131,9 +131,8 @@ func (r *logDrainResource) Schema(_ context.Context, _ resource.SchemaRequest, r
 			"exclude_pii": schema.BoolAttribute{
 				Required: true,
 			},
-		},
-		Blocks: map[string]schema.Block{
-			"service_config": schema.SingleNestedBlock{
+			"service_config": schema.SingleNestedAttribute{
+				Required: true,
 				// TODO: add validations based on the destination type
 				Attributes: map[string]schema.Attribute{
 					"url": schema.StringAttribute{

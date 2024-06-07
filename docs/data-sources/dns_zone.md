@@ -24,11 +24,11 @@ description: |-
 - `account_id` (String)
 - `account_slug` (String)
 - `dns_servers` (List of String)
-- `domain` (Block, Read-only) (see [below for nested schema](#nestedblock--domain))
+- `domain` (Attributes) (see [below for nested schema](#nestedatt--domain))
 - `id` (String) The ID of this resource.
 - `records` (Attributes List) (see [below for nested schema](#nestedatt--records))
 
-<a id="nestedblock--domain"></a>
+<a id="nestedatt--domain"></a>
 ### Nested Schema for `domain`
 
 Read-Only:

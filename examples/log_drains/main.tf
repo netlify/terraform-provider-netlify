@@ -21,7 +21,7 @@ resource "netlify_log_drain" "ramontest4" {
   log_types   = ["user_traffic", "deploys", "edge_functions", "functions"]
   format      = "ndjson"
   exclude_pii = true
-  service_config {
+  service_config = {
     # https://webhook.site/#!/view/524008a8-bbdd-418e-8238-dd988b8d7d54
     url = "https://webhook.site/524008a8-bbdd-418e-8238-dd988b8d7d54"
   }

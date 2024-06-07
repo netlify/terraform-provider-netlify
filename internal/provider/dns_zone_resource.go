@@ -99,9 +99,8 @@ func (r *dnsZoneResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 					listplanmodifier.UseStateForUnknown(),
 				},
 			},
-		},
-		Blocks: map[string]schema.Block{
-			"domain": schema.SingleNestedBlock{
+			"domain": schema.SingleNestedAttribute{
+				Computed: true,
 				Attributes: map[string]schema.Attribute{
 					"id": schema.StringAttribute{
 						Computed: true,
