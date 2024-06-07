@@ -20,19 +20,19 @@ description: |-
 - `destination` (String)
 - `exclude_pii` (Boolean)
 - `log_types` (Set of String)
+- `service_config` (Attributes) (see [below for nested schema](#nestedatt--service_config))
 - `site_id` (String)
 
 ### Optional
 
 - `format` (String)
-- `service_config` (Block, Optional) (see [below for nested schema](#nestedblock--service_config))
 
 ### Read-Only
 
 - `id` (String) The ID of this resource.
 - `last_updated` (String)
 
-<a id="nestedblock--service_config"></a>
+<a id="nestedatt--service_config"></a>
 ### Nested Schema for `service_config`
 
 Optional:
