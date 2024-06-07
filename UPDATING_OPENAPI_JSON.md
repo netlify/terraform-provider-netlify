@@ -22,3 +22,7 @@ This project uses a modified `openapi.json`. Please maintain these instructions 
 1. Remove the required properties from the `LogDrainServiceConfig` object.
 1. Add properties to the `LogDrainServiceConfig` object, by copying it from an earlier version of the `openapi.json`.
 1. Change the request body of the `Log Drains-update` operation to use the `LogDrain` object (copy from `Log Drains-create`).
+1. Add the various `firewall_rule_set` paths from `bitballoon-openapi`'s `openapi.json` file (NOTE: both site and account level).
+1. Replace the response body of the `getAccountFirewallRuleSet` operation to use the `SiteFirewallConfig` object.
+1. Replace the request body of the `updateAccountFirewallRuleSet` operation to use the `SiteFirewallConfig` object.
+1. Renamed the `unpublished_rules` and `published_rules` properties to `unpublished` and `published` in the `SiteFirewallConfig` object, also in the required properties array.

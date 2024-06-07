@@ -22,8 +22,8 @@ var _ MappedNullable = &SiteFirewallConfig{}
 // SiteFirewallConfig struct for SiteFirewallConfig
 type SiteFirewallConfig struct {
 	Id string `json:"id"`
-	UnpublishedRules FirewallRuleSet `json:"unpublished_rules"`
-	PublishedRules FirewallRuleSet `json:"published_rules"`
+	Unpublished FirewallRuleSet `json:"unpublished"`
+	Published FirewallRuleSet `json:"published"`
 	// When the deployed branch was created
 	CreatedAt time.Time `json:"created_at"`
 	// When the deployed branch was updated
@@ -37,11 +37,11 @@ type _SiteFirewallConfig SiteFirewallConfig
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSiteFirewallConfig(id string, unpublishedRules FirewallRuleSet, publishedRules FirewallRuleSet, createdAt time.Time, updatedAt time.Time) *SiteFirewallConfig {
+func NewSiteFirewallConfig(id string, unpublished FirewallRuleSet, published FirewallRuleSet, createdAt time.Time, updatedAt time.Time) *SiteFirewallConfig {
 	this := SiteFirewallConfig{}
 	this.Id = id
-	this.UnpublishedRules = unpublishedRules
-	this.PublishedRules = publishedRules
+	this.Unpublished = unpublished
+	this.Published = published
 	this.CreatedAt = createdAt
 	this.UpdatedAt = updatedAt
 	return &this
@@ -79,52 +79,52 @@ func (o *SiteFirewallConfig) SetId(v string) {
 	o.Id = v
 }
 
-// GetUnpublishedRules returns the UnpublishedRules field value
-func (o *SiteFirewallConfig) GetUnpublishedRules() FirewallRuleSet {
+// GetUnpublished returns the Unpublished field value
+func (o *SiteFirewallConfig) GetUnpublished() FirewallRuleSet {
 	if o == nil {
 		var ret FirewallRuleSet
 		return ret
 	}
 
-	return o.UnpublishedRules
+	return o.Unpublished
 }
 
-// GetUnpublishedRulesOk returns a tuple with the UnpublishedRules field value
+// GetUnpublishedOk returns a tuple with the Unpublished field value
 // and a boolean to check if the value has been set.
-func (o *SiteFirewallConfig) GetUnpublishedRulesOk() (*FirewallRuleSet, bool) {
+func (o *SiteFirewallConfig) GetUnpublishedOk() (*FirewallRuleSet, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.UnpublishedRules, true
+	return &o.Unpublished, true
 }
 
-// SetUnpublishedRules sets field value
-func (o *SiteFirewallConfig) SetUnpublishedRules(v FirewallRuleSet) {
-	o.UnpublishedRules = v
+// SetUnpublished sets field value
+func (o *SiteFirewallConfig) SetUnpublished(v FirewallRuleSet) {
+	o.Unpublished = v
 }
 
-// GetPublishedRules returns the PublishedRules field value
-func (o *SiteFirewallConfig) GetPublishedRules() FirewallRuleSet {
+// GetPublished returns the Published field value
+func (o *SiteFirewallConfig) GetPublished() FirewallRuleSet {
 	if o == nil {
 		var ret FirewallRuleSet
 		return ret
 	}
 
-	return o.PublishedRules
+	return o.Published
 }
 
-// GetPublishedRulesOk returns a tuple with the PublishedRules field value
+// GetPublishedOk returns a tuple with the Published field value
 // and a boolean to check if the value has been set.
-func (o *SiteFirewallConfig) GetPublishedRulesOk() (*FirewallRuleSet, bool) {
+func (o *SiteFirewallConfig) GetPublishedOk() (*FirewallRuleSet, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.PublishedRules, true
+	return &o.Published, true
 }
 
-// SetPublishedRules sets field value
-func (o *SiteFirewallConfig) SetPublishedRules(v FirewallRuleSet) {
-	o.PublishedRules = v
+// SetPublished sets field value
+func (o *SiteFirewallConfig) SetPublished(v FirewallRuleSet) {
+	o.Published = v
 }
 
 // GetCreatedAt returns the CreatedAt field value
@@ -186,8 +186,8 @@ func (o SiteFirewallConfig) MarshalJSON() ([]byte, error) {
 func (o SiteFirewallConfig) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id
-	toSerialize["unpublished_rules"] = o.UnpublishedRules
-	toSerialize["published_rules"] = o.PublishedRules
+	toSerialize["unpublished"] = o.Unpublished
+	toSerialize["published"] = o.Published
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["updated_at"] = o.UpdatedAt
 
@@ -204,8 +204,8 @@ func (o *SiteFirewallConfig) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"id",
-		"unpublished_rules",
-		"published_rules",
+		"unpublished",
+		"published",
 		"created_at",
 		"updated_at",
 	}
@@ -238,8 +238,8 @@ func (o *SiteFirewallConfig) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "id")
-		delete(additionalProperties, "unpublished_rules")
-		delete(additionalProperties, "published_rules")
+		delete(additionalProperties, "unpublished")
+		delete(additionalProperties, "published")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "updated_at")
 		o.AdditionalProperties = additionalProperties

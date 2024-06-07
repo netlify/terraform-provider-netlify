@@ -362,6 +362,109 @@ func (a *SitesAPIService) DeleteSiteExecute(r ApiDeleteSiteRequest) (*http.Respo
 	return localVarHTTPResponse, nil
 }
 
+type ApiDeleteSiteFirewallRuleSetRequest struct {
+	ctx context.Context
+	ApiService *SitesAPIService
+	id *string
+	siteId string
+}
+
+// The site ID
+func (r ApiDeleteSiteFirewallRuleSetRequest) Id(id string) ApiDeleteSiteFirewallRuleSetRequest {
+	r.id = &id
+	return r
+}
+
+func (r ApiDeleteSiteFirewallRuleSetRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteSiteFirewallRuleSetExecute(r)
+}
+
+/*
+DeleteSiteFirewallRuleSet Method for DeleteSiteFirewallRuleSet
+
+remove the rule set for the site if it exists
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param siteId Scope response to site_id
+ @return ApiDeleteSiteFirewallRuleSetRequest
+*/
+func (a *SitesAPIService) DeleteSiteFirewallRuleSet(ctx context.Context, siteId string) ApiDeleteSiteFirewallRuleSetRequest {
+	return ApiDeleteSiteFirewallRuleSetRequest{
+		ApiService: a,
+		ctx: ctx,
+		siteId: siteId,
+	}
+}
+
+// Execute executes the request
+func (a *SitesAPIService) DeleteSiteFirewallRuleSetExecute(r ApiDeleteSiteFirewallRuleSetRequest) (*http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodDelete
+		localVarPostBody     interface{}
+		formFiles            []formFile
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SitesAPIService.DeleteSiteFirewallRuleSet")
+	if err != nil {
+		return nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/sites/{site_id}/firewall_rule_set"
+	localVarPath = strings.Replace(localVarPath, "{"+"site_id"+"}", url.PathEscape(parameterValueToString(r.siteId, "siteId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.id == nil {
+		return nil, reportError("id is required and must be specified")
+	}
+
+	parameterAddToHeaderOrQuery(localVarQueryParams, "id", r.id, "")
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
 type ApiGetSimplePublicSiteRequest struct {
 	ctx context.Context
 	ApiService *SitesAPIService
@@ -514,6 +617,120 @@ func (a *SitesAPIService) GetSiteExecute(r ApiGetSiteRequest) (*Site, *http.Resp
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetSiteFirewallRuleSetRequest struct {
+	ctx context.Context
+	ApiService *SitesAPIService
+	id *string
+	siteId string
+}
+
+// The site ID
+func (r ApiGetSiteFirewallRuleSetRequest) Id(id string) ApiGetSiteFirewallRuleSetRequest {
+	r.id = &id
+	return r
+}
+
+func (r ApiGetSiteFirewallRuleSetRequest) Execute() (*SiteFirewallConfig, *http.Response, error) {
+	return r.ApiService.GetSiteFirewallRuleSetExecute(r)
+}
+
+/*
+GetSiteFirewallRuleSet Method for GetSiteFirewallRuleSet
+
+Returns the rule set for the site if it exists
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param siteId Scope response to site_id
+ @return ApiGetSiteFirewallRuleSetRequest
+*/
+func (a *SitesAPIService) GetSiteFirewallRuleSet(ctx context.Context, siteId string) ApiGetSiteFirewallRuleSetRequest {
+	return ApiGetSiteFirewallRuleSetRequest{
+		ApiService: a,
+		ctx: ctx,
+		siteId: siteId,
+	}
+}
+
+// Execute executes the request
+//  @return SiteFirewallConfig
+func (a *SitesAPIService) GetSiteFirewallRuleSetExecute(r ApiGetSiteFirewallRuleSetRequest) (*SiteFirewallConfig, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *SiteFirewallConfig
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SitesAPIService.GetSiteFirewallRuleSet")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/sites/{site_id}/firewall_rule_set"
+	localVarPath = strings.Replace(localVarPath, "{"+"site_id"+"}", url.PathEscape(parameterValueToString(r.siteId, "siteId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.id == nil {
+		return localVarReturnValue, nil, reportError("id is required and must be specified")
+	}
+
+	parameterAddToHeaderOrQuery(localVarQueryParams, "id", r.id, "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -1336,4 +1553,119 @@ func (a *SitesAPIService) UpdateSiteExecute(r ApiUpdateSiteRequest) (*Site, *htt
 	}
 
 	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiUpdateSiteFirewallRuleSetRequest struct {
+	ctx context.Context
+	ApiService *SitesAPIService
+	id *string
+	siteId string
+	createSiteFirewallConfig *CreateSiteFirewallConfig
+}
+
+// The site ID
+func (r ApiUpdateSiteFirewallRuleSetRequest) Id(id string) ApiUpdateSiteFirewallRuleSetRequest {
+	r.id = &id
+	return r
+}
+
+// 
+func (r ApiUpdateSiteFirewallRuleSetRequest) CreateSiteFirewallConfig(createSiteFirewallConfig CreateSiteFirewallConfig) ApiUpdateSiteFirewallRuleSetRequest {
+	r.createSiteFirewallConfig = &createSiteFirewallConfig
+	return r
+}
+
+func (r ApiUpdateSiteFirewallRuleSetRequest) Execute() (*http.Response, error) {
+	return r.ApiService.UpdateSiteFirewallRuleSetExecute(r)
+}
+
+/*
+UpdateSiteFirewallRuleSet Method for UpdateSiteFirewallRuleSet
+
+Takes a body containing the traffic rule set and completely replaces the full ruleset for the site.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param siteId Scope response to site_id
+ @return ApiUpdateSiteFirewallRuleSetRequest
+*/
+func (a *SitesAPIService) UpdateSiteFirewallRuleSet(ctx context.Context, siteId string) ApiUpdateSiteFirewallRuleSetRequest {
+	return ApiUpdateSiteFirewallRuleSetRequest{
+		ApiService: a,
+		ctx: ctx,
+		siteId: siteId,
+	}
+}
+
+// Execute executes the request
+func (a *SitesAPIService) UpdateSiteFirewallRuleSetExecute(r ApiUpdateSiteFirewallRuleSetRequest) (*http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPut
+		localVarPostBody     interface{}
+		formFiles            []formFile
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SitesAPIService.UpdateSiteFirewallRuleSet")
+	if err != nil {
+		return nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/sites/{site_id}/firewall_rule_set"
+	localVarPath = strings.Replace(localVarPath, "{"+"site_id"+"}", url.PathEscape(parameterValueToString(r.siteId, "siteId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.id == nil {
+		return nil, reportError("id is required and must be specified")
+	}
+	if r.createSiteFirewallConfig == nil {
+		return nil, reportError("createSiteFirewallConfig is required and must be specified")
+	}
+
+	parameterAddToHeaderOrQuery(localVarQueryParams, "id", r.id, "")
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.createSiteFirewallConfig
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
 }

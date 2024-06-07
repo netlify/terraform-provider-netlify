@@ -5100,6 +5100,214 @@ paths:
       x-internal: "true"
       x-controller: api/v1/log_drains
       x-action: verify
+  /api/v1/sites/{site_id}/firewall_rule_set:
+    delete:
+      description: remove the rule set for the site if it exists
+      operationId: deleteSiteFirewallRuleSet
+      parameters:
+      - description: The site ID
+        explode: true
+        in: query
+        name: id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Scope response to site_id
+        explode: false
+        in: path
+        name: site_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: ""
+        "409":
+          description: ""
+        "404":
+          description: ""
+        "401":
+          description: ""
+      tags:
+      - Sites
+      x-internal: "true"
+      x-controller: api/v1/sites
+      x-action: destroy_firewall_rule_set
+    get:
+      description: Returns the rule set for the site if it exists
+      operationId: getSiteFirewallRuleSet
+      parameters:
+      - description: The site ID
+        explode: true
+        in: query
+        name: id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Scope response to site_id
+        explode: false
+        in: path
+        name: site_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteFirewallConfig'
+          description: ""
+        "409":
+          description: ""
+        "404":
+          description: ""
+      tags:
+      - Sites
+      x-internal: "true"
+      x-controller: api/v1/sites
+      x-action: firewall_rule_set
+    put:
+      description: Takes a body containing the traffic rule set and completely replaces
+        the full ruleset for the site.
+      operationId: updateSiteFirewallRuleSet
+      parameters:
+      - description: The site ID
+        explode: true
+        in: query
+        name: id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Scope response to site_id
+        explode: false
+        in: path
+        name: site_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSiteFirewallConfig'
+        description: ""
+        required: true
+      responses:
+        "200":
+          description: ""
+        "409":
+          description: ""
+        "400":
+          description: ""
+        "404":
+          description: ""
+        "401":
+          description: ""
+      tags:
+      - Sites
+      x-internal: "true"
+      x-controller: api/v1/sites
+      x-action: update_firewall_rule_set
+  /api/v1/accounts/{account_id}/firewall_rule_set:
+    delete:
+      description: remove the rule set for the account if it exists
+      operationId: deleteAccountFirewallRuleSet
+      parameters:
+      - description: The account ID
+        explode: false
+        in: path
+        name: account_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: ""
+        "409":
+          description: ""
+        "401":
+          description: Only owners are allowed to destroy the firewall rule set
+      tags:
+      - Accounts
+      x-internal: "true"
+      x-controller: api/v1/accounts
+      x-action: destroy_firewall_rule_set
+    get:
+      description: Returns the firewall rules for an account.
+      operationId: getAccountFirewallRuleSet
+      parameters:
+      - description: The account ID
+        explode: false
+        in: path
+        name: account_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The account ID
+        explode: true
+        in: query
+        name: id
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteFirewallConfig'
+          description: ""
+        "409":
+          description: ""
+        "404":
+          description: ""
+      tags:
+      - Accounts
+      x-internal: "true"
+      x-controller: api/v1/accounts
+      x-action: firewall_rule_set
+    put:
+      description: Takes a body containing the traffic rule set and completely replaces
+        the full ruleset for the account/team.
+      operationId: updateAccountFirewallRuleSet
+      parameters:
+      - description: The account ID
+        explode: false
+        in: path
+        name: account_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSiteFirewallConfig'
+        description: ""
+        required: true
+      responses:
+        "200":
+          description: ""
+        "409":
+          description: ""
+        "401":
+          description: Only owners are allowed to update the firewall rule set
+      tags:
+      - Accounts
+      x-internal: "true"
+      x-controller: api/v1/accounts
+      x-action: update_firewall_rule_set
 components:
   schemas:
     AccountBuild:
@@ -5252,6 +5460,45 @@ components:
       - unpublished_rules
       - updated_at
     CreateAccountFirewallConfig:
+      example:
+        published:
+          default: allow
+          rules:
+          - data:
+              key:
+              - data
+              - data
+            action: allow
+            description: description
+            disabled: ""
+            type: geo
+          - data:
+              key:
+              - data
+              - data
+            action: allow
+            description: description
+            disabled: ""
+            type: geo
+        unpublished:
+          default: allow
+          rules:
+          - data:
+              key:
+              - data
+              - data
+            action: allow
+            description: description
+            disabled: ""
+            type: geo
+          - data:
+              key:
+              - data
+              - data
+            action: allow
+            description: description
+            disabled: ""
+            type: geo
       properties:
         unpublished:
           $ref: '#/components/schemas/FirewallRuleSet'
@@ -8238,12 +8485,54 @@ components:
             variable and not accesible outside of Netlify runtimes
           type: boolean
     SiteFirewallConfig:
+      example:
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        created_at: 2000-01-23T04:56:07.000+00:00
+        id: id
+        published:
+          default: allow
+          rules:
+          - data:
+              key:
+              - data
+              - data
+            action: allow
+            description: description
+            disabled: ""
+            type: geo
+          - data:
+              key:
+              - data
+              - data
+            action: allow
+            description: description
+            disabled: ""
+            type: geo
+        unpublished:
+          default: allow
+          rules:
+          - data:
+              key:
+              - data
+              - data
+            action: allow
+            description: description
+            disabled: ""
+            type: geo
+          - data:
+              key:
+              - data
+              - data
+            action: allow
+            description: description
+            disabled: ""
+            type: geo
       properties:
         id:
           type: string
-        unpublished_rules:
+        unpublished:
           $ref: '#/components/schemas/FirewallRuleSet'
-        published_rules:
+        published:
           $ref: '#/components/schemas/FirewallRuleSet'
         created_at:
           description: When the deployed branch was created
@@ -8256,16 +8545,64 @@ components:
       required:
       - created_at
       - id
-      - published_rules
-      - unpublished_rules
+      - published
+      - unpublished
       - updated_at
     CreateSiteFirewallConfig:
+      example:
+        published:
+          default: allow
+          rules:
+          - data:
+              key:
+              - data
+              - data
+            action: allow
+            description: description
+            disabled: ""
+            type: geo
+          - data:
+              key:
+              - data
+              - data
+            action: allow
+            description: description
+            disabled: ""
+            type: geo
+        unpublished:
+          default: allow
+          rules:
+          - data:
+              key:
+              - data
+              - data
+            action: allow
+            description: description
+            disabled: ""
+            type: geo
+          - data:
+              key:
+              - data
+              - data
+            action: allow
+            description: description
+            disabled: ""
+            type: geo
       properties:
         unpublished:
           $ref: '#/components/schemas/FirewallRuleSet'
         published:
           $ref: '#/components/schemas/FirewallRuleSet'
     FirewallRule:
+      example:
+        data:
+          key:
+          - data
+          - data
+        action: allow
+        description: description
+        disabled: ""
+        type: geo
       properties:
         action:
           enum:
@@ -8290,6 +8627,25 @@ components:
       - data
       - type
     FirewallRuleSet:
+      example:
+        default: allow
+        rules:
+        - data:
+            key:
+            - data
+            - data
+          action: allow
+          description: description
+          disabled: ""
+          type: geo
+        - data:
+            key:
+            - data
+            - data
+          action: allow
+          description: description
+          disabled: ""
+          type: geo
       properties:
         default:
           enum:
