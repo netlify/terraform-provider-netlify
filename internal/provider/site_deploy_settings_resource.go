@@ -181,55 +181,11 @@ func (r *siteDeploySettingsResource) Read(ctx context.Context, req resource.Read
 		return
 	}
 
-	r.read(ctx, &state, &resp.Diagnostics)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-}
-
-func (r *siteDeploySettingsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan siteDeploySettingsResourceModel
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	r.write(ctx, &plan, &resp.Diagnostics)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-}
-
-func (r *siteDeploySettingsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state siteDeploySettingsResourceModel
-	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	resp.Diagnostics.AddWarning("Site deploy settings are now unmanaged.", "Site deploy settings are now unmanaged. The site will continue to deploy with the last settings.")
-}
-
-func (r *siteDeploySettingsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resource.ImportStatePassthroughID(ctx, path.Root("site_id"), req, resp)
-}
-
-func (r *siteDeploySettingsResource) read(ctx context.Context, state *siteDeploySettingsResourceModel, diagnostics *diag.Diagnostics) {
 	site, _, err := r.data.client.SitesAPI.GetSite(ctx, state.SiteID.ValueString()).Execute()
 	if err != nil {
-		diagnostics.AddError(
-			"Error reading site build settings",
-			fmt.Sprintf("Could not read site build settings for site %q: %q", state.SiteID.ValueString(), err.Error()),
+		resp.Diagnostics.AddError(
+			"Error reading site deploy settings",
+			fmt.Sprintf("Could not read site deploy settings for site %q: %q", state.SiteID.ValueString(), err.Error()),
 		)
 		return
 	}
@@ -270,16 +226,46 @@ func (r *siteDeploySettingsResource) read(ctx context.Context, state *siteDeploy
 	}
 	state.BranchDeployCustomDomain = types.StringValue(site.BranchDeployCustomDomain)
 	state.DeployPreviewCustomDomain = types.StringValue(site.DeployPreviewCustomDomain)
+
+	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 }
 
-func (r *siteDeploySettingsResource) write(ctx context.Context, plan *siteDeploySettingsResourceModel, diagnostics *diag.Diagnostics) {
-	var curState siteDeploySettingsResourceModel
-	curState.SiteID = plan.SiteID
-	r.read(ctx, &curState, diagnostics)
-	if diagnostics.HasError() {
+func (r *siteDeploySettingsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan siteDeploySettingsResourceModel
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
 		return
 	}
 
+	r.write(ctx, &plan, &resp.Diagnostics)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+}
+
+func (r *siteDeploySettingsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state siteDeploySettingsResourceModel
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.AddWarning("Site deploy settings are now unmanaged.", "Site deploy settings are now unmanaged. The site will continue to deploy with the last settings.")
+}
+
+func (r *siteDeploySettingsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	resource.ImportStatePassthroughID(ctx, path.Root("site_id"), req, resp)
+}
+
+func (r *siteDeploySettingsResource) write(ctx context.Context, plan *siteDeploySettingsResourceModel, diagnostics *diag.Diagnostics) {
 	allowedBranches := make([]string, 0, len(plan.BranchDeployBranches)+1)
 	if !plan.BranchDeployAllBranches.ValueBool() {
 		allowedBranches = append(allowedBranches, plan.ProductionBranch.ValueString())
@@ -320,8 +306,8 @@ func (r *siteDeploySettingsResource) write(ctx context.Context, plan *siteDeploy
 		Execute()
 	if err != nil {
 		diagnostics.AddError(
-			"Error updating site build settings",
-			fmt.Sprintf("Could not update site build settings for site %q: %q", plan.SiteID.ValueString(), err.Error()),
+			"Error updating site deploy settings",
+			fmt.Sprintf("Could not update site deploy settings for site %q: %q", plan.SiteID.ValueString(), err.Error()),
 		)
 		return
 	}

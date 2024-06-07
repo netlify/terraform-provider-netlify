@@ -6957,6 +6957,281 @@
           }
         }
       }
+    },
+    "/api/v1/sites/{site_id}/firewall_rule_set": {
+      "get": {
+        "tags": [
+          "Sites"
+        ],
+        "operationId": "getSiteFirewallRuleSet",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The site ID",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "description": "Scope response to site_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteFirewallConfig"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": ""
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "description": "Returns the rule set for the site if it exists",
+        "x-internal": "true",
+        "x-controller": "api/v1/sites",
+        "x-action": "firewall_rule_set"
+      },
+      "delete": {
+        "tags": [
+          "Sites"
+        ],
+        "operationId": "deleteSiteFirewallRuleSet",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The site ID",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "description": "Scope response to site_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "409": {
+            "description": ""
+          },
+          "404": {
+            "description": ""
+          },
+          "401": {
+            "description": ""
+          }
+        },
+        "description": "remove the rule set for the site if it exists",
+        "x-internal": "true",
+        "x-controller": "api/v1/sites",
+        "x-action": "destroy_firewall_rule_set"
+      },
+      "put": {
+        "tags": [
+          "Sites"
+        ],
+        "operationId": "updateSiteFirewallRuleSet",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The site ID",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "description": "Scope response to site_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "409": {
+            "description": ""
+          },
+          "400": {
+            "description": ""
+          },
+          "404": {
+            "description": ""
+          },
+          "401": {
+            "description": ""
+          }
+        },
+        "description": "Takes a body containing the traffic rule set and completely replaces the full ruleset for the site.",
+        "x-internal": "true",
+        "x-controller": "api/v1/sites",
+        "x-action": "update_firewall_rule_set",
+        "requestBody": { "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSiteFirewallConfig"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/accounts/{account_id}/firewall_rule_set": {
+      "get": {
+        "tags": [
+          "Accounts"
+        ],
+        "operationId": "getAccountFirewallRuleSet",
+        "parameters": [
+          {
+            "name": "account_id",
+            "description": "The account ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "description": "The account ID",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteFirewallConfig"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": ""
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "description": "Returns the firewall rules for an account.",
+        "x-internal": "true",
+        "x-controller": "api/v1/accounts",
+        "x-action": "firewall_rule_set"
+      },
+      "delete": {
+        "tags": [
+          "Accounts"
+        ],
+        "operationId": "deleteAccountFirewallRuleSet",
+        "parameters": [
+          {
+            "name": "account_id",
+            "description": "The account ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "409": {
+            "description": ""
+          },
+          "401": {
+            "description": "Only owners are allowed to destroy the firewall rule set"
+          }
+        },
+        "description": "remove the rule set for the account if it exists",
+        "x-internal": "true",
+        "x-controller": "api/v1/accounts",
+        "x-action": "destroy_firewall_rule_set"
+      },
+      "put": {
+        "tags": [
+          "Accounts"
+        ],
+        "operationId": "updateAccountFirewallRuleSet",
+        "parameters": [
+          {
+            "name": "account_id",
+            "description": "The account ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "409": {
+            "description": ""
+          },
+          "401": {
+            "description": "Only owners are allowed to update the firewall rule set"
+          }
+        },
+        "description": "Takes a body containing the traffic rule set and completely replaces the full ruleset for the account/team.",
+        "x-internal": "true",
+        "x-controller": "api/v1/accounts",
+        "x-action": "update_firewall_rule_set",
+        "requestBody": { "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSiteFirewallConfig"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "tags": [
@@ -10771,10 +11046,10 @@
           "id": {
             "type": "string"
           },
-          "unpublished_rules": {
+          "unpublished": {
             "$ref": "#/components/schemas/FirewallRuleSet"
           },
-          "published_rules": {
+          "published": {
             "$ref": "#/components/schemas/FirewallRuleSet"
           },
           "created_at": {
@@ -10790,8 +11065,8 @@
         },
         "required": [
           "id",
-          "unpublished_rules",
-          "published_rules",
+          "unpublished",
+          "published",
           "created_at",
           "updated_at"
         ]

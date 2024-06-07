@@ -134,6 +134,7 @@ func (r *logDrainResource) Schema(_ context.Context, _ resource.SchemaRequest, r
 		},
 		Blocks: map[string]schema.Block{
 			"service_config": schema.SingleNestedBlock{
+				// TODO: add validations based on the destination type
 				Attributes: map[string]schema.Attribute{
 					"url": schema.StringAttribute{
 						Optional:  true,
