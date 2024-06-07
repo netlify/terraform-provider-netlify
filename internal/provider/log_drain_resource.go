@@ -18,6 +18,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/netlify/terraform-provider-netlify/internal/netlifyapi"
+	"github.com/netlify/terraform-provider-netlify/internal/provider/netlify_validators"
 )
 
 var (
@@ -112,6 +113,26 @@ func (r *logDrainResource) Schema(_ context.Context, _ resource.SchemaRequest, r
 						"axiom",
 						"azure",
 					),
+					// TODO: These are partial validations, need to be completed
+					netlify_validators.RequiredIfEquals("datadog", path.MatchRoot("service_config").AtName("url")),
+					netlify_validators.ForbiddenIfEquals( // Must be part of the URL
+						"datadog",
+						path.MatchRoot("service_config").AtName("tags"),
+						path.MatchRoot("service_config").AtName("authorization_header"),
+					),
+					netlify_validators.RequiredIfEquals(
+						"newrelic",
+						path.MatchRoot("service_config").AtName("url"),
+						path.MatchRoot("service_config").AtName("tags"),
+					),
+					netlify_validators.RequiredIfEquals("http", path.MatchRoot("service_config").AtName("url")),
+					netlify_validators.RequiredIfEquals(
+						"s3",
+						path.MatchRoot("service_config").AtName("bucket_name"),
+						path.MatchRoot("service_config").AtName("bucket_region"),
+						path.MatchRoot("service_config").AtName("path"),
+						path.MatchRoot("service_config").AtName("verification_filename"),
+					),
 				},
 			},
 			"format": schema.StringAttribute{
@@ -133,7 +154,6 @@ func (r *logDrainResource) Schema(_ context.Context, _ resource.SchemaRequest, r
 			},
 			"service_config": schema.SingleNestedAttribute{
 				Required: true,
-				// TODO: add validations based on the destination type
 				Attributes: map[string]schema.Attribute{
 					"url": schema.StringAttribute{
 						Optional:  true,
