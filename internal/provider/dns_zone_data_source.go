@@ -29,13 +29,13 @@ type dnsZoneDataSource struct {
 }
 
 type dnsZoneDataSourceModel struct {
-	ID          types.String        `tfsdk:"id"`
-	Name        types.String        `tfsdk:"name"`
-	AccountID   types.String        `tfsdk:"account_id"`
-	AccountSlug types.String        `tfsdk:"account_slug"`
-	DnsServers  types.List          `tfsdk:"dns_servers"`
-	Domain      *netlifyDomainModel `tfsdk:"domain"`
-	Records     []dnsRecordModel    `tfsdk:"records"`
+	ID         types.String        `tfsdk:"id"`
+	Name       types.String        `tfsdk:"name"`
+	TeamID     types.String        `tfsdk:"team_id"`
+	TeamSlug   types.String        `tfsdk:"team_slug"`
+	DnsServers types.List          `tfsdk:"dns_servers"`
+	Domain     *netlifyDomainModel `tfsdk:"domain"`
+	Records    []dnsRecordModel    `tfsdk:"records"`
 }
 
 type dnsRecordModel struct {
@@ -84,10 +84,10 @@ func (d *dnsZoneDataSource) Schema(_ context.Context, _ datasource.SchemaRequest
 				Optional: true,
 				Computed: true,
 			},
-			"account_id": schema.StringAttribute{
+			"team_id": schema.StringAttribute{
 				Computed: true,
 			},
-			"account_slug": schema.StringAttribute{
+			"team_slug": schema.StringAttribute{
 				Computed: true,
 			},
 			"domain": schema.SingleNestedAttribute{
@@ -201,8 +201,8 @@ func (d *dnsZoneDataSource) Read(ctx context.Context, req datasource.ReadRequest
 
 	config.ID = types.StringValue(zone.Id)
 	config.Name = types.StringValue(zone.Name)
-	config.AccountID = types.StringValue(zone.AccountId)
-	config.AccountSlug = types.StringValue(zone.AccountSlug)
+	config.TeamID = types.StringValue(zone.AccountId)
+	config.TeamSlug = types.StringValue(zone.AccountSlug)
 	dnsServers := make([]types.String, len(zone.DnsServers))
 	for i, dnsServer := range zone.DnsServers {
 		dnsServers[i] = types.StringValue(dnsServer)

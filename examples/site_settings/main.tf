@@ -11,8 +11,8 @@ terraform {
 provider "netlify" {}
 
 data "netlify_site" "platform_test" {
-  account_slug = "ramon-test-1"
-  name         = "platform-test-1"
+  team_slug = "ramon-test-1"
+  name      = "platform-test-1"
 }
 
 resource "netlify_site_build_settings" "platform_test" {

@@ -28,7 +28,7 @@ type siteDataSource struct {
 
 type siteModel struct {
 	ID            types.String   `tfsdk:"id"`
-	AccountSlug   types.String   `tfsdk:"account_slug"`
+	TeamSlug      types.String   `tfsdk:"team_slug"`
 	Name          types.String   `tfsdk:"name"`
 	CustomDomain  types.String   `tfsdk:"custom_domain"`
 	DomainAliases []types.String `tfsdk:"domain_aliases"`
@@ -66,7 +66,7 @@ func (d *siteDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, r
 					stringvalidator.AtLeastOneOf(path.MatchRoot("name")),
 				},
 			},
-			"account_slug": schema.StringAttribute{
+			"team_slug": schema.StringAttribute{
 				Optional: true,
 				Computed: true,
 			},
@@ -74,7 +74,7 @@ func (d *siteDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, r
 				Optional: true,
 				Computed: true,
 				Validators: []validator.String{
-					stringvalidator.AlsoRequires(path.MatchRoot("account_slug")),
+					stringvalidator.AlsoRequires(path.MatchRoot("team_slug")),
 				},
 			},
 			"custom_domain": schema.StringAttribute{
@@ -109,11 +109,11 @@ func (d *siteDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 		}
 	} else {
 		sites, _, err := d.data.client.SitesAPI.
-			ListSitesForAccount(ctx, config.AccountSlug.ValueString()).
+			ListSitesForAccount(ctx, config.TeamSlug.ValueString()).
 			Name(config.Name.ValueString()).
 			Execute()
 		if err != nil {
-			resp.Diagnostics.AddError("Error reading Netlify account", fmt.Sprintf("Could not list Netlify sites in account %q: %q", config.AccountSlug.ValueString(), err.Error()))
+			resp.Diagnostics.AddError("Error reading Netlify team", fmt.Sprintf("Could not list Netlify sites in team %q: %q", config.TeamSlug.ValueString(), err.Error()))
 			return
 		}
 		nameString := config.Name.ValueString()
@@ -125,7 +125,7 @@ func (d *siteDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 			}
 		}
 		if site == nil {
-			resp.Diagnostics.AddError("Error reading Netlify account", fmt.Sprintf("Could not find Netlify site with name %q in account %q", nameString, config.AccountSlug.ValueString()))
+			resp.Diagnostics.AddError("Error reading Netlify team", fmt.Sprintf("Could not find Netlify site with name %q in team %q", nameString, config.TeamSlug.ValueString()))
 			return
 		}
 	}
@@ -144,7 +144,7 @@ func (d *siteDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 	}
 
 	config.ID = types.StringValue(site.Id)
-	config.AccountSlug = types.StringValue(site.AccountSlug)
+	config.TeamSlug = types.StringValue(site.AccountSlug)
 	config.Name = types.StringValue(site.Name)
 	config.CustomDomain = types.StringValue(site.CustomDomain)
 	config.DomainAliases = make([]types.String, len(site.DomainAliases))
