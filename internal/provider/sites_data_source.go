@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/netlify/terraform-provider-netlify/internal/netlifyapi"
 )
 
 var (
@@ -96,10 +97,22 @@ func (d *sitesDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		return
 	}
 
-	sites, _, err := d.data.client.SitesAPI.ListSitesForAccount(ctx, config.AccountSlug.ValueString()).Execute()
-	if err != nil {
-		resp.Diagnostics.AddError("Error reading Netlify account", fmt.Sprintf("Could not list Netlify sites in account %q: %q", config.AccountSlug.ValueString(), err.Error()))
-		return
+	r := d.data.client.SitesAPI.
+		ListSitesForAccount(ctx, config.AccountSlug.ValueString()).
+		PerPage(100)
+	sites := make([]netlifyapi.Site, 0)
+	var page int64 = 1
+	for {
+		items, _, err := r.Page(page).Execute()
+		if err != nil {
+			resp.Diagnostics.AddError("Error reading Netlify account", fmt.Sprintf("Could not list Netlify sites in account %q: %q", config.AccountSlug.ValueString(), err.Error()))
+			return
+		}
+		if len(items) == 0 {
+			break
+		}
+		sites = append(sites, items...)
+		page++
 	}
 	config.Sites = make([]sitesSiteModel, len(sites))
 	for i, site := range sites {
