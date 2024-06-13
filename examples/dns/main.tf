@@ -52,6 +52,7 @@ resource "netlify_dns_record" "fish" {
   priority = 10
 }
 
+# TODO: verify this returns all DNS records
 data "netlify_dns_zone" "example" {
   name = "example-tf-test-test.com"
   depends_on = [

@@ -2,5 +2,6 @@
     "go.lintFlags": [
         "--fast"
     ],
-    "go.lintTool": "golangci-lint"
+    "go.lintTool": "golangci-lint",
+    "files.insertFinalNewline": true
 }

@@ -23,7 +23,7 @@ resource "netlify_environment_variable" "woof" {
   account_id = data.netlify_account.current.id
   site_id    = data.netlify_site.platform_test.id
   key        = "WOOF"
-  value = [
+  values = [
     {
       value   = "dogs are here",
       context = "all",
@@ -35,7 +35,7 @@ resource "netlify_environment_variable" "meow" {
   account_id = data.netlify_account.current.id
   site_id    = data.netlify_site.platform_test.id
   key        = "TEST_MEOW"
-  value = [
+  values = [
     {
       value   = "roflmaocopter",
       context = "all",
@@ -47,7 +47,7 @@ resource "netlify_environment_variable" "secret_meow" {
   account_id = data.netlify_account.current.id
   site_id    = data.netlify_site.platform_test.id
   key        = "SECRET_TEST_MEOW"
-  secret_value = [
+  secret_values = [
     {
       value   = "secret roflmaocopter",
       context = "production",
@@ -62,7 +62,7 @@ resource "netlify_environment_variable" "secret_meow" {
 resource "netlify_environment_variable" "global_meow" {
   account_id = data.netlify_account.current.id
   key        = "TEST_MEOW"
-  value = [
+  values = [
     {
       value   = "global roflmaocopter",
       context = "all",

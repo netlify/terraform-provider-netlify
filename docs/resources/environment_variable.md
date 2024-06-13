@@ -23,16 +23,16 @@ description: |-
 ### Optional
 
 - `scopes` (Set of String)
-- `secret_value` (Attributes Set) (see [below for nested schema](#nestedatt--secret_value))
+- `secret_values` (Attributes Set) (see [below for nested schema](#nestedatt--secret_values))
 - `site_id` (String)
-- `value` (Attributes Set) (see [below for nested schema](#nestedatt--value))
+- `values` (Attributes Set) (see [below for nested schema](#nestedatt--values))
 
 ### Read-Only
 
 - `last_updated` (String)
 
-<a id="nestedatt--secret_value"></a>
-### Nested Schema for `secret_value`
+<a id="nestedatt--secret_values"></a>
+### Nested Schema for `secret_values`
 
 Required:
 
@@ -44,8 +44,8 @@ Optional:
 - `context_parameter` (String)
 
 
-<a id="nestedatt--value"></a>
-### Nested Schema for `value`
+<a id="nestedatt--values"></a>
+### Nested Schema for `values`
 
 Required:
 
