@@ -37,13 +37,13 @@ type environmentVariableResource struct {
 }
 
 type environmentVariableResourceModel struct {
-	AccountID   types.String                    `tfsdk:"account_id"`
-	SiteID      types.String                    `tfsdk:"site_id"`
-	LastUpdated types.String                    `tfsdk:"last_updated"`
-	Key         types.String                    `tfsdk:"key"`
-	Scopes      []types.String                  `tfsdk:"scopes"`
-	Value       []environmentVariableValueModel `tfsdk:"value"`
-	SecretValue []environmentVariableValueModel `tfsdk:"secret_value"`
+	AccountID    types.String                    `tfsdk:"account_id"`
+	SiteID       types.String                    `tfsdk:"site_id"`
+	LastUpdated  types.String                    `tfsdk:"last_updated"`
+	Key          types.String                    `tfsdk:"key"`
+	Scopes       []types.String                  `tfsdk:"scopes"`
+	Values       []environmentVariableValueModel `tfsdk:"values"`
+	SecretValues []environmentVariableValueModel `tfsdk:"secret_values"`
 }
 
 type environmentVariableValueModel struct {
@@ -114,7 +114,7 @@ func (r *environmentVariableResource) Schema(_ context.Context, _ resource.Schem
 					types.StringValue("post-processing"),
 				})),
 			},
-			"value": schema.SetNestedAttribute{
+			"values": schema.SetNestedAttribute{
 				Optional: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -140,7 +140,7 @@ func (r *environmentVariableResource) Schema(_ context.Context, _ resource.Schem
 				},
 				// TODO: validate that values don't overlap
 			},
-			"secret_value": schema.SetNestedAttribute{
+			"secret_values": schema.SetNestedAttribute{
 				Optional: true,
 				Validators: []validator.Set{
 					setvalidator.ExactlyOneOf(path.MatchRoot("value")),
@@ -189,11 +189,11 @@ func (r *environmentVariableResource) Create(ctx context.Context, req resource.C
 	}
 	var values []netlifyapi.EnvVarValue
 	var isSecret bool
-	if plan.SecretValue != nil && len(plan.SecretValue) > 0 {
-		values = serializeValues(plan.SecretValue)
+	if plan.SecretValues != nil && len(plan.SecretValues) > 0 {
+		values = serializeValues(plan.SecretValues)
 		isSecret = true
 	} else {
-		values = serializeValues(plan.Value)
+		values = serializeValues(plan.Values)
 		isSecret = false
 	}
 	createEnvVars := r.data.client.EnvironmentVariablesAPI.
@@ -263,7 +263,7 @@ func (r *environmentVariableResource) Read(ctx context.Context, req resource.Rea
 		state.Scopes[i] = types.StringValue(strings.ReplaceAll(strings.ReplaceAll(scope, " ", "-"), "_", "-"))
 	}
 	if !*envVar.IsSecret {
-		state.Value = parseValues(envVar.Values)
+		state.Values = parseValues(envVar.Values)
 	}
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
@@ -285,11 +285,11 @@ func (r *environmentVariableResource) Update(ctx context.Context, req resource.U
 	}
 	var values []netlifyapi.EnvVarValue
 	var isSecret bool
-	if plan.SecretValue != nil && len(plan.SecretValue) > 0 {
-		values = serializeValues(plan.SecretValue)
+	if plan.SecretValues != nil && len(plan.SecretValues) > 0 {
+		values = serializeValues(plan.SecretValues)
 		isSecret = true
 	} else {
-		values = serializeValues(plan.Value)
+		values = serializeValues(plan.Values)
 		isSecret = false
 	}
 	updateEnvVar := r.data.client.EnvironmentVariablesAPI.

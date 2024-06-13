@@ -19,6 +19,7 @@ data "netlify_site" "platform_test" {
   name         = "platform-test-1"
 }
 
+# TODO: verify this returns all sites
 data "netlify_sites" "all" {
   account_slug = "netlify-testing"
 }

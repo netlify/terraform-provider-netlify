@@ -8,9 +8,7 @@ terraform {
 }
 
 # `token` comes from NETLIFY_API_TOKEN, but can be specified with a Terraform variable
-provider "netlify" {
-  token = "nfp_C92ECMDqhbZpjtbhGmzGT2GQnFJSA4zvcc22"
-}
+provider "netlify" {}
 
 data "netlify_site" "test4" {
   account_slug = "netlify-testing"

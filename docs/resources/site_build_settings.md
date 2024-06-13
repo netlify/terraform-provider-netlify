@@ -18,14 +18,19 @@ description: |-
 ### Required
 
 - `build_command` (String)
+- `production_branch` (String)
 - `publish_directory` (String)
 - `site_id` (String)
 
 ### Optional
 
 - `base_directory` (String)
+- `branch_deploy_all_branches` (Boolean)
+- `branch_deploy_branches` (List of String)
 - `build_image` (String)
+- `deploy_previews` (Boolean)
 - `functions_directory` (String)
+- `functions_region` (String)
 - `package_directory` (String)
 - `pretty_urls` (Boolean)
 - `stop_builds` (Boolean)

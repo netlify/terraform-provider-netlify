@@ -142,7 +142,8 @@ func (p *NetlifyProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewFirewallTrafficRulesResource(false),
 		NewLogDrainResource,
 		NewSiteBuildSettingsResource,
-		NewSiteDeploySettingsResource,
+		NewSiteCollaborationSettingsResource,
+		NewSiteDomainSettingsResource,
 	}
 }
 

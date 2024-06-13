@@ -179,6 +179,18 @@ func (r *dnsZoneResource) Create(ctx context.Context, req resource.CreateRequest
 		}
 	}
 
+	_, _, err = r.data.client.DNSZonesAPI.EnableDnsZoneIpv6(ctx, plan.ID.ValueString()).Execute()
+	if err != nil {
+		resp.Diagnostics.AddWarning(
+			"Error enabling IPv6 for Netlify DNS zone",
+			fmt.Sprintf(
+				"Could not enable IPv6 for Netlify DNS zone %q: %q",
+				plan.ID.ValueString(),
+				err.Error(),
+			),
+		)
+	}
+
 	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 	if resp.Diagnostics.HasError() {
 		return

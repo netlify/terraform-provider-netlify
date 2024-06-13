@@ -14,33 +14,33 @@ import (
 )
 
 var (
-	_ validator.List = SiteDeploySettingsDeployBranchesValidator{}
+	_ validator.List = SiteBuildSettingsDeployBranchesValidator{}
 )
 
-type SiteDeploySettingsDeployBranchesValidator struct {
+type SiteBuildSettingsDeployBranchesValidator struct {
 	AllBranchesPathExpression path.Expression
 }
 
-type SiteDeploySettingsDeployBranchesValidatorRequest struct {
+type SiteBuildSettingsDeployBranchesValidatorRequest struct {
 	Config         tfsdk.Config
 	ConfigValue    attr.Value
 	Path           path.Path
 	PathExpression path.Expression
 }
 
-type SiteDeploySettingsDeployBranchesValidatorResponse struct {
+type SiteBuildSettingsDeployBranchesValidatorResponse struct {
 	Diagnostics diag.Diagnostics
 }
 
-func (av SiteDeploySettingsDeployBranchesValidator) Description(ctx context.Context) string {
+func (av SiteBuildSettingsDeployBranchesValidator) Description(ctx context.Context) string {
 	return av.MarkdownDescription(ctx)
 }
 
-func (av SiteDeploySettingsDeployBranchesValidator) MarkdownDescription(_ context.Context) string {
+func (av SiteBuildSettingsDeployBranchesValidator) MarkdownDescription(_ context.Context) string {
 	return fmt.Sprintf("Ensure that an attribute is a non-empty list only if %q is set to false", av.AllBranchesPathExpression)
 }
 
-func (av SiteDeploySettingsDeployBranchesValidator) Validate(ctx context.Context, req SiteDeploySettingsDeployBranchesValidatorRequest, res *SiteDeploySettingsDeployBranchesValidatorResponse) {
+func (av SiteBuildSettingsDeployBranchesValidator) Validate(ctx context.Context, req SiteBuildSettingsDeployBranchesValidatorRequest, res *SiteBuildSettingsDeployBranchesValidatorResponse) {
 	// Delay validation until all involved attributes have a known value
 	if req.ConfigValue.IsUnknown() {
 		return
@@ -86,14 +86,14 @@ func (av SiteDeploySettingsDeployBranchesValidator) Validate(ctx context.Context
 	}
 }
 
-func (av SiteDeploySettingsDeployBranchesValidator) ValidateList(ctx context.Context, req validator.ListRequest, resp *validator.ListResponse) {
-	validateReq := SiteDeploySettingsDeployBranchesValidatorRequest{
+func (av SiteBuildSettingsDeployBranchesValidator) ValidateList(ctx context.Context, req validator.ListRequest, resp *validator.ListResponse) {
+	validateReq := SiteBuildSettingsDeployBranchesValidatorRequest{
 		Config:         req.Config,
 		ConfigValue:    req.ConfigValue,
 		Path:           req.Path,
 		PathExpression: req.PathExpression,
 	}
-	validateResp := &SiteDeploySettingsDeployBranchesValidatorResponse{}
+	validateResp := &SiteBuildSettingsDeployBranchesValidatorResponse{}
 
 	av.Validate(ctx, validateReq, validateResp)
 
