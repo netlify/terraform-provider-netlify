@@ -11,8 +11,8 @@ terraform {
 provider "netlify" {}
 
 data "netlify_site" "test4" {
-  account_slug = "netlify-testing"
-  name         = "ramontest4"
+  team_slug = "netlify-testing"
+  name      = "ramontest4"
 }
 
 resource "netlify_log_drain" "ramontest4" {

@@ -17,8 +17,8 @@ description: |-
 
 ### Required
 
-- `account_id` (String)
 - `key` (String)
+- `team_id` (String)
 
 ### Optional
 

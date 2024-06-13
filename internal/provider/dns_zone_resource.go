@@ -34,8 +34,8 @@ type dnsZoneResourceModel struct {
 	ID          types.String        `tfsdk:"id"`
 	LastUpdated types.String        `tfsdk:"last_updated"`
 	Name        types.String        `tfsdk:"name"`
-	AccountID   types.String        `tfsdk:"account_id"`
-	AccountSlug types.String        `tfsdk:"account_slug"`
+	TeamID      types.String        `tfsdk:"team_id"`
+	TeamSlug    types.String        `tfsdk:"team_slug"`
 	DnsServers  types.List          `tfsdk:"dns_servers"`
 	Domain      *netlifyDomainModel `tfsdk:"domain"`
 }
@@ -80,13 +80,13 @@ func (r *dnsZoneResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"account_id": schema.StringAttribute{
+			"team_id": schema.StringAttribute{
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"account_slug": schema.StringAttribute{
+			"team_slug": schema.StringAttribute{
 				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -139,7 +139,7 @@ func (r *dnsZoneResource) Create(ctx context.Context, req resource.CreateRequest
 	dnsZone, _, err := r.data.client.DNSZonesAPI.
 		CreateDnsZone(ctx).
 		DnsZoneCreateParams(netlifyapi.DnsZoneCreateParams{
-			AccountSlug: plan.AccountSlug.ValueStringPointer(),
+			AccountSlug: plan.TeamSlug.ValueStringPointer(),
 			Name:        plan.Name.ValueStringPointer(),
 		}).
 		Execute()
@@ -147,9 +147,9 @@ func (r *dnsZoneResource) Create(ctx context.Context, req resource.CreateRequest
 		resp.Diagnostics.AddError(
 			"Error creating Netlify DNS zone",
 			fmt.Sprintf(
-				"Could not create Netlify DNS zone %q (account slug: %q): %q",
+				"Could not create Netlify DNS zone %q (team slug: %q): %q",
 				plan.Name.ValueString(),
-				plan.AccountSlug.ValueString(),
+				plan.TeamSlug.ValueString(),
 				err.Error(),
 			),
 		)
@@ -157,7 +157,7 @@ func (r *dnsZoneResource) Create(ctx context.Context, req resource.CreateRequest
 	}
 	plan.ID = types.StringValue(dnsZone.Id)
 	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC3339))
-	plan.AccountID = types.StringValue(dnsZone.AccountId)
+	plan.TeamID = types.StringValue(dnsZone.AccountId)
 	dnsServers := make([]types.String, len(dnsZone.DnsServers))
 	for i, dnsServer := range dnsZone.DnsServers {
 		dnsServers[i] = types.StringValue(dnsServer)
@@ -217,8 +217,8 @@ func (r *dnsZoneResource) Read(ctx context.Context, req resource.ReadRequest, re
 		return
 	}
 	state.Name = types.StringValue(dnsZone.Name)
-	state.AccountID = types.StringValue(dnsZone.AccountId)
-	state.AccountSlug = types.StringValue(dnsZone.AccountSlug)
+	state.TeamID = types.StringValue(dnsZone.AccountId)
+	state.TeamSlug = types.StringValue(dnsZone.AccountSlug)
 	dnsServers := make([]types.String, len(dnsZone.DnsServers))
 	for i, dnsServer := range dnsZone.DnsServers {
 		dnsServers[i] = types.StringValue(dnsServer)

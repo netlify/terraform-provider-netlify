@@ -17,7 +17,7 @@ description: |-
 
 ### Required
 
-- `account_slug` (String)
+- `team_slug` (String)
 
 ### Read-Only
 
@@ -28,8 +28,8 @@ description: |-
 
 Read-Only:
 
-- `account_slug` (String)
 - `custom_domain` (String)
 - `domain_aliases` (List of String)
 - `id` (String)
 - `name` (String)
+- `team_slug` (String)

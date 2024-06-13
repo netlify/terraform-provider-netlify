@@ -11,11 +11,11 @@ terraform {
 provider "netlify" {}
 
 data "netlify_site" "test4" {
-  account_slug = "netlify-testing"
-  name         = "ramontest4"
+  team_slug = "netlify-testing"
+  name      = "ramontest4"
 }
 
-# TODO: add an example for netlify_account_firewall_traffic_rules
+# TODO: add an example for netlify_team_firewall_traffic_rules
 
 resource "netlify_site_firewall_traffic_rules" "ramontest4" {
   site_id = data.netlify_site.test4.id

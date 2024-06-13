@@ -10,19 +10,19 @@ terraform {
 # `token` comes from NETLIFY_API_TOKEN, but can be specified with a Terraform variable
 provider "netlify" {}
 
-data "netlify_account" "current" {
+data "netlify_team" "current" {
   slug = "ramon-test-1"
 }
 
 data "netlify_site" "platform_test" {
-  account_slug = data.netlify_account.current.slug
-  name         = "platform-test-1"
+  team_slug = data.netlify_team.current.slug
+  name      = "platform-test-1"
 }
 
 resource "netlify_environment_variable" "woof" {
-  account_id = data.netlify_account.current.id
-  site_id    = data.netlify_site.platform_test.id
-  key        = "WOOF"
+  team_id = data.netlify_team.current.id
+  site_id = data.netlify_site.platform_test.id
+  key     = "WOOF"
   values = [
     {
       value   = "dogs are here",
@@ -32,9 +32,9 @@ resource "netlify_environment_variable" "woof" {
 }
 
 resource "netlify_environment_variable" "meow" {
-  account_id = data.netlify_account.current.id
-  site_id    = data.netlify_site.platform_test.id
-  key        = "TEST_MEOW"
+  team_id = data.netlify_team.current.id
+  site_id = data.netlify_site.platform_test.id
+  key     = "TEST_MEOW"
   values = [
     {
       value   = "roflmaocopter",
@@ -44,9 +44,9 @@ resource "netlify_environment_variable" "meow" {
 }
 
 resource "netlify_environment_variable" "secret_meow" {
-  account_id = data.netlify_account.current.id
-  site_id    = data.netlify_site.platform_test.id
-  key        = "SECRET_TEST_MEOW"
+  team_id = data.netlify_team.current.id
+  site_id = data.netlify_site.platform_test.id
+  key     = "SECRET_TEST_MEOW"
   secret_values = [
     {
       value   = "secret roflmaocopter",
@@ -60,8 +60,8 @@ resource "netlify_environment_variable" "secret_meow" {
 }
 
 resource "netlify_environment_variable" "global_meow" {
-  account_id = data.netlify_account.current.id
-  key        = "TEST_MEOW"
+  team_id = data.netlify_team.current.id
+  key     = "TEST_MEOW"
   values = [
     {
       value   = "global roflmaocopter",

@@ -21,12 +21,12 @@ description: |-
 
 ### Read-Only
 
-- `account_id` (String)
-- `account_slug` (String)
 - `dns_servers` (List of String)
 - `domain` (Attributes) (see [below for nested schema](#nestedatt--domain))
 - `id` (String) The ID of this resource.
 - `records` (Attributes List) (see [below for nested schema](#nestedatt--records))
+- `team_id` (String)
+- `team_slug` (String)
 
 <a id="nestedatt--domain"></a>
 ### Nested Schema for `domain`

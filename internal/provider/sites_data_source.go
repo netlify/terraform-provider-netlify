@@ -24,13 +24,13 @@ type sitesDataSource struct {
 }
 
 type sitesDataSourceModel struct {
-	AccountSlug types.String     `tfsdk:"account_slug"`
-	Sites       []sitesSiteModel `tfsdk:"sites"`
+	TeamSlug types.String     `tfsdk:"team_slug"`
+	Sites    []sitesSiteModel `tfsdk:"sites"`
 }
 
 type sitesSiteModel struct {
 	ID            types.String   `tfsdk:"id"`
-	AccountSlug   types.String   `tfsdk:"account_slug"`
+	TeamSlug      types.String   `tfsdk:"team_slug"`
 	Name          types.String   `tfsdk:"name"`
 	CustomDomain  types.String   `tfsdk:"custom_domain"`
 	DomainAliases []types.String `tfsdk:"domain_aliases"`
@@ -60,7 +60,7 @@ func (d *sitesDataSource) Metadata(_ context.Context, req datasource.MetadataReq
 func (d *sitesDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
-			"account_slug": schema.StringAttribute{
+			"team_slug": schema.StringAttribute{
 				Required: true,
 			},
 			"sites": schema.ListNestedAttribute{
@@ -70,7 +70,7 @@ func (d *sitesDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, 
 						"id": schema.StringAttribute{
 							Computed: true,
 						},
-						"account_slug": schema.StringAttribute{
+						"team_slug": schema.StringAttribute{
 							Computed: true,
 						},
 						"name": schema.StringAttribute{
@@ -98,14 +98,14 @@ func (d *sitesDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	}
 
 	r := d.data.client.SitesAPI.
-		ListSitesForAccount(ctx, config.AccountSlug.ValueString()).
+		ListSitesForAccount(ctx, config.TeamSlug.ValueString()).
 		PerPage(100)
 	sites := make([]netlifyapi.Site, 0)
 	var page int64 = 1
 	for {
 		items, _, err := r.Page(page).Execute()
 		if err != nil {
-			resp.Diagnostics.AddError("Error reading Netlify account", fmt.Sprintf("Could not list Netlify sites in account %q: %q", config.AccountSlug.ValueString(), err.Error()))
+			resp.Diagnostics.AddError("Error reading Netlify team", fmt.Sprintf("Could not list Netlify sites in team %q: %q", config.TeamSlug.ValueString(), err.Error()))
 			return
 		}
 		if len(items) == 0 {
@@ -118,7 +118,7 @@ func (d *sitesDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	for i, site := range sites {
 		config.Sites[i] = sitesSiteModel{
 			ID:            types.StringValue(site.Id),
-			AccountSlug:   types.StringValue(site.AccountSlug),
+			TeamSlug:      types.StringValue(site.AccountSlug),
 			Name:          types.StringValue(site.Name),
 			CustomDomain:  types.StringValue(site.CustomDomain),
 			DomainAliases: make([]types.String, len(site.DomainAliases)),

@@ -23,8 +23,8 @@ description: |-
 
 ### Read-Only
 
-- `account_id` (String)
 - `last_updated` (String)
+- `team_id` (String)
 
 <a id="nestedatt--published"></a>
 ### Nested Schema for `published`

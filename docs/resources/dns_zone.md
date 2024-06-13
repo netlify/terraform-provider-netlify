@@ -17,16 +17,16 @@ description: |-
 
 ### Required
 
-- `account_slug` (String)
 - `name` (String)
+- `team_slug` (String)
 
 ### Read-Only
 
-- `account_id` (String)
 - `dns_servers` (List of String)
 - `domain` (Attributes) (see [below for nested schema](#nestedatt--domain))
 - `id` (String) The ID of this resource.
 - `last_updated` (String)
+- `team_id` (String)
 
 <a id="nestedatt--domain"></a>
 ### Nested Schema for `domain`

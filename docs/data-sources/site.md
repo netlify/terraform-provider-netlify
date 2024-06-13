@@ -17,8 +17,8 @@ description: |-
 
 ### Optional
 
-- `account_slug` (String)
 - `name` (String)
+- `team_slug` (String)
 
 ### Read-Only
 

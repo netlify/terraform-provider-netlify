@@ -25,22 +25,22 @@ var (
 	_ resource.ResourceWithImportState = &firewallTrafficRulesResource{}
 )
 
-func NewFirewallTrafficRulesResource(accountLevel bool) func() resource.Resource {
+func NewFirewallTrafficRulesResource(teamLevel bool) func() resource.Resource {
 	return func() resource.Resource {
 		return &firewallTrafficRulesResource{
-			accountLevel: accountLevel,
+			teamLevel: teamLevel,
 		}
 	}
 }
 
 type firewallTrafficRulesResource struct {
-	data         NetlifyProviderData
-	accountLevel bool
+	data      NetlifyProviderData
+	teamLevel bool
 }
 
 type firewallTrafficRulesResourceModel struct {
 	SiteID      types.String            `tfsdk:"site_id"`
-	AccountID   types.String            `tfsdk:"account_id"`
+	TeamID      types.String            `tfsdk:"team_id"`
 	LastUpdated types.String            `tfsdk:"last_updated"`
 	Published   *firewallTrafficRuleSet `tfsdk:"published"`
 	Unpublished *firewallTrafficRuleSet `tfsdk:"unpublished"`
@@ -66,8 +66,8 @@ type geoFirewallTrafficRule struct {
 }
 
 func (r *firewallTrafficRulesResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	if r.accountLevel {
-		resp.TypeName = req.ProviderTypeName + "_account_firewall_traffic_rules"
+	if r.teamLevel {
+		resp.TypeName = req.ProviderTypeName + "_team_firewall_traffic_rules"
 	} else {
 		resp.TypeName = req.ProviderTypeName + "_site_firewall_traffic_rules"
 	}
@@ -161,15 +161,15 @@ func (r *firewallTrafficRulesResource) Schema(_ context.Context, _ resource.Sche
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"site_id": schema.StringAttribute{
-				Required: !r.accountLevel,
-				Computed: r.accountLevel,
+				Required: !r.teamLevel,
+				Computed: r.teamLevel,
 				PlanModifiers: []planmodifier.String{
 					netlify_planmodifiers.UseNullForUnknown(),
 				},
 			},
-			"account_id": schema.StringAttribute{
-				Required: r.accountLevel,
-				Computed: !r.accountLevel,
+			"team_id": schema.StringAttribute{
+				Required: r.teamLevel,
+				Computed: !r.teamLevel,
 				PlanModifiers: []planmodifier.String{
 					netlify_planmodifiers.UseNullForUnknown(),
 				},
@@ -210,17 +210,17 @@ func (r *firewallTrafficRulesResource) Read(ctx context.Context, req resource.Re
 
 	var config *netlifyapi.SiteFirewallConfig
 
-	if r.accountLevel {
+	if r.teamLevel {
 		var err error
 		config, _, err = r.data.client.AccountsAPI.
-			GetAccountFirewallRuleSet(ctx, state.AccountID.ValueString()).
+			GetAccountFirewallRuleSet(ctx, state.TeamID.ValueString()).
 			Execute()
 		if err != nil {
 			resp.Diagnostics.AddError(
-				"Error reading account firewall rule set",
+				"Error reading team firewall rule set",
 				fmt.Sprintf(
-					"Could not read account firewall rule set %q: %q",
-					state.AccountID.ValueString(),
+					"Could not read team firewall rule set %q: %q",
+					state.TeamID.ValueString(),
 					err.Error(),
 				),
 			)
@@ -281,16 +281,16 @@ func (r *firewallTrafficRulesResource) Delete(ctx context.Context, req resource.
 		return
 	}
 
-	if r.accountLevel {
+	if r.teamLevel {
 		_, err := r.data.client.AccountsAPI.
-			DeleteAccountFirewallRuleSet(ctx, state.AccountID.ValueString()).
+			DeleteAccountFirewallRuleSet(ctx, state.TeamID.ValueString()).
 			Execute()
 		if err != nil {
 			resp.Diagnostics.AddError(
-				"Error deleting account firewall rule set",
+				"Error deleting team firewall rule set",
 				fmt.Sprintf(
-					"Could not delete account firewall rule set %q: %q",
-					state.AccountID.ValueString(),
+					"Could not delete team firewall rule set %q: %q",
+					state.TeamID.ValueString(),
 					err.Error(),
 				),
 			)
@@ -316,8 +316,8 @@ func (r *firewallTrafficRulesResource) Delete(ctx context.Context, req resource.
 }
 
 func (r *firewallTrafficRulesResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	if r.accountLevel {
-		resource.ImportStatePassthroughID(ctx, path.Root("account_id"), req, resp)
+	if r.teamLevel {
+		resource.ImportStatePassthroughID(ctx, path.Root("team_id"), req, resp)
 	} else {
 		resource.ImportStatePassthroughID(ctx, path.Root("site_id"), req, resp)
 	}
@@ -331,17 +331,17 @@ func (r *firewallTrafficRulesResource) write(ctx context.Context, plan *firewall
 	unpublished := r.serializeRuleSet(plan.Unpublished)
 	createSiteFirewallConfig.Unpublished = &unpublished
 
-	if r.accountLevel {
+	if r.teamLevel {
 		_, err := r.data.client.AccountsAPI.
-			UpdateAccountFirewallRuleSet(ctx, plan.AccountID.ValueString()).
+			UpdateAccountFirewallRuleSet(ctx, plan.TeamID.ValueString()).
 			CreateSiteFirewallConfig(createSiteFirewallConfig).
 			Execute()
 		if err != nil {
 			diagnostics.AddError(
-				"Error updating account firewall rule set",
+				"Error updating team firewall rule set",
 				fmt.Sprintf(
-					"Could not update account firewall rule set %q: %q",
-					plan.AccountID.ValueString(),
+					"Could not update team firewall rule set %q: %q",
+					plan.TeamID.ValueString(),
 					err.Error(),
 				),
 			)
@@ -365,7 +365,7 @@ func (r *firewallTrafficRulesResource) write(ctx context.Context, plan *firewall
 			)
 			return
 		}
-		plan.AccountID = types.StringNull()
+		plan.TeamID = types.StringNull()
 	}
 	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 }
