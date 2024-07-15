@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/go-swagger/go-swagger v0.30.5
 	github.com/hashicorp/terraform-plugin-docs v0.19.4
-	github.com/hashicorp/terraform-plugin-framework v1.9.0
+	github.com/hashicorp/terraform-plugin-framework v1.10.0
 	golang.org/x/oauth2 v0.21.0
 )
 
