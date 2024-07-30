@@ -322,7 +322,10 @@ func (r *siteBuildSettingsResource) write(ctx context.Context, plan *siteBuildSe
 		},
 	}
 
-	if plan.BuildImage.IsUnknown() || plan.BuildImage.IsNull() {
+	if plan.BuildImage.IsUnknown() {
+		plan.BuildImage = curState.BuildImage
+	}
+	if plan.BuildImage.IsNull() {
 		site.BuildImage = curState.BuildImage.ValueStringPointer()
 	} else {
 		site.BuildImage = plan.BuildImage.ValueStringPointer()
