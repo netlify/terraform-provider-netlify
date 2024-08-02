@@ -42,7 +42,7 @@ func (p *NetlifyProvider) Schema(ctx context.Context, req provider.SchemaRequest
 				Optional:            true,
 			},
 			"token": schema.StringAttribute{
-				MarkdownDescription: "Read: https://docs.netlify.com/api/get-started/",
+				MarkdownDescription: "Read: https://docs.netlify.com/api/get-started/#authentication , will use the `NETLIFY_API_TOKEN` environment variable if not set.",
 				Optional:            true,
 				Sensitive:           true,
 			},

@@ -7,6 +7,32 @@ description: |-
 
 # Netlify Provider
 
-The Netlify provider provides resources to interact with a Netlify account.
+The Netlify provider provides resources to manage Netlify resources like site configuration, environment variables, and Advanced Web Security features.
+
+## Authentication
+
+To use the provider, you will need a [personal access token](https://docs.netlify.com/api/get-started/#authentication).
+You can create a new token in the [Netlify app](https://app.netlify.com/user/applications#personal-access-tokens).
+
+You can expose the token as an environment variable:
+```bash
+export NETLIFY_API_TOKEN="your-personal-access-token"
+```
+
+Or by creating a Terraform variable:
+```terraform
+variable "netlify_api_token" {
+  type = string
+}
+
+provider "netlify" {
+  token = var.netlify_api_token
+}
+```
+and setting the variable's value as an environment variable (`TF_VAR_netlify_api_token`).
+
+## Example Usage
+
+{{tffile "examples/provider/provider.tf"}}
 
 {{ .SchemaMarkdown | trimspace }}
