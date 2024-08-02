@@ -129,7 +129,8 @@ func (r *firewallTrafficRulesResource) Schema(_ context.Context, _ resource.Sche
 		Required: true,
 		Attributes: map[string]schema.Attribute{
 			"default_action": schema.StringAttribute{
-				Required: true,
+				Required:    true,
+				Description: "One of allow or deny",
 				Validators: []validator.String{
 					stringvalidator.OneOf("allow", "deny"),
 					netlify_validators.ForbiddenIfEquals(
@@ -158,7 +159,21 @@ func (r *firewallTrafficRulesResource) Schema(_ context.Context, _ resource.Sche
 		},
 	}
 
+	var (
+		description   string
+		mdDescription string
+	)
+	if r.teamLevel {
+		description = "Netlify team-level firewall traffic rules"
+		mdDescription = "Netlify team-level firewall traffic rules. [Read more](https://docs.netlify.com/security/secure-access-to-sites/traffic-rules/)"
+	} else {
+		description = "Netlify site-level firewall traffic rules"
+		mdDescription = "Netlify site-level firewall traffic rules. [Read more](https://docs.netlify.com/security/secure-access-to-sites/traffic-rules/)"
+	}
+
 	resp.Schema = schema.Schema{
+		Description:         description,
+		MarkdownDescription: mdDescription,
 		Attributes: map[string]schema.Attribute{
 			"site_id": schema.StringAttribute{
 				Required: !r.teamLevel,

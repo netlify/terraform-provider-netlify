@@ -81,6 +81,8 @@ func (r *logDrainResource) Configure(_ context.Context, req resource.ConfigureRe
 
 func (r *logDrainResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		Description:         "Netlify log drain",
+		MarkdownDescription: "Netlify log drain. [Read more](https://docs.netlify.com/monitor-sites/log-drains/)",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed: true,
@@ -102,6 +104,7 @@ func (r *logDrainResource) Schema(_ context.Context, _ resource.SchemaRequest, r
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
+				Description: "One of datadog, newrelic, logflare, s3, splunkcloud, http, axiom, or azure",
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"datadog",
@@ -136,13 +139,15 @@ func (r *logDrainResource) Schema(_ context.Context, _ resource.SchemaRequest, r
 				},
 			},
 			"format": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-				Default:  stringdefault.StaticString("json"),
+				Optional:    true,
+				Computed:    true,
+				Description: "json or ndjson",
+				Default:     stringdefault.StaticString("json"),
 			},
 			"log_types": schema.SetAttribute{
 				Required:    true,
 				ElementType: types.StringType,
+				Description: "One or more of user_traffic, functions, edge_functions, and deploys",
 				Validators: []validator.Set{
 					setvalidator.ValueStringsAre(
 						stringvalidator.OneOf("user_traffic", "functions", "edge_functions", "deploys"),

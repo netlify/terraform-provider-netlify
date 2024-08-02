@@ -76,6 +76,8 @@ func (r *environmentVariableResource) Configure(_ context.Context, req resource.
 
 func (r *environmentVariableResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		Description:         "Environment variables for Netlify sites",
+		MarkdownDescription: "Environment variables for Netlify sites. [Read more](https://docs.netlify.com/environment-variables/overview/)",
 		Attributes: map[string]schema.Attribute{
 			"last_updated": schema.StringAttribute{
 				Computed: true,
@@ -102,6 +104,7 @@ func (r *environmentVariableResource) Schema(_ context.Context, _ resource.Schem
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
+				Description: "One or more of builds, functions, runtime, and post-processing",
 				Validators: []validator.Set{
 					setvalidator.ValueStringsAre(
 						stringvalidator.OneOf("builds", "functions", "runtime", "post-processing"),
@@ -123,7 +126,8 @@ func (r *environmentVariableResource) Schema(_ context.Context, _ resource.Schem
 							Required: true,
 						},
 						"context": schema.StringAttribute{
-							Required: true,
+							Required:    true,
+							Description: "One of all, dev, branch-deploy, deploy-preview, production, or branch",
 							Validators: []validator.String{
 								stringvalidator.OneOf("all", "dev", "branch-deploy", "deploy-preview", "production", "branch"),
 							},
@@ -153,7 +157,8 @@ func (r *environmentVariableResource) Schema(_ context.Context, _ resource.Schem
 							Sensitive: true,
 						},
 						"context": schema.StringAttribute{
-							Required: true,
+							Required:    true,
+							Description: "One of all, dev, branch-deploy, deploy-preview, production, or branch",
 							Validators: []validator.String{
 								stringvalidator.OneOf("all", "dev", "branch-deploy", "deploy-preview", "production", "branch"),
 							},

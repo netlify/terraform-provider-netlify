@@ -64,6 +64,8 @@ func (r *dnsZoneResource) Configure(_ context.Context, req resource.ConfigureReq
 
 func (r *dnsZoneResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		Description:         "Netlify DNS zone",
+		MarkdownDescription: "Netlify DNS zone. [Read more](https://docs.netlify.com/domains-https/netlify-dns/)",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed: true,

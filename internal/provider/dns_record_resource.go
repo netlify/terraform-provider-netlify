@@ -71,6 +71,8 @@ func (r *dnsRecordResource) Configure(_ context.Context, req resource.ConfigureR
 
 func (r *dnsRecordResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		Description:         "Netlify DNS record",
+		MarkdownDescription: "Netlify DNS record. [Read more](https://docs.netlify.com/domains-https/netlify-dns/)",
 		Attributes: map[string]schema.Attribute{
 			"zone_id": schema.StringAttribute{
 				Required: true,
@@ -88,7 +90,8 @@ func (r *dnsRecordResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				Computed: true,
 			},
 			"type": schema.StringAttribute{
-				Required: true,
+				Required:    true,
+				Description: "One of A, AAAA, ALIAS, CAA, CNAME, MX, NS, SPF, or TXT",
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"A",
@@ -106,7 +109,8 @@ func (r *dnsRecordResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 				},
 			},
 			"hostname": schema.StringAttribute{
-				Required: true,
+				Required:    true,
+				Description: "The hostname for the DNS record. For example, `www.example.com`.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
