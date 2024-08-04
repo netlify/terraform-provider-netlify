@@ -29,9 +29,9 @@ data "netlify_team" "team" {
 
 ### Optional
 
-- `slug` (String)
+- `id` (String) ID or slug are required if a default team was not configured in the provider configuration.
+- `slug` (String) ID or slug are required if a default team was not configured in the provider configuration.
 
 ### Read-Only
 
-- `id` (String) The ID of this resource.
 - `name` (String)

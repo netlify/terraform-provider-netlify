@@ -28,7 +28,10 @@ resource "netlify_dns_zone" "example" {
 ### Required
 
 - `name` (String)
-- `team_slug` (String)
+
+### Optional
+
+- `team_slug` (String) Required if a default team was not configured in the provider configuration.
 
 ### Read-Only
 

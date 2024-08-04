@@ -2,14 +2,17 @@ package provider
 
 import (
 	"context"
+	"fmt"
 	"net/url"
 	"os"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/netlify/terraform-provider-netlify/internal/netlifyapi"
 )
@@ -21,12 +24,30 @@ type NetlifyProvider struct {
 }
 
 type NetlifyProviderModel struct {
-	Endpoint types.String `tfsdk:"endpoint"`
-	Token    types.String `tfsdk:"token"`
+	Endpoint        types.String `tfsdk:"endpoint"`
+	Token           types.String `tfsdk:"token"`
+	DefaultTeamID   types.String `tfsdk:"default_team_id"`
+	DefaultTeamSlug types.String `tfsdk:"default_team_slug"`
 }
 
 type NetlifyProviderData struct {
-	client *netlifyapi.APIClient
+	client          *netlifyapi.APIClient
+	defaultTeamId   *string
+	defaultTeamSlug *string
+}
+
+func (d *NetlifyProviderData) teamIdOrDefault(value types.String) *string {
+	if value.IsUnknown() || value.IsNull() {
+		return d.defaultTeamId
+	}
+	return value.ValueStringPointer()
+}
+
+func (d *NetlifyProviderData) teamSlugOrDefault(value types.String) *string {
+	if value.IsUnknown() || value.IsNull() {
+		return d.defaultTeamSlug
+	}
+	return value.ValueStringPointer()
 }
 
 func (p *NetlifyProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -45,6 +66,16 @@ func (p *NetlifyProvider) Schema(ctx context.Context, req provider.SchemaRequest
 				MarkdownDescription: "Read: https://docs.netlify.com/api/get-started/#authentication , will use the `NETLIFY_API_TOKEN` environment variable if not set.",
 				Optional:            true,
 				Sensitive:           true,
+			},
+			"default_team_id": schema.StringAttribute{
+				MarkdownDescription: "The default team ID to use for resources that require a team ID or a team slug. Warning: Changing this value may not trigger recreation of resources.",
+				Optional:            true,
+				Validators:          []validator.String{stringvalidator.ConflictsWith(path.MatchRoot("default_team_slug"))},
+			},
+			"default_team_slug": schema.StringAttribute{
+				MarkdownDescription: "The default team slug to use for resources that require a team ID or a team slug. Warning: Changing this value may not trigger recreation of resources.",
+				Optional:            true,
+				Validators:          []validator.String{stringvalidator.ConflictsWith(path.MatchRoot("default_team_id"))},
 			},
 		},
 	}
@@ -128,6 +159,43 @@ func (p *NetlifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 	apiConfig.AddDefaultHeader("Authorization", "Bearer "+token)
 	// TODO: Add debug/trace logging to the API client, perhaps by overriding the behavior of apiConfig.Debug
 	data.client = netlifyapi.NewAPIClient(apiConfig)
+
+	var account *netlifyapi.Account
+
+	if !config.DefaultTeamID.IsNull() {
+		var err error
+		account, _, err = data.client.AccountsAPI.GetAccount(ctx, config.DefaultTeamID.ValueString()).Execute()
+		if err != nil {
+			resp.Diagnostics.AddError(
+				"Error reading Netlify team",
+				fmt.Sprintf("Could not read Netlify team ID %q: %q", config.DefaultTeamID.ValueString(), err.Error()),
+			)
+			return
+		}
+	} else if !config.DefaultTeamSlug.IsNull() {
+		accounts, _, err := data.client.AccountsAPI.ListAccountsForUser(ctx).Execute()
+		if err != nil {
+			resp.Diagnostics.AddError("Error reading Netlify team", fmt.Sprintf("Could not list Netlify teams: %q", err.Error()))
+			return
+		}
+		slugString := config.DefaultTeamSlug.ValueString()
+		for _, a := range accounts {
+			if a.Slug == slugString {
+				acc := a
+				account = &acc
+				break
+			}
+		}
+		if account == nil {
+			resp.Diagnostics.AddError("Error reading Netlify team", fmt.Sprintf("Could not find Netlify team with slug %q", slugString))
+			return
+		}
+	}
+
+	if account != nil {
+		data.defaultTeamId = &account.Id
+		data.defaultTeamSlug = &account.Slug
+	}
 
 	resp.DataSourceData = data
 	resp.ResourceData = data

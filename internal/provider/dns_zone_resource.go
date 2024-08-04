@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -89,9 +90,12 @@ func (r *dnsZoneResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 				},
 			},
 			"team_slug": schema.StringAttribute{
-				Required: true,
+				Computed:    true,
+				Optional:    true,
+				Description: "Required if a default team was not configured in the provider configuration.",
 				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
+					stringplanmodifier.RequiresReplaceIfConfigured(),
+					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"dns_servers": schema.ListAttribute{
@@ -102,7 +106,8 @@ func (r *dnsZoneResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 				},
 			},
 			"domain": schema.SingleNestedAttribute{
-				Computed: true,
+				Computed:      true,
+				PlanModifiers: []planmodifier.Object{objectplanmodifier.UseStateForUnknown()},
 				Attributes: map[string]schema.Attribute{
 					"id": schema.StringAttribute{
 						Computed: true,
@@ -138,10 +143,19 @@ func (r *dnsZoneResource) Create(ctx context.Context, req resource.CreateRequest
 		return
 	}
 
+	teamSlug := r.data.teamSlugOrDefault(plan.TeamSlug)
+	if teamSlug == nil {
+		resp.Diagnostics.AddError(
+			"Missing team slug",
+			"Team slug is required for creating a Netlify DNS zone. Please provide a team slug in the plan or configure a default team in the provider configuration.",
+		)
+		return
+	}
+
 	dnsZone, _, err := r.data.client.DNSZonesAPI.
 		CreateDnsZone(ctx).
 		DnsZoneCreateParams(netlifyapi.DnsZoneCreateParams{
-			AccountSlug: plan.TeamSlug.ValueStringPointer(),
+			AccountSlug: teamSlug,
 			Name:        plan.Name.ValueStringPointer(),
 		}).
 		Execute()
@@ -151,7 +165,7 @@ func (r *dnsZoneResource) Create(ctx context.Context, req resource.CreateRequest
 			fmt.Sprintf(
 				"Could not create Netlify DNS zone %q (team slug: %q): %q",
 				plan.Name.ValueString(),
-				plan.TeamSlug.ValueString(),
+				*teamSlug,
 				err.Error(),
 			),
 		)
@@ -160,6 +174,7 @@ func (r *dnsZoneResource) Create(ctx context.Context, req resource.CreateRequest
 	plan.ID = types.StringValue(dnsZone.Id)
 	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC3339))
 	plan.TeamID = types.StringValue(dnsZone.AccountId)
+	plan.TeamSlug = types.StringValue(dnsZone.AccountSlug)
 	dnsServers := make([]types.String, len(dnsZone.DnsServers))
 	for i, dnsServer := range dnsZone.DnsServers {
 		dnsServers[i] = types.StringValue(dnsServer)
@@ -249,7 +264,7 @@ func (r *dnsZoneResource) Read(ctx context.Context, req resource.ReadRequest, re
 }
 
 func (r *dnsZoneResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	resp.Diagnostics.AddError(
+	resp.Diagnostics.AddWarning(
 		"Update not supported for Netlify DNS zones",
 		"Update is not supported for Netlify DNS zones at this time.",
 	)

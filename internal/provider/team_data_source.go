@@ -4,11 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/path"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/netlify/terraform-provider-netlify/internal/netlifyapi"
 )
@@ -57,15 +54,14 @@ func (d *teamDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, r
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-				Validators: []validator.String{
-					stringvalidator.AtLeastOneOf(path.MatchRoot("slug")),
-				},
+				Optional:    true,
+				Computed:    true,
+				Description: "ID or slug are required if a default team was not configured in the provider configuration.",
 			},
 			"slug": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
+				Optional:    true,
+				Computed:    true,
+				Description: "ID or slug are required if a default team was not configured in the provider configuration.",
 			},
 			"name": schema.StringAttribute{
 				Computed: true,
@@ -82,15 +78,7 @@ func (d *teamDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 	}
 
 	var account *netlifyapi.Account
-	if !config.ID.IsUnknown() && !config.ID.IsNull() {
-		var err error
-		account, _, err = d.data.client.AccountsAPI.GetAccount(ctx, config.ID.ValueString()).Execute()
-		if err != nil {
-			resp.Diagnostics.AddError("Error reading Netlify team", fmt.Sprintf("Could not read Netlify team ID %q: %q",
-				config.ID.ValueString(), err.Error()))
-			return
-		}
-	} else {
+	if !config.Slug.IsUnknown() && !config.Slug.IsNull() {
 		accounts, _, err := d.data.client.AccountsAPI.ListAccountsForUser(ctx).Execute()
 		if err != nil {
 			resp.Diagnostics.AddError("Error reading Netlify team", fmt.Sprintf("Could not list Netlify teams: %q", err.Error()))
@@ -106,6 +94,23 @@ func (d *teamDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 		}
 		if account == nil {
 			resp.Diagnostics.AddError("Error reading Netlify team", fmt.Sprintf("Could not find Netlify team with slug %q", slugString))
+			return
+		}
+	} else {
+		teamId := d.data.teamIdOrDefault(config.ID)
+		if teamId == nil {
+			resp.Diagnostics.AddError(
+				"Missing team information",
+				"Team information is required for reading a Netlify team. Please provide a team ID or slug in the plan or configure a default team in the provider configuration.",
+			)
+			return
+		}
+
+		var err error
+		account, _, err = d.data.client.AccountsAPI.GetAccount(ctx, *teamId).Execute()
+		if err != nil {
+			resp.Diagnostics.AddError("Error reading Netlify team", fmt.Sprintf("Could not read Netlify team ID %q: %q",
+				*teamId, err.Error()))
 			return
 		}
 	}

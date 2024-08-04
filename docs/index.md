@@ -48,19 +48,21 @@ terraform {
 
 provider "netlify" {
   token = var.netlify_api_token
+  # Optionally, set a default team through its ID or its slug to avoid repeating it.
+  default_team_slug = "your-team-slug"
 }
 
 data "netlify_team" "team" {
-  slug = "your-team-slug"
+  # slug coming from the default team
 }
 
 data "netlify_site" "blog" {
-  team_slug = data.netlify_team.team.slug
-  name      = "blog"
+  # team_slug coming from the default team
+  name = "blog"
 }
 
 resource "netlify_environment_variable" "astro_database_file" {
-  team_id = data.netlify_team.team.id
+  # team_id coming from the default team
   site_id = data.netlify_site.blog.id
   key     = "ASTRO_DATABASE_FILE"
   values = [
@@ -77,5 +79,7 @@ resource "netlify_environment_variable" "astro_database_file" {
 
 ### Optional
 
+- `default_team_id` (String) The default team ID to use for resources that require a team ID or a team slug. Warning: Changing this value may not trigger recreation of resources.
+- `default_team_slug` (String) The default team slug to use for resources that require a team ID or a team slug. Warning: Changing this value may not trigger recreation of resources.
 - `endpoint` (String) Defaults to: https://api.netlify.com
 - `token` (String, Sensitive) Read: https://docs.netlify.com/api/get-started/#authentication , will use the `NETLIFY_API_TOKEN` environment variable if not set.
