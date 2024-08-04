@@ -61,7 +61,9 @@ func (d *sitesDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, 
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"team_slug": schema.StringAttribute{
-				Required: true,
+				Optional:    true,
+				Computed:    true,
+				Description: "Required if a default team was not configured in the provider configuration.",
 			},
 			"sites": schema.ListNestedAttribute{
 				Computed: true,
@@ -97,15 +99,24 @@ func (d *sitesDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		return
 	}
 
+	teamSlug := d.data.teamSlugOrDefault(config.TeamSlug)
+	if teamSlug == nil {
+		resp.Diagnostics.AddError(
+			"Missing team slug",
+			"Team slug is required for reading Netlify sites. Please provide a team slug in the plan or configure a default team in the provider configuration.",
+		)
+		return
+	}
+
 	r := d.data.client.SitesAPI.
-		ListSitesForAccount(ctx, config.TeamSlug.ValueString()).
+		ListSitesForAccount(ctx, *teamSlug).
 		PerPage(100)
 	sites := make([]netlifyapi.Site, 0)
 	var page int64 = 1
 	for {
 		items, _, err := r.Page(page).Execute()
 		if err != nil {
-			resp.Diagnostics.AddError("Error reading Netlify team", fmt.Sprintf("Could not list Netlify sites in team %q: %q", config.TeamSlug.ValueString(), err.Error()))
+			resp.Diagnostics.AddError("Error reading Netlify team", fmt.Sprintf("Could not list Netlify sites in team %q: %q", *teamSlug, err.Error()))
 			return
 		}
 		if len(items) == 0 {

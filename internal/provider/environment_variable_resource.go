@@ -83,9 +83,12 @@ func (r *environmentVariableResource) Schema(_ context.Context, _ resource.Schem
 				Computed: true,
 			},
 			"team_id": schema.StringAttribute{
-				Required: true,
+				Computed:    true,
+				Optional:    true,
+				Description: "Required if a default team was not configured in the provider configuration.",
 				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
+					stringplanmodifier.RequiresReplaceIfConfigured(),
+					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"site_id": schema.StringAttribute{
@@ -188,6 +191,15 @@ func (r *environmentVariableResource) Create(ctx context.Context, req resource.C
 		return
 	}
 
+	teamId := r.data.teamIdOrDefault(plan.TeamID)
+	if teamId == nil {
+		resp.Diagnostics.AddError(
+			"Missing team ID",
+			"Team ID is required for creating a Netlify environment variable. Please provide a team ID in the plan or configure a default team in the provider configuration.",
+		)
+		return
+	}
+
 	scopes := make([]string, len(plan.Scopes))
 	for i, scope := range plan.Scopes {
 		scopes[i] = scope.ValueString()
@@ -202,7 +214,7 @@ func (r *environmentVariableResource) Create(ctx context.Context, req resource.C
 		isSecret = false
 	}
 	createEnvVars := r.data.client.EnvironmentVariablesAPI.
-		CreateEnvVars(ctx, plan.TeamID.ValueString()).
+		CreateEnvVars(ctx, *teamId).
 		EnvVar([]netlifyapi.EnvVar{
 			{
 				Key:      plan.Key.ValueString(),
@@ -221,7 +233,7 @@ func (r *environmentVariableResource) Create(ctx context.Context, req resource.C
 			fmt.Sprintf(
 				"Could not create Netlify environment variable order ID %q (team ID: %q, site ID: %q, secret: %v): %q",
 				plan.Key.ValueString(),
-				plan.TeamID.ValueString(),
+				*teamId,
 				plan.SiteID.ValueString(),
 				isSecret,
 				err.Error(),
@@ -230,6 +242,7 @@ func (r *environmentVariableResource) Create(ctx context.Context, req resource.C
 		return
 	}
 	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC3339))
+	plan.TeamID = types.StringValue(*teamId)
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, plan)...)
 	if resp.Diagnostics.HasError() {
@@ -283,6 +296,11 @@ func (r *environmentVariableResource) Update(ctx context.Context, req resource.U
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	var state environmentVariableResourceModel
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	scopes := make([]string, len(plan.Scopes))
 	for i, scope := range plan.Scopes {
@@ -298,7 +316,7 @@ func (r *environmentVariableResource) Update(ctx context.Context, req resource.U
 		isSecret = false
 	}
 	updateEnvVar := r.data.client.EnvironmentVariablesAPI.
-		UpdateEnvVar(ctx, plan.TeamID.ValueString(), plan.Key.ValueString()).
+		UpdateEnvVar(ctx, state.TeamID.ValueString(), plan.Key.ValueString()).
 		Key(plan.Key.ValueString()).UpdateEnvVarRequest(netlifyapi.UpdateEnvVarRequest{
 		Scopes:   scopes,
 		Values:   values,
@@ -314,7 +332,7 @@ func (r *environmentVariableResource) Update(ctx context.Context, req resource.U
 			fmt.Sprintf(
 				"Could not update Netlify environment variable order ID %q (team ID: %q, site ID: %q, secret: %v): %q",
 				plan.Key.ValueString(),
-				plan.TeamID.ValueString(),
+				state.TeamID.ValueString(),
 				plan.SiteID.ValueString(),
 				isSecret,
 				err.Error(),

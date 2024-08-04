@@ -31,7 +31,7 @@ data "netlify_site" "blog" {
 ### Optional
 
 - `name` (String)
-- `team_slug` (String)
+- `team_slug` (String) Required if name is specified and a default team was not configured in the provider configuration.
 
 ### Read-Only
 

@@ -8,15 +8,12 @@ terraform {
 }
 
 # `token` comes from NETLIFY_API_TOKEN, but can be specified with a Terraform variable
-provider "netlify" {}
-
-# data "netlify_team" "current" {
-#   slug = "ramon-test-1"
-# }
+provider "netlify" {
+  default_team_slug = "ramon-test-1"
+}
 
 resource "netlify_dns_zone" "example" {
-  team_slug = "ramon-test-1" // data.netlify_team.current.slug
-  name      = "example-tf-test-test.com"
+  name = "example-tf-test-test.com"
   lifecycle {
     prevent_destroy = true
   }

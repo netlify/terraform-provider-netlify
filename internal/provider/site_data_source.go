@@ -67,15 +67,13 @@ func (d *siteDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, r
 				},
 			},
 			"team_slug": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
+				Optional:    true,
+				Computed:    true,
+				Description: "Required if name is specified and a default team was not configured in the provider configuration.",
 			},
 			"name": schema.StringAttribute{
 				Optional: true,
 				Computed: true,
-				Validators: []validator.String{
-					stringvalidator.AlsoRequires(path.MatchRoot("team_slug")),
-				},
 			},
 			"custom_domain": schema.StringAttribute{
 				Computed: true,
@@ -108,12 +106,20 @@ func (d *siteDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 			return
 		}
 	} else {
+		teamSlug := d.data.teamSlugOrDefault(config.TeamSlug)
+		if teamSlug == nil {
+			resp.Diagnostics.AddError(
+				"Missing team slug",
+				"Team slug is required for reading a Netlify site by its name. Please provide a team slug in the plan or configure a default team in the provider configuration.",
+			)
+			return
+		}
 		sites, _, err := d.data.client.SitesAPI.
-			ListSitesForAccount(ctx, config.TeamSlug.ValueString()).
+			ListSitesForAccount(ctx, *teamSlug).
 			Name(config.Name.ValueString()).
 			Execute()
 		if err != nil {
-			resp.Diagnostics.AddError("Error reading Netlify team", fmt.Sprintf("Could not list Netlify sites in team %q: %q", config.TeamSlug.ValueString(), err.Error()))
+			resp.Diagnostics.AddError("Error reading Netlify team", fmt.Sprintf("Could not list Netlify sites in team %q: %q", *teamSlug, err.Error()))
 			return
 		}
 		nameString := config.Name.ValueString()
@@ -125,7 +131,7 @@ func (d *siteDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 			}
 		}
 		if site == nil {
-			resp.Diagnostics.AddError("Error reading Netlify team", fmt.Sprintf("Could not find Netlify site with name %q in team %q", nameString, config.TeamSlug.ValueString()))
+			resp.Diagnostics.AddError("Error reading Netlify team", fmt.Sprintf("Could not find Netlify site with name %q in team %q", nameString, *teamSlug))
 			return
 		}
 	}

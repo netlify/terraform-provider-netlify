@@ -8,7 +8,9 @@ terraform {
 }
 
 # `token` comes from NETLIFY_API_TOKEN, but can be specified with a Terraform variable
-provider "netlify" {}
+provider "netlify" {
+  default_team_slug = "ramon-test-1"
+}
 
 data "netlify_team" "current" {
   slug = "ramon-test-1"
@@ -23,6 +25,17 @@ resource "netlify_environment_variable" "woof" {
   team_id = data.netlify_team.current.id
   site_id = data.netlify_site.platform_test.id
   key     = "WOOF"
+  values = [
+    {
+      value   = "dogs are here",
+      context = "all",
+    }
+  ]
+}
+
+resource "netlify_environment_variable" "woof2" {
+  site_id = data.netlify_site.platform_test.id
+  key     = "WOOF2"
   values = [
     {
       value   = "dogs are here",

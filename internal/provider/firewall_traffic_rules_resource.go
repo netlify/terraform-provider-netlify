@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/netlify/terraform-provider-netlify/internal/netlifyapi"
@@ -160,15 +161,33 @@ func (r *firewallTrafficRulesResource) Schema(_ context.Context, _ resource.Sche
 	}
 
 	var (
-		description   string
-		mdDescription string
+		description         string
+		mdDescription       string
+		teamIdDescription   string
+		siteIdPlanModifiers []planmodifier.String
+		teamIdPlanModifiers []planmodifier.String
 	)
 	if r.teamLevel {
 		description = "Netlify team-level firewall traffic rules"
 		mdDescription = "Netlify team-level firewall traffic rules. [Read more](https://docs.netlify.com/security/secure-access-to-sites/traffic-rules/)"
+		teamIdDescription = "Required if a default team was not configured in the provider configuration."
+		siteIdPlanModifiers = []planmodifier.String{
+			netlify_planmodifiers.UseNullForUnknown(),
+		}
+		teamIdPlanModifiers = []planmodifier.String{
+			stringplanmodifier.RequiresReplaceIfConfigured(),
+			stringplanmodifier.UseStateForUnknown(),
+		}
 	} else {
 		description = "Netlify site-level firewall traffic rules"
 		mdDescription = "Netlify site-level firewall traffic rules. [Read more](https://docs.netlify.com/security/secure-access-to-sites/traffic-rules/)"
+		teamIdDescription = ""
+		siteIdPlanModifiers = []planmodifier.String{
+			stringplanmodifier.RequiresReplace(),
+		}
+		teamIdPlanModifiers = []planmodifier.String{
+			netlify_planmodifiers.UseNullForUnknown(),
+		}
 	}
 
 	resp.Schema = schema.Schema{
@@ -176,18 +195,15 @@ func (r *firewallTrafficRulesResource) Schema(_ context.Context, _ resource.Sche
 		MarkdownDescription: mdDescription,
 		Attributes: map[string]schema.Attribute{
 			"site_id": schema.StringAttribute{
-				Required: !r.teamLevel,
-				Computed: r.teamLevel,
-				PlanModifiers: []planmodifier.String{
-					netlify_planmodifiers.UseNullForUnknown(),
-				},
+				Required:      !r.teamLevel,
+				Computed:      r.teamLevel,
+				PlanModifiers: siteIdPlanModifiers,
 			},
 			"team_id": schema.StringAttribute{
-				Required: r.teamLevel,
-				Computed: !r.teamLevel,
-				PlanModifiers: []planmodifier.String{
-					netlify_planmodifiers.UseNullForUnknown(),
-				},
+				Optional:      r.teamLevel,
+				Computed:      true,
+				Description:   teamIdDescription,
+				PlanModifiers: teamIdPlanModifiers,
 			},
 			"last_updated": schema.StringAttribute{
 				Computed: true,
@@ -347,8 +363,17 @@ func (r *firewallTrafficRulesResource) write(ctx context.Context, plan *firewall
 	createSiteFirewallConfig.Unpublished = &unpublished
 
 	if r.teamLevel {
+		teamId := r.data.teamIdOrDefault(plan.TeamID)
+		if teamId == nil {
+			diagnostics.AddError(
+				"Missing team ID",
+				"Team ID is required for managin Netlify team-level firewall traffic rules. Please provide a team ID in the plan or configure a default team in the provider configuration.",
+			)
+			return
+		}
+
 		_, err := r.data.client.AccountsAPI.
-			UpdateAccountFirewallRuleSet(ctx, plan.TeamID.ValueString()).
+			UpdateAccountFirewallRuleSet(ctx, *teamId).
 			CreateSiteFirewallConfig(createSiteFirewallConfig).
 			Execute()
 		if err != nil {
@@ -356,13 +381,14 @@ func (r *firewallTrafficRulesResource) write(ctx context.Context, plan *firewall
 				"Error updating team firewall rule set",
 				fmt.Sprintf(
 					"Could not update team firewall rule set %q: %q",
-					plan.TeamID.ValueString(),
+					*teamId,
 					err.Error(),
 				),
 			)
 			return
 		}
 		plan.SiteID = types.StringNull()
+		plan.TeamID = types.StringValue(*teamId)
 	} else {
 		_, err := r.data.client.SitesAPI.
 			UpdateSiteFirewallRuleSet(ctx, plan.SiteID.ValueString()).

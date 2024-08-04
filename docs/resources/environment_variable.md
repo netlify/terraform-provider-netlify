@@ -91,13 +91,13 @@ resource "netlify_environment_variable" "astro_database_file" {
 ### Required
 
 - `key` (String)
-- `team_id` (String)
 
 ### Optional
 
 - `scopes` (Set of String) One or more of builds, functions, runtime, and post-processing
 - `secret_values` (Attributes Set) (see [below for nested schema](#nestedatt--secret_values))
 - `site_id` (String)
+- `team_id` (String) Required if a default team was not configured in the provider configuration.
 - `values` (Attributes Set) (see [below for nested schema](#nestedatt--values))
 
 ### Read-Only

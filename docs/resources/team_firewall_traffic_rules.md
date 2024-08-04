@@ -51,8 +51,11 @@ resource "netlify_team_firewall_traffic_rules" "team" {
 ### Required
 
 - `published` (Attributes) (see [below for nested schema](#nestedatt--published))
-- `team_id` (String)
 - `unpublished` (Attributes) (see [below for nested schema](#nestedatt--unpublished))
+
+### Optional
+
+- `team_id` (String) Required if a default team was not configured in the provider configuration.
 
 ### Read-Only
 
