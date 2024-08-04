@@ -147,7 +147,7 @@ func (r *environmentVariableResource) Schema(_ context.Context, _ resource.Schem
 			"secret_values": schema.SetNestedAttribute{
 				Optional: true,
 				Validators: []validator.Set{
-					setvalidator.ExactlyOneOf(path.MatchRoot("value")),
+					setvalidator.ExactlyOneOf(path.MatchRoot("values")),
 				},
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
