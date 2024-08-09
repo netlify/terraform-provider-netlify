@@ -245,6 +245,7 @@ func (r *firewallTrafficRulesResource) Read(ctx context.Context, req resource.Re
 		var err error
 		config, _, err = r.data.client.AccountsAPI.
 			GetAccountFirewallRuleSet(ctx, state.TeamID.ValueString()).
+			Id(state.TeamID.ValueString()).
 			Execute()
 		if err != nil {
 			resp.Diagnostics.AddError(
