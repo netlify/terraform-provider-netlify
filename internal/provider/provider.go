@@ -21,6 +21,7 @@ var _ provider.Provider = &NetlifyProvider{}
 
 type NetlifyProvider struct {
 	version string
+	client  *netlifyapi.APIClient
 }
 
 type NetlifyProviderModel struct {
@@ -158,7 +159,8 @@ func (p *NetlifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 	apiConfig.UserAgent = "Terraform Provider"
 	apiConfig.AddDefaultHeader("Authorization", "Bearer "+token)
 	// TODO: Add debug/trace logging to the API client, perhaps by overriding the behavior of apiConfig.Debug
-	data.client = netlifyapi.NewAPIClient(apiConfig)
+	p.client = netlifyapi.NewAPIClient(apiConfig)
+	data.client = p.client
 
 	var account *netlifyapi.Account
 
