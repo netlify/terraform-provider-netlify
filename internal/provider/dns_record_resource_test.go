@@ -28,13 +28,27 @@ func TestAccDnsRecordA(t *testing.T) {
 			),
 		},
 		{
+			ResourceName: "netlify_dns_record.example",
+			ImportState:  true,
+			ImportStateIdFunc: func(s *terraform.State) (string, error) {
+				for _, m := range s.Modules {
+					if v, ok := m.Resources["netlify_dns_record.example"]; ok {
+						return fmt.Sprintf("%s:%s", v.Primary.Attributes["zone_id"], v.Primary.Attributes["id"]), nil
+					}
+				}
+				return "", fmt.Errorf("not found in TestAccDnsRecordA import test step")
+			},
+			ImportStateVerify:       true,
+			ImportStateVerifyIgnore: []string{"last_updated"},
+		},
+		{
 			Config: fmt.Sprintf(`resource "netlify_dns_record" "example" {
 	type = "A"
 	zone_id = "%s"
 	hostname = "testacc.examplepetstore.com"
 	value = "10.0.0.1"
 }`, zoneId),
-			Check: resource.ComposeTestCheckFunc(
+			Check: resource.ComposeAggregateTestCheckFunc(
 				resource.TestCheckResourceAttr("netlify_dns_record.example", "type", "A"),
 				resource.TestCheckResourceAttr("netlify_dns_record.example", "zone_id", zoneId),
 				resource.TestCheckResourceAttr("netlify_dns_record.example", "hostname", "testacc.examplepetstore.com"),
