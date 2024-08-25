@@ -206,7 +206,7 @@ func (r *environmentVariableResource) Create(ctx context.Context, req resource.C
 	}
 	var values []netlifyapi.EnvVarValue
 	var isSecret bool
-	if plan.SecretValues != nil && len(plan.SecretValues) > 0 {
+	if len(plan.SecretValues) > 0 {
 		values = serializeValues(plan.SecretValues)
 		isSecret = true
 	} else {
@@ -308,7 +308,7 @@ func (r *environmentVariableResource) Update(ctx context.Context, req resource.U
 	}
 	var values []netlifyapi.EnvVarValue
 	var isSecret bool
-	if plan.SecretValues != nil && len(plan.SecretValues) > 0 {
+	if len(plan.SecretValues) > 0 {
 		values = serializeValues(plan.SecretValues)
 		isSecret = true
 	} else {

@@ -30,4 +30,5 @@ test: ## Test the go code.
 	go test -v ./...
 
 testacc:
-	TF_ACC=1 go test ./... -v $(TESTARGS) -timeout 120m
+	TF_ACC=1 go test ./... -v $(TESTARGS)
+# -timeout 120m
