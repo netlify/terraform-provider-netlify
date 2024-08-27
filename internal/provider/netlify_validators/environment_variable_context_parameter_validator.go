@@ -79,12 +79,20 @@ func (av EnvironmentVariableContextParameterValidator) Validate(ctx context.Cont
 			continue
 		}
 
-		isBranch := !mpVal.IsNull() && mpVal.Equal(listValue)
+		var mpValList basetypes.ListValue
+		mpValList, diags = types.ListValue(types.StringType, []attr.Value{mpVal})
+		res.Diagnostics.Append(diags...)
+
+		// Collect all errors
+		if diags.HasError() {
+			continue
+		}
+		isBranch := !mpVal.IsNull() && mpValList.Equal(listValue)
 
 		if isNonEmpty != isBranch {
 			res.Diagnostics.Append(validatordiag.InvalidAttributeCombinationDiagnostic(
 				req.Path,
-				fmt.Sprintf("Attribute %q must be a non-empty string iff %q is specified", req.Path, mp),
+				fmt.Sprintf("Attribute %q must be a non-empty string iff %q is specified %q %q %q", req.Path, mp, listValue, mpVal, req.ConfigValue),
 			))
 		}
 	}
