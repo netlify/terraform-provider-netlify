@@ -32,13 +32,13 @@ type dnsZoneResource struct {
 }
 
 type dnsZoneResourceModel struct {
-	ID          types.String        `tfsdk:"id"`
-	LastUpdated types.String        `tfsdk:"last_updated"`
-	Name        types.String        `tfsdk:"name"`
-	TeamID      types.String        `tfsdk:"team_id"`
-	TeamSlug    types.String        `tfsdk:"team_slug"`
-	DnsServers  types.List          `tfsdk:"dns_servers"`
-	Domain      *netlifyDomainModel `tfsdk:"domain"`
+	ID          types.String `tfsdk:"id"`
+	LastUpdated types.String `tfsdk:"last_updated"`
+	Name        types.String `tfsdk:"name"`
+	TeamID      types.String `tfsdk:"team_id"`
+	TeamSlug    types.String `tfsdk:"team_slug"`
+	DnsServers  types.List   `tfsdk:"dns_servers"`
+	Domain      types.Object `tfsdk:"domain"`
 }
 
 func (r *dnsZoneResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -183,9 +183,9 @@ func (r *dnsZoneResource) Create(ctx context.Context, req resource.CreateRequest
 	plan.DnsServers, diags = types.ListValueFrom(ctx, types.StringType, dnsServers)
 	resp.Diagnostics.Append(diags...)
 	if dnsZone.Domain == nil {
-		plan.Domain = nil
+		plan.Domain = types.ObjectNull(netlifyDomainModel{}.AttributeTypes())
 	} else {
-		plan.Domain = &netlifyDomainModel{
+		plan.Domain, diags = types.ObjectValueFrom(ctx, netlifyDomainModel{}.AttributeTypes(), netlifyDomainModel{
 			ID:           types.StringValue(dnsZone.Domain.Id),
 			Name:         types.StringValue(dnsZone.Domain.Name),
 			RegisteredAt: types.StringValue(dnsZone.Domain.RegisteredAt.Format(time.RFC3339)),
@@ -193,7 +193,8 @@ func (r *dnsZoneResource) Create(ctx context.Context, req resource.CreateRequest
 			RenewalPrice: types.StringValue(dnsZone.Domain.RenewalPrice),
 			AutoRenew:    types.BoolValue(dnsZone.Domain.AutoRenew),
 			AutoRenewAt:  types.StringValue(dnsZone.Domain.AutoRenewAt.Format(time.RFC3339)),
-		}
+		})
+		resp.Diagnostics.Append(diags...)
 	}
 
 	_, _, err = r.data.client.DNSZonesAPI.EnableDnsZoneIpv6(ctx, plan.ID.ValueString()).Execute()
@@ -244,9 +245,9 @@ func (r *dnsZoneResource) Read(ctx context.Context, req resource.ReadRequest, re
 	state.DnsServers, diags = types.ListValueFrom(ctx, types.StringType, dnsServers)
 	resp.Diagnostics.Append(diags...)
 	if dnsZone.Domain == nil {
-		state.Domain = nil
+		state.Domain = types.ObjectNull(netlifyDomainModel{}.AttributeTypes())
 	} else {
-		state.Domain = &netlifyDomainModel{
+		state.Domain, diags = types.ObjectValueFrom(ctx, netlifyDomainModel{}.AttributeTypes(), netlifyDomainModel{
 			ID:           types.StringValue(dnsZone.Domain.Id),
 			Name:         types.StringValue(dnsZone.Domain.Name),
 			RegisteredAt: types.StringValue(dnsZone.Domain.RegisteredAt.Format(time.RFC3339)),
@@ -254,7 +255,8 @@ func (r *dnsZoneResource) Read(ctx context.Context, req resource.ReadRequest, re
 			RenewalPrice: types.StringValue(dnsZone.Domain.RenewalPrice),
 			AutoRenew:    types.BoolValue(dnsZone.Domain.AutoRenew),
 			AutoRenewAt:  types.StringValue(dnsZone.Domain.AutoRenewAt.Format(time.RFC3339)),
-		}
+		})
+		resp.Diagnostics.Append(diags...)
 	}
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)

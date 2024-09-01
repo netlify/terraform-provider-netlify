@@ -180,8 +180,13 @@ func (r *siteDomainSettingsResource) ImportState(ctx context.Context, req resour
 }
 
 func (r *siteDomainSettingsResource) write(ctx context.Context, plan *siteDomainSettingsResourceModel, diagnostics *diag.Diagnostics) {
+	domainAliases := make([]string, len(plan.DomainAliases))
+	for i, domainAlias := range plan.DomainAliases {
+		domainAliases[i] = domainAlias.ValueString()
+	}
 	site := netlifyapi.PartialSite{
 		CustomDomain:              plan.CustomDomain.ValueStringPointer(),
+		DomainAliases:             domainAliases,
 		BranchDeployCustomDomain:  plan.BranchDeployCustomDomain.ValueStringPointer(),
 		DeployPreviewCustomDomain: plan.DeployPreviewCustomDomain.ValueStringPointer(),
 	}
