@@ -1,7 +1,7 @@
 /swagger_flat.json
 /swagger_go.json
 /.env
-plan.out
+*.out
 
 *.dll
 *.exe

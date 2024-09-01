@@ -14,7 +14,7 @@ Netlify team-level firewall traffic rules. [Read more](https://docs.netlify.com/
 
 ```terraform
 resource "netlify_team_firewall_traffic_rules" "team" {
-  site_id = data.netlify_team.team.id
+  team_id = data.netlify_team.team.id
   published = {
     default_action = "allow"
     ip_restrictions = [
