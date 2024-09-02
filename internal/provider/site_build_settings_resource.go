@@ -311,7 +311,7 @@ func (r *siteBuildSettingsResource) write(ctx context.Context, plan *siteBuildSe
 			Dir:             plan.PublishDirectory.ValueStringPointer(),
 			FunctionsDir:    plan.FunctionsDirectory.ValueStringPointer(),
 			StopBuilds:      plan.StopBuilds.ValueBoolPointer(),
-			RepoBranch:      plan.ProductionBranch.ValueStringPointer(),
+			Branch:          plan.ProductionBranch.ValueStringPointer(),
 			AllowedBranches: allowedBranches,
 			SkipPrs:         &skipPrs,
 		},

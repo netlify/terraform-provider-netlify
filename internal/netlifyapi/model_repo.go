@@ -35,6 +35,7 @@ type Repo struct {
 	PrivateLogs *bool `json:"private_logs,omitempty"`
 	Provider *string `json:"provider,omitempty"`
 	PublicRepo *bool `json:"public_repo,omitempty"`
+	Branch *string `json:"branch,omitempty"`
 	RepoBranch *string `json:"repo_branch,omitempty"`
 	RepoOwnerType *string `json:"repo_owner_type,omitempty"`
 	RepoPath *string `json:"repo_path,omitempty"`
@@ -548,6 +549,38 @@ func (o *Repo) SetPublicRepo(v bool) {
 	o.PublicRepo = &v
 }
 
+// GetBranch returns the Branch field value if set, zero value otherwise.
+func (o *Repo) GetBranch() string {
+	if o == nil || IsNil(o.Branch) {
+		var ret string
+		return ret
+	}
+	return *o.Branch
+}
+
+// GetBranchOk returns a tuple with the Branch field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Repo) GetBranchOk() (*string, bool) {
+	if o == nil || IsNil(o.Branch) {
+		return nil, false
+	}
+	return o.Branch, true
+}
+
+// HasBranch returns a boolean if a field has been set.
+func (o *Repo) HasBranch() bool {
+	if o != nil && !IsNil(o.Branch) {
+		return true
+	}
+
+	return false
+}
+
+// SetBranch gets a reference to the given string and assigns it to the Branch field.
+func (o *Repo) SetBranch(v string) {
+	o.Branch = &v
+}
+
 // GetRepoBranch returns the RepoBranch field value if set, zero value otherwise.
 func (o *Repo) GetRepoBranch() string {
 	if o == nil || IsNil(o.RepoBranch) {
@@ -923,6 +956,9 @@ func (o Repo) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.PublicRepo) {
 		toSerialize["public_repo"] = o.PublicRepo
 	}
+	if !IsNil(o.Branch) {
+		toSerialize["branch"] = o.Branch
+	}
 	if !IsNil(o.RepoBranch) {
 		toSerialize["repo_branch"] = o.RepoBranch
 	}
@@ -990,6 +1026,7 @@ func (o *Repo) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "private_logs")
 		delete(additionalProperties, "provider")
 		delete(additionalProperties, "public_repo")
+		delete(additionalProperties, "branch")
 		delete(additionalProperties, "repo_branch")
 		delete(additionalProperties, "repo_owner_type")
 		delete(additionalProperties, "repo_path")
