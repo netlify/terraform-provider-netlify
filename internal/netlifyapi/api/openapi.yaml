@@ -10297,6 +10297,7 @@ components:
         repo_branch: repo_branch
         base_rel_dir: true
         private_logs: true
+        branch: branch
         allowed_branches:
         - allowed_branches
         - allowed_branches
@@ -10351,6 +10352,8 @@ components:
           type: string
         public_repo:
           type: boolean
+        branch:
+          type: string
         repo_branch:
           type: string
         repo_owner_type:
@@ -10701,6 +10704,7 @@ components:
           repo_branch: repo_branch
           base_rel_dir: true
           private_logs: true
+          branch: branch
           allowed_branches:
           - allowed_branches
           - allowed_branches
@@ -10911,6 +10915,7 @@ components:
           repo_branch: repo_branch
           base_rel_dir: true
           private_logs: true
+          branch: branch
           allowed_branches:
           - allowed_branches
           - allowed_branches

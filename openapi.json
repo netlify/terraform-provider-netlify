@@ -13141,6 +13141,9 @@
           "public_repo": {
             "type": "boolean"
           },
+          "branch": {
+            "type": "string"
+          },
           "repo_branch": {
             "type": "string"
           },

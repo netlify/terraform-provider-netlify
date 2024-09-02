@@ -12,6 +12,20 @@ func TestAccSiteCollaborationSettings(t *testing.T) {
 		{
 			Config: `resource "netlify_site_collaboration_settings" "example" {
   site_id                           = "5b407d6d-9385-4e7a-a4c4-8efc11ea3c26"
+  netlify_drawer_in_deploy_previews = false
+  netlify_drawer_in_branch_deploys  = false
+  netlify_heads_up_display          = false
+}`,
+			Check: resource.ComposeAggregateTestCheckFunc(
+				resource.TestCheckResourceAttr("netlify_site_collaboration_settings.example", "site_id", "5b407d6d-9385-4e7a-a4c4-8efc11ea3c26"),
+				resource.TestCheckResourceAttr("netlify_site_collaboration_settings.example", "netlify_drawer_in_deploy_previews", "false"),
+				resource.TestCheckResourceAttr("netlify_site_collaboration_settings.example", "netlify_drawer_in_branch_deploys", "false"),
+				resource.TestCheckResourceAttr("netlify_site_collaboration_settings.example", "netlify_heads_up_display", "false"),
+			),
+		},
+		{
+			Config: `resource "netlify_site_collaboration_settings" "example" {
+  site_id                           = "5b407d6d-9385-4e7a-a4c4-8efc11ea3c26"
   netlify_drawer_in_deploy_previews = true
   netlify_drawer_in_branch_deploys  = true
   netlify_heads_up_display          = true

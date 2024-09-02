@@ -25,7 +25,7 @@ openapi_generate: ## Generate the go code from the OpenAPI spec.
 		-o /local/internal/netlifyapi ; \
 	sed -i '' 's/int32/int64/g' internal/netlifyapi/model_*.go ; \
 	sed -i '' 's/int32/int64/g' internal/netlifyapi/api_*.go ; \
-	sed -i '' 's/return e.error/return fmt.Sprintf("%s: %q", e.error, e.body)/g' internal/netlifyapi/client.go
+	sed -i '' 's/return e.error/return fmt.Sprintf("%s: %s", e.error, e.body)/g' internal/netlifyapi/client.go
 
 test: ## Test the go code.
 	go test -v ./...

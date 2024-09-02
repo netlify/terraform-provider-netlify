@@ -12,6 +12,7 @@ This project uses a modified `openapi.json`. Please maintain these instructions 
 1. Remove the `values`, `scopes` and `is_secret` parameters from the `updateEnvVar` operation.
 1. Add a request body schema to the `updateEnvVar` operation, by copying it from an earlier version of the `openapi.json`.
 1. Add a `package_path` property of type `string` to the `Repo` object.
+1. Add a `branch` property of type `string` to the `Repo` object.
 1. Add a `functions_region` property of type `string` to the `Site` object.
 1. Add a `cdp_enabled_contexts` property of type `array` of `string`s to the `Site` object.
 1. Add a `hud_enabled` property of type `boolean` to the `Site` object.
