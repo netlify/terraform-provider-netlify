@@ -156,7 +156,7 @@ func (p *NetlifyProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 	apiConfig := netlifyapi.NewConfiguration()
 	apiConfig.Servers[0].URL = url.String()
-	apiConfig.UserAgent = "Terraform Provider"
+	apiConfig.UserAgent = "Terraform Provider/" + p.version
 	apiConfig.AddDefaultHeader("Authorization", "Bearer "+token)
 	// TODO: Add debug/trace logging to the API client, perhaps by overriding the behavior of apiConfig.Debug
 	p.client = netlifyapi.NewAPIClient(apiConfig)
