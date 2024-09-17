@@ -147,10 +147,10 @@ func (r *logDrainResource) Schema(_ context.Context, _ resource.SchemaRequest, r
 			"log_types": schema.SetAttribute{
 				Required:    true,
 				ElementType: types.StringType,
-				Description: "One or more of user_traffic, functions, edge_functions, and deploys",
+				Description: "One or more of user_traffic, functions, edge_functions, waf, and deploys",
 				Validators: []validator.Set{
 					setvalidator.ValueStringsAre(
-						stringvalidator.OneOf("user_traffic", "functions", "edge_functions", "deploys"),
+						stringvalidator.OneOf("user_traffic", "functions", "edge_functions", "waf", "deploys"),
 					),
 				},
 			},

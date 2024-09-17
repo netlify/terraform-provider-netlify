@@ -32,7 +32,7 @@ resource "netlify_log_drain" "blog" {
 
 - `destination` (String) One of datadog, newrelic, logflare, s3, splunkcloud, http, axiom, or azure
 - `exclude_pii` (Boolean)
-- `log_types` (Set of String) One or more of user_traffic, functions, edge_functions, and deploys
+- `log_types` (Set of String) One or more of user_traffic, functions, edge_functions, waf, and deploys
 - `service_config` (Attributes) (see [below for nested schema](#nestedatt--service_config))
 - `site_id` (String)
 
