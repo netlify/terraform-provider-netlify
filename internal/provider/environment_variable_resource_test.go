@@ -100,6 +100,7 @@ resource "netlify_environment_variable" "b" {
   team_id = "66ae34e11a567e9092e3850f"
   site_id = "5b407d6d-9385-4e7a-a4c4-8efc11ea3c26"
   key     = "C_B"
+  scopes  = ["builds", "functions", "runtime", "post-processing"]
   values = [
     {
       value             = "staging"

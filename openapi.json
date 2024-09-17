@@ -3440,7 +3440,6 @@
                 },
                 "requiredProperties": [
                   "values",
-                  "scopes",
                   "is_secret"
                 ]
               }
@@ -10948,7 +10947,6 @@
         },
         "required": [
           "key",
-          "scopes",
           "values",
           "updated_at",
           "updated_by"

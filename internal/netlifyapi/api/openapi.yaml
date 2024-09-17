@@ -8398,7 +8398,6 @@ components:
           type: boolean
       required:
       - key
-      - scopes
       - updated_at
       - updated_by
       - values
@@ -11965,7 +11964,6 @@ components:
           type: boolean
       requiredProperties:
       - values
-      - scopes
       - is_secret
     uploadDeployFunction_200_response:
       example:

@@ -52,6 +52,14 @@ type environmentVariableValueModel struct {
 	ContextParameter types.String `tfsdk:"context_parameter"`
 }
 
+var allScopes = []string{"builds", "functions", "runtime", "post-processing"}
+var allScopesValues = []attr.Value{
+	types.StringValue("builds"),
+	types.StringValue("functions"),
+	types.StringValue("runtime"),
+	types.StringValue("post-processing"),
+}
+
 func (r *environmentVariableResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_environment_variable"
 }
@@ -110,15 +118,10 @@ func (r *environmentVariableResource) Schema(_ context.Context, _ resource.Schem
 				Description: "One or more of builds, functions, runtime, and post-processing",
 				Validators: []validator.Set{
 					setvalidator.ValueStringsAre(
-						stringvalidator.OneOf("builds", "functions", "runtime", "post-processing"),
+						stringvalidator.OneOf(allScopes...),
 					),
 				},
-				Default: setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{
-					types.StringValue("builds"),
-					types.StringValue("functions"),
-					types.StringValue("runtime"),
-					types.StringValue("post-processing"),
-				})),
+				Default: setdefault.StaticValue(types.SetValueMust(types.StringType, allScopesValues)),
 			},
 			"values": schema.SetNestedAttribute{
 				Optional: true,
@@ -203,6 +206,9 @@ func (r *environmentVariableResource) Create(ctx context.Context, req resource.C
 	scopes := make([]string, len(plan.Scopes))
 	for i, scope := range plan.Scopes {
 		scopes[i] = scope.ValueString()
+	}
+	if hasAllScopes(scopes) {
+		scopes = nil
 	}
 	var values []netlifyapi.EnvVarValue
 	var isSecret bool
@@ -305,6 +311,9 @@ func (r *environmentVariableResource) Update(ctx context.Context, req resource.U
 	scopes := make([]string, len(plan.Scopes))
 	for i, scope := range plan.Scopes {
 		scopes[i] = scope.ValueString()
+	}
+	if hasAllScopes(scopes) {
+		scopes = nil
 	}
 	var values []netlifyapi.EnvVarValue
 	var isSecret bool
@@ -430,4 +439,20 @@ func parseValues(values []netlifyapi.EnvVarValue) []environmentVariableValueMode
 		}
 	}
 	return envVarValues
+}
+
+func hasAllScopes(scopes []string) bool {
+	for _, scope := range allScopes {
+		found := false
+		for _, s := range scopes {
+			if s == scope {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return false
+		}
+	}
+	return true
 }
