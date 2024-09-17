@@ -24,7 +24,7 @@ type EnvVar struct {
 	// The environment variable key, like ALGOLIA_ID (case-sensitive)
 	Key string `json:"key"`
 	// The scopes that this environment variable is set to
-	Scopes []string `json:"scopes"`
+	Scopes []string `json:"scopes,omitempty"`
 	// An array of Value objects containing values and metadata
 	Values []EnvVarValue `json:"values"`
 	// The timestamp of when the value was last updated
@@ -41,10 +41,9 @@ type _EnvVar EnvVar
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewEnvVar(key string, scopes []string, values []EnvVarValue, updatedAt time.Time, updatedBy EnvVarUser) *EnvVar {
+func NewEnvVar(key string, values []EnvVarValue, updatedAt time.Time, updatedBy EnvVarUser) *EnvVar {
 	this := EnvVar{}
 	this.Key = key
-	this.Scopes = scopes
 	this.Values = values
 	this.UpdatedAt = updatedAt
 	this.UpdatedBy = updatedBy
@@ -83,26 +82,34 @@ func (o *EnvVar) SetKey(v string) {
 	o.Key = v
 }
 
-// GetScopes returns the Scopes field value
+// GetScopes returns the Scopes field value if set, zero value otherwise.
 func (o *EnvVar) GetScopes() []string {
-	if o == nil {
+	if o == nil || IsNil(o.Scopes) {
 		var ret []string
 		return ret
 	}
-
 	return o.Scopes
 }
 
-// GetScopesOk returns a tuple with the Scopes field value
+// GetScopesOk returns a tuple with the Scopes field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EnvVar) GetScopesOk() ([]string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Scopes) {
 		return nil, false
 	}
 	return o.Scopes, true
 }
 
-// SetScopes sets field value
+// HasScopes returns a boolean if a field has been set.
+func (o *EnvVar) HasScopes() bool {
+	if o != nil && !IsNil(o.Scopes) {
+		return true
+	}
+
+	return false
+}
+
+// SetScopes gets a reference to the given []string and assigns it to the Scopes field.
 func (o *EnvVar) SetScopes(v []string) {
 	o.Scopes = v
 }
@@ -222,7 +229,9 @@ func (o EnvVar) MarshalJSON() ([]byte, error) {
 func (o EnvVar) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["key"] = o.Key
-	toSerialize["scopes"] = o.Scopes
+	if !IsNil(o.Scopes) {
+		toSerialize["scopes"] = o.Scopes
+	}
 	toSerialize["values"] = o.Values
 	toSerialize["updated_at"] = o.UpdatedAt
 	toSerialize["updated_by"] = o.UpdatedBy
@@ -243,7 +252,6 @@ func (o *EnvVar) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"key",
-		"scopes",
 		"values",
 		"updated_at",
 		"updated_by",
