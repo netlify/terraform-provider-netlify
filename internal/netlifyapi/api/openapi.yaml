@@ -10693,6 +10693,7 @@ components:
         force_ssl: true
         notification_email: notification_email
         capabilities: "{}"
+        rum_enabled: true
         hud_enabled: true
         admin_url: admin_url
         build_settings:
@@ -10738,6 +10739,7 @@ components:
           description: description
           id: id
         account_slug: account_slug
+        analytics_instance_id: analytics_instance_id
         account_id: account_id
         ssl_url: ssl_url
         name: name
@@ -10800,6 +10802,10 @@ components:
           type: string
         force_ssl:
           type: boolean
+        rum_enabled:
+          type: boolean
+        analytics_instance_id:
+          type: string
         build_settings:
           $ref: '#/components/schemas/Repo'
         processing_settings:
@@ -10904,6 +10910,7 @@ components:
         force_ssl: true
         notification_email: notification_email
         capabilities: "{}"
+        rum_enabled: true
         hud_enabled: true
         admin_url: admin_url
         build_settings:
@@ -11010,6 +11017,8 @@ components:
         ssl_url:
           type: string
         force_ssl:
+          type: boolean
+        rum_enabled:
           type: boolean
         build_settings:
           $ref: '#/components/schemas/Repo'

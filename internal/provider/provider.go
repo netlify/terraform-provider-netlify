@@ -215,6 +215,7 @@ func (p *NetlifyProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewSiteBuildSettingsResource,
 		NewSiteCollaborationSettingsResource,
 		NewSiteDomainSettingsResource,
+		NewSiteMetricsSettingsResource,
 	}
 }
 

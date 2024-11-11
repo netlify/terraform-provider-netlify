@@ -43,6 +43,7 @@ type PartialSite struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 	SslUrl *string `json:"ssl_url,omitempty"`
 	ForceSsl *bool `json:"force_ssl,omitempty"`
+	RumEnabled *bool `json:"rum_enabled,omitempty"`
 	BuildSettings *Repo `json:"build_settings,omitempty"`
 	ProcessingSettings *SiteProcessingSettings `json:"processing_settings,omitempty"`
 	DeployHook *string `json:"deploy_hook,omitempty"`
@@ -817,6 +818,38 @@ func (o *PartialSite) SetForceSsl(v bool) {
 	o.ForceSsl = &v
 }
 
+// GetRumEnabled returns the RumEnabled field value if set, zero value otherwise.
+func (o *PartialSite) GetRumEnabled() bool {
+	if o == nil || IsNil(o.RumEnabled) {
+		var ret bool
+		return ret
+	}
+	return *o.RumEnabled
+}
+
+// GetRumEnabledOk returns a tuple with the RumEnabled field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PartialSite) GetRumEnabledOk() (*bool, bool) {
+	if o == nil || IsNil(o.RumEnabled) {
+		return nil, false
+	}
+	return o.RumEnabled, true
+}
+
+// HasRumEnabled returns a boolean if a field has been set.
+func (o *PartialSite) HasRumEnabled() bool {
+	if o != nil && !IsNil(o.RumEnabled) {
+		return true
+	}
+
+	return false
+}
+
+// SetRumEnabled gets a reference to the given bool and assigns it to the RumEnabled field.
+func (o *PartialSite) SetRumEnabled(v bool) {
+	o.RumEnabled = &v
+}
+
 // GetBuildSettings returns the BuildSettings field value if set, zero value otherwise.
 func (o *PartialSite) GetBuildSettings() Repo {
 	if o == nil || IsNil(o.BuildSettings) {
@@ -1408,6 +1441,9 @@ func (o PartialSite) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ForceSsl) {
 		toSerialize["force_ssl"] = o.ForceSsl
 	}
+	if !IsNil(o.RumEnabled) {
+		toSerialize["rum_enabled"] = o.RumEnabled
+	}
 	if !IsNil(o.BuildSettings) {
 		toSerialize["build_settings"] = o.BuildSettings
 	}
@@ -1501,6 +1537,7 @@ func (o *PartialSite) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "updated_at")
 		delete(additionalProperties, "ssl_url")
 		delete(additionalProperties, "force_ssl")
+		delete(additionalProperties, "rum_enabled")
 		delete(additionalProperties, "build_settings")
 		delete(additionalProperties, "processing_settings")
 		delete(additionalProperties, "deploy_hook")

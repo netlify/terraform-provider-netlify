@@ -44,6 +44,8 @@ type Site struct {
 	UpdatedAt time.Time `json:"updated_at"`
 	SslUrl string `json:"ssl_url"`
 	ForceSsl bool `json:"force_ssl"`
+	RumEnabled *bool `json:"rum_enabled,omitempty"`
+	AnalyticsInstanceId *string `json:"analytics_instance_id,omitempty"`
 	BuildSettings Repo `json:"build_settings"`
 	ProcessingSettings SiteProcessingSettings `json:"processing_settings"`
 	DeployHook string `json:"deploy_hook"`
@@ -670,6 +672,70 @@ func (o *Site) SetForceSsl(v bool) {
 	o.ForceSsl = v
 }
 
+// GetRumEnabled returns the RumEnabled field value if set, zero value otherwise.
+func (o *Site) GetRumEnabled() bool {
+	if o == nil || IsNil(o.RumEnabled) {
+		var ret bool
+		return ret
+	}
+	return *o.RumEnabled
+}
+
+// GetRumEnabledOk returns a tuple with the RumEnabled field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Site) GetRumEnabledOk() (*bool, bool) {
+	if o == nil || IsNil(o.RumEnabled) {
+		return nil, false
+	}
+	return o.RumEnabled, true
+}
+
+// HasRumEnabled returns a boolean if a field has been set.
+func (o *Site) HasRumEnabled() bool {
+	if o != nil && !IsNil(o.RumEnabled) {
+		return true
+	}
+
+	return false
+}
+
+// SetRumEnabled gets a reference to the given bool and assigns it to the RumEnabled field.
+func (o *Site) SetRumEnabled(v bool) {
+	o.RumEnabled = &v
+}
+
+// GetAnalyticsInstanceId returns the AnalyticsInstanceId field value if set, zero value otherwise.
+func (o *Site) GetAnalyticsInstanceId() string {
+	if o == nil || IsNil(o.AnalyticsInstanceId) {
+		var ret string
+		return ret
+	}
+	return *o.AnalyticsInstanceId
+}
+
+// GetAnalyticsInstanceIdOk returns a tuple with the AnalyticsInstanceId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Site) GetAnalyticsInstanceIdOk() (*string, bool) {
+	if o == nil || IsNil(o.AnalyticsInstanceId) {
+		return nil, false
+	}
+	return o.AnalyticsInstanceId, true
+}
+
+// HasAnalyticsInstanceId returns a boolean if a field has been set.
+func (o *Site) HasAnalyticsInstanceId() bool {
+	if o != nil && !IsNil(o.AnalyticsInstanceId) {
+		return true
+	}
+
+	return false
+}
+
+// SetAnalyticsInstanceId gets a reference to the given string and assigns it to the AnalyticsInstanceId field.
+func (o *Site) SetAnalyticsInstanceId(v string) {
+	o.AnalyticsInstanceId = &v
+}
+
 // GetBuildSettings returns the BuildSettings field value
 func (o *Site) GetBuildSettings() Repo {
 	if o == nil {
@@ -1111,6 +1177,12 @@ func (o Site) ToMap() (map[string]interface{}, error) {
 	toSerialize["updated_at"] = o.UpdatedAt
 	toSerialize["ssl_url"] = o.SslUrl
 	toSerialize["force_ssl"] = o.ForceSsl
+	if !IsNil(o.RumEnabled) {
+		toSerialize["rum_enabled"] = o.RumEnabled
+	}
+	if !IsNil(o.AnalyticsInstanceId) {
+		toSerialize["analytics_instance_id"] = o.AnalyticsInstanceId
+	}
 	toSerialize["build_settings"] = o.BuildSettings
 	toSerialize["processing_settings"] = o.ProcessingSettings
 	toSerialize["deploy_hook"] = o.DeployHook
@@ -1234,6 +1306,8 @@ func (o *Site) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "updated_at")
 		delete(additionalProperties, "ssl_url")
 		delete(additionalProperties, "force_ssl")
+		delete(additionalProperties, "rum_enabled")
+		delete(additionalProperties, "analytics_instance_id")
 		delete(additionalProperties, "build_settings")
 		delete(additionalProperties, "processing_settings")
 		delete(additionalProperties, "deploy_hook")
