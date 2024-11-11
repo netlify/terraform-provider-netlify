@@ -13591,6 +13591,12 @@
           "force_ssl": {
             "type": "boolean"
           },
+          "rum_enabled": {
+            "type": "boolean"
+          },
+          "analytics_instance_id": {
+            "type": "string"
+          },
           "build_settings": {
             "$ref": "#/components/schemas/Repo"
           },
@@ -13774,6 +13780,9 @@
             "type": "string"
           },
           "force_ssl": {
+            "type": "boolean"
+          },
+          "rum_enabled": {
             "type": "boolean"
           },
           "build_settings": {

@@ -29,3 +29,6 @@ This project uses a modified `openapi.json`. Please maintain these instructions 
 1. Replace the response body of the `getAccountFirewallRuleSet` operation to use the `SiteFirewallConfig` object.
 1. Replace the request body of the `updateAccountFirewallRuleSet` operation to use the `SiteFirewallConfig` object.
 1. Renamed the `unpublished_rules` and `published_rules` properties to `unpublished` and `published` in the `SiteFirewallConfig` object, also in the required properties array.
+1. Add a `rum_enabled` property of type `boolean` to the `Site` object.
+1. Add a `rum_enabled` property of type `boolean` to the `PartialSite` object.
+1. Add an `analytics_instance_id` property of type `string` to the `Site` object.
