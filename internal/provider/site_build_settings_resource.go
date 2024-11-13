@@ -167,7 +167,9 @@ func (r *siteBuildSettingsResource) Schema(_ context.Context, _ resource.SchemaR
 			"functions_region": schema.StringAttribute{
 				Optional: true,
 				Computed: true,
-				Default:  stringdefault.StaticString("us-east-2"),
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 			},
 			"pretty_urls": schema.BoolAttribute{
 				Optional: true,
@@ -303,7 +305,6 @@ func (r *siteBuildSettingsResource) write(ctx context.Context, plan *siteBuildSe
 	skipPrs := !plan.DeployPreviews.ValueBool()
 
 	site := netlifyapi.PartialSite{
-		FunctionsRegion: plan.FunctionsRegion.ValueStringPointer(),
 		BuildSettings: &netlifyapi.Repo{
 			Base:            plan.BaseDirectory.ValueStringPointer(),
 			PackagePath:     plan.PackageDirectory.ValueStringPointer(),
@@ -329,6 +330,15 @@ func (r *siteBuildSettingsResource) write(ctx context.Context, plan *siteBuildSe
 		site.BuildImage = curState.BuildImage.ValueStringPointer()
 	} else {
 		site.BuildImage = plan.BuildImage.ValueStringPointer()
+	}
+
+	if plan.FunctionsRegion.IsUnknown() {
+		plan.FunctionsRegion = curState.FunctionsRegion
+	}
+	if plan.FunctionsRegion.IsNull() {
+		site.FunctionsRegion = curState.FunctionsRegion.ValueStringPointer()
+	} else {
+		site.FunctionsRegion = plan.FunctionsRegion.ValueStringPointer()
 	}
 
 	_, _, err := r.data.client.SitesAPI.
