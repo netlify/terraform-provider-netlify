@@ -33,6 +33,20 @@ func TestAccSiteBuildSettings(t *testing.T) {
   publish_directory      = "dist"
   production_branch      = "main"
   branch_deploy_branches = ["preview", "staging"]
+  waf_policy_id          = netlify_waf_policy.example.id
+}
+
+resource "netlify_waf_policy" "example" {
+  team_id     = "66ae34e11a567e9092e3850f"
+  name        = "Terraform Policy"
+  description = "This is a test policy through Terraform"
+  rule_sets = [
+    {
+      managed_id        = "crs-basic",
+      passive_mode      = true,
+      overall_threshold = 5
+    }
+  ]
 }`,
 			Check: resource.ComposeAggregateTestCheckFunc(
 				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "site_id", "49137d35-1470-4db1-810f-c185b8381cd3"),
@@ -42,6 +56,7 @@ func TestAccSiteBuildSettings(t *testing.T) {
 				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "branch_deploy_branches.#", "2"),
 				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "branch_deploy_branches.0", "preview"),
 				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "branch_deploy_branches.1", "staging"),
+				resource.TestCheckResourceAttrSet("netlify_site_build_settings.example", "waf_policy_id"),
 			),
 		},
 		{

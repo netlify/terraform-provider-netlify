@@ -30,6 +30,8 @@ api_sni_certificates.go
 api_snippets.go
 api_split_tests.go
 api_users.go
+api_waf_managed_rules.go
+api_waf_policies.go
 api_work_os_scim.go
 client.go
 configuration.go
@@ -156,6 +158,10 @@ model_key_value_target_config.go
 model_log_drain.go
 model_log_drain_service_config.go
 model_log_drains_verify_request.go
+model_managed_waf_rule_set.go
+model_managed_waf_rule_set_definition.go
+model_managed_waf_rule_set_rules_inner.go
+model_managed_waf_rules.go
 model_member.go
 model_member_committer_match_method.go
 model_mfa_confirmation.go
@@ -228,5 +234,9 @@ model_user_connected_accounts.go
 model_user_questionnaire_params.go
 model_user_signup.go
 model_value_target_config.go
+model_waf_policy.go
+model_waf_policy_rule_override.go
+model_waf_policy_rule_sets_inner.go
+model_waf_policy_update.go
 response.go
 utils.go

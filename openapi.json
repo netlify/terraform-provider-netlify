@@ -7231,6 +7231,272 @@
           }
         }
       }
+    },
+    "/api/v1/accounts/{account_id}/waf/policies": {
+      "post": {
+        "tags": [
+          "WAF Policies"
+        ],
+        "operationId": "createWafPolicy",
+        "parameters": [
+          {
+            "name": "account_id",
+            "description": "The ID of the account",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WafPolicy"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "WAF Policy created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WafPolicyUpdate"
+                }
+              }
+            }
+          }
+        },
+        "description": "Creates a new WAF policy for the account."
+      }
+    },
+    "/api/v1/sites/{site_id}/waf/policy": {
+      "put": {
+        "tags": [
+          "WAF Policies"
+        ],
+        "operationId": "updateSiteWafPolicy",
+        "parameters": [
+          {
+            "name": "site_id",
+            "description": "The ID of the site",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WafPolicyUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "WAF Policy updated",
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "description": "Updates the WAF policy for the site."
+      },
+      "get": {
+        "tags": [
+          "WAF Policies"
+        ],
+        "operationId": "getSiteWafPolicy",
+        "parameters": [
+          {
+            "name": "site_id",
+            "description": "The ID of the site",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "WAF Policy retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WafPolicy"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "WAF Policy not found"
+          }
+        },
+        "description": "Retrieves the WAF policy for the site."
+      }
+    },
+    "/api/v1/accounts/{account_id}/waf/policies/{policy_id}": {
+      "get": {
+        "tags": [
+          "WAF Policies"
+        ],
+        "operationId": "getWafPolicy",
+        "parameters": [
+          {
+            "name": "account_id",
+            "description": "The ID of the account",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policy_id",
+            "description": "The ID of the WAF policy",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "WAF Policy retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WafPolicy"
+                }
+              }
+            }
+          }
+        },
+        "description": "Retrieves the WAF policy for the account."
+      },
+      "delete": {
+        "tags": [
+          "WAF Policies"
+        ],
+        "operationId": "deleteWafPolicy",
+        "parameters": [
+          {
+            "name": "account_id",
+            "description": "The ID of the account",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policy_id",
+            "description": "The ID of the WAF policy",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "WAF Policy deleted",
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "description": "Deletes the WAF policy for the account."
+      },
+      "put": {
+        "tags": [
+          "WAF Policies"
+        ],
+        "operationId": "updateWafPolicy",
+        "parameters": [
+          {
+            "name": "account_id",
+            "description": "The ID of the account",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policy_id",
+            "description": "The ID of the WAF policy",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WafPolicy"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "WAF Policy updated",
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "description": "Updates the WAF policy for the account."
+      }
+    },
+    "/api/v1/accounts/{account_id}/waf/managed": {
+      "get": {
+        "tags": [
+          "WAF Managed Rules"
+        ],
+        "operationId": "getManagedWafRules",
+        "parameters": [
+          {
+            "name": "account_id",
+            "description": "The ID of the account",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Managed WAF rules retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedWafRules"
+                }
+              }
+            }
+          }
+        },
+        "description": "Retrieves the managed WAF rules for the account."
+      }
     }
   },
   "tags": [
@@ -14887,6 +15153,128 @@
           },
           "use_case_something_else": {
             "type": "string"
+          }
+        }
+      },
+      "WafPolicy": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "rule_sets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "managed_id": {
+                  "type": "string"
+                },
+                "excluded_patterns": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "passive_mode": {
+                  "type": "boolean"
+                },
+                "overall_threshold": {
+                  "type": "integer"
+                },
+                "category_thresholds": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "integer"
+                  }
+                },
+                "rule_overrides": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "$ref": "#/components/schemas/WafPolicyRuleOverride"
+                  }
+                }
+              },
+              "required": ["overall_threshold"]
+            }
+          }
+        },
+        "required": ["name", "description", "rule_sets"]
+      },
+      "WafPolicyRuleOverride": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string"
+          }
+        },
+        "required": ["action"]
+      },
+      "WafPolicyUpdate": {
+        "type": "object",
+        "properties": {
+          "policy_id": {
+            "type": "string"
+          }
+        },
+        "required": ["policy_id"]
+      },
+      "ManagedWafRules": {
+        "type": "object",
+        "properties": {
+          "rule_sets": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ManagedWafRuleSet"
+            }
+          }
+        }
+      },
+      "ManagedWafRuleSet": {
+        "type": "object",
+        "properties": {
+          "definition": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              }
+            }
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "phase": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "severity": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       }

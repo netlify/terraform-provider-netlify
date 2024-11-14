@@ -110,6 +110,10 @@ type APIClient struct {
 
 	UsersAPI *UsersAPIService
 
+	WAFManagedRulesAPI *WAFManagedRulesAPIService
+
+	WAFPoliciesAPI *WAFPoliciesAPIService
+
 	WorkOSScimAPI *WorkOSScimAPIService
 }
 
@@ -159,6 +163,8 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.SnippetsAPI = (*SnippetsAPIService)(&c.common)
 	c.SplitTestsAPI = (*SplitTestsAPIService)(&c.common)
 	c.UsersAPI = (*UsersAPIService)(&c.common)
+	c.WAFManagedRulesAPI = (*WAFManagedRulesAPIService)(&c.common)
+	c.WAFPoliciesAPI = (*WAFPoliciesAPIService)(&c.common)
 	c.WorkOSScimAPI = (*WorkOSScimAPIService)(&c.common)
 
 	return c
