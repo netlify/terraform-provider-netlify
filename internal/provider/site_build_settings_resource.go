@@ -56,6 +56,8 @@ type siteBuildSettingsResourceModel struct {
 	FunctionsRegion types.String `tfsdk:"functions_region"`
 
 	PrettyURLs types.Bool `tfsdk:"pretty_urls"`
+
+	WafPolicyID types.String `tfsdk:"waf_policy_id"`
 }
 
 func (r *siteBuildSettingsResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -176,6 +178,10 @@ func (r *siteBuildSettingsResource) Schema(_ context.Context, _ resource.SchemaR
 				Computed: true,
 				Default:  booldefault.StaticBool(true),
 			},
+			"waf_policy_id": schema.StringAttribute{
+				Optional:    true,
+				Description: "See more details in the netlify_waf_policy resource.",
+			},
 		},
 	}
 }
@@ -285,6 +291,19 @@ func (r *siteBuildSettingsResource) read(ctx context.Context, state *siteBuildSe
 	state.BuildImage = types.StringValue(site.BuildImage)
 	state.FunctionsRegion = types.StringPointerValue(site.FunctionsRegion)
 	state.PrettyURLs = types.BoolPointerValue(site.ProcessingSettings.Html.PrettyUrls)
+
+	policy, resp, err := r.data.client.WAFPoliciesAPI.GetSiteWafPolicy(ctx, state.SiteID.ValueString()).Execute()
+	if resp.StatusCode == 204 || resp.StatusCode == 404 {
+		state.WafPolicyID = types.StringNull()
+	} else if err != nil {
+		diagnostics.AddError(
+			"Error reading site WAF policy",
+			fmt.Sprintf("Could not read site WAF policy for site %q: %q", state.SiteID.ValueString(), err.Error()),
+		)
+		return
+	} else {
+		state.WafPolicyID = types.StringValue(*policy.Id)
+	}
 }
 
 func (r *siteBuildSettingsResource) write(ctx context.Context, plan *siteBuildSettingsResourceModel, diagnostics *diag.Diagnostics) {
@@ -351,6 +370,40 @@ func (r *siteBuildSettingsResource) write(ctx context.Context, plan *siteBuildSe
 			fmt.Sprintf("Could not update site build settings for site %q: %q", plan.SiteID.ValueString(), err.Error()),
 		)
 		return
+	}
+
+	// We're being a little defensive here and only updating the WAF policy if it has changed, to avoid problems for non-Enterprise customers.
+	// The update API call also purges some caches, so it's better to avoid it when possible.
+	wafPolicyChanged := false
+	wafUpdate := netlifyapi.WafPolicyUpdate{}
+	if !plan.WafPolicyID.IsNull() {
+		wafUpdate.PolicyId = plan.WafPolicyID.ValueString()
+	}
+	policy, resp, err := r.data.client.WAFPoliciesAPI.GetSiteWafPolicy(ctx, plan.SiteID.ValueString()).Execute()
+	if resp.StatusCode == 204 || resp.StatusCode == 404 {
+		wafPolicyChanged = !plan.WafPolicyID.IsNull()
+	} else if err != nil {
+		diagnostics.AddError(
+			"Error reading site WAF policy",
+			fmt.Sprintf("Could not read site WAF policy for site %q: %q", plan.SiteID.ValueString(), err.Error()),
+		)
+		return
+	} else {
+		wafPolicyChanged = plan.WafPolicyID.IsNull() || plan.WafPolicyID.ValueString() != *policy.Id
+	}
+	if wafPolicyChanged {
+		resp, err = r.data.client.WAFPoliciesAPI.UpdateSiteWafPolicy(ctx, plan.SiteID.ValueString()).WafPolicyUpdate(wafUpdate).Execute()
+		if err != nil {
+			diagnostics.AddError(
+				"Error updating site WAF policy",
+				fmt.Sprintf("Could not update site WAF policy for site %q: %q", plan.SiteID.ValueString(), err.Error()),
+			)
+		} else if resp.StatusCode == 204 {
+			diagnostics.AddError(
+				"Error updating site WAF policy",
+				fmt.Sprintf("Could not update site WAF policy for site %q: %q", plan.SiteID.ValueString(), "policy not found"),
+			)
+		}
 	}
 
 	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))

@@ -14,8 +14,8 @@ func TestAccDnsZone(t *testing.T) {
 	accTest(t, []resource.TestStep{
 		{
 			Config: `resource "netlify_dns_zone" "example" {
-	name      = "tfsoftsecretnetlifytestingexamplestore.com"
-	team_slug = "netlify-terraform-test"
+  name      = "tfsoftsecretnetlifytestingexamplestore.com"
+  team_slug = "netlify-terraform-test"
 }`,
 			Check: resource.ComposeAggregateTestCheckFunc(
 				resource.TestCheckResourceAttrSet("netlify_dns_zone.example", "id"),

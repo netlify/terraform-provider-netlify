@@ -5308,6 +5308,195 @@ paths:
       x-internal: "true"
       x-controller: api/v1/accounts
       x-action: update_firewall_rule_set
+  /api/v1/accounts/{account_id}/waf/policies:
+    post:
+      description: Creates a new WAF policy for the account.
+      operationId: createWafPolicy
+      parameters:
+      - description: The ID of the account
+        explode: false
+        in: path
+        name: account_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WafPolicy'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WafPolicyUpdate'
+          description: WAF Policy created
+      tags:
+      - WAF Policies
+  /api/v1/sites/{site_id}/waf/policy:
+    get:
+      description: Retrieves the WAF policy for the site.
+      operationId: getSiteWafPolicy
+      parameters:
+      - description: The ID of the site
+        explode: false
+        in: path
+        name: site_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WafPolicy'
+          description: WAF Policy retrieved
+        "404":
+          description: WAF Policy not found
+      tags:
+      - WAF Policies
+    put:
+      description: Updates the WAF policy for the site.
+      operationId: updateSiteWafPolicy
+      parameters:
+      - description: The ID of the site
+        explode: false
+        in: path
+        name: site_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WafPolicyUpdate'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json: {}
+          description: WAF Policy updated
+      tags:
+      - WAF Policies
+  /api/v1/accounts/{account_id}/waf/policies/{policy_id}:
+    delete:
+      description: Deletes the WAF policy for the account.
+      operationId: deleteWafPolicy
+      parameters:
+      - description: The ID of the account
+        explode: false
+        in: path
+        name: account_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID of the WAF policy
+        explode: false
+        in: path
+        name: policy_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "202":
+          content:
+            application/json: {}
+          description: WAF Policy deleted
+      tags:
+      - WAF Policies
+    get:
+      description: Retrieves the WAF policy for the account.
+      operationId: getWafPolicy
+      parameters:
+      - description: The ID of the account
+        explode: false
+        in: path
+        name: account_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID of the WAF policy
+        explode: false
+        in: path
+        name: policy_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WafPolicy'
+          description: WAF Policy retrieved
+      tags:
+      - WAF Policies
+    put:
+      description: Updates the WAF policy for the account.
+      operationId: updateWafPolicy
+      parameters:
+      - description: The ID of the account
+        explode: false
+        in: path
+        name: account_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID of the WAF policy
+        explode: false
+        in: path
+        name: policy_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WafPolicy'
+        required: true
+      responses:
+        "202":
+          content:
+            application/json: {}
+          description: WAF Policy updated
+      tags:
+      - WAF Policies
+  /api/v1/accounts/{account_id}/waf/managed:
+    get:
+      description: Retrieves the managed WAF rules for the account.
+      operationId: getManagedWafRules
+      parameters:
+      - description: The ID of the account
+        explode: false
+        in: path
+        name: account_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManagedWafRules'
+          description: Managed WAF rules retrieved
+      tags:
+      - WAF Managed Rules
 components:
   schemas:
     AccountBuild:
@@ -11822,6 +12011,112 @@ components:
           type: string
         use_case_something_else:
           type: string
+    WafPolicy:
+      example:
+        name: name
+        description: description
+        rule_sets:
+        - excluded_patterns:
+          - excluded_patterns
+          - excluded_patterns
+          category_thresholds:
+            key: 6
+          overall_threshold: 0
+          passive_mode: true
+          managed_id: managed_id
+          rule_overrides:
+            key:
+              action: action
+        - excluded_patterns:
+          - excluded_patterns
+          - excluded_patterns
+          category_thresholds:
+            key: 6
+          overall_threshold: 0
+          passive_mode: true
+          managed_id: managed_id
+          rule_overrides:
+            key:
+              action: action
+        id: id
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        rule_sets:
+          items:
+            $ref: '#/components/schemas/WafPolicy_rule_sets_inner'
+          type: array
+      required:
+      - description
+      - name
+      - rule_sets
+    WafPolicyRuleOverride:
+      example:
+        action: action
+      properties:
+        action:
+          type: string
+      required:
+      - action
+    WafPolicyUpdate:
+      example:
+        policy_id: policy_id
+      properties:
+        policy_id:
+          type: string
+      required:
+      - policy_id
+    ManagedWafRules:
+      example:
+        rule_sets:
+          key:
+            definition:
+              id: id
+              type: type
+              version: version
+            rules:
+            - phase: phase
+              severity: severity
+              description: description
+              id: id
+              category: category
+            - phase: phase
+              severity: severity
+              description: description
+              id: id
+              category: category
+      properties:
+        rule_sets:
+          additionalProperties:
+            $ref: '#/components/schemas/ManagedWafRuleSet'
+    ManagedWafRuleSet:
+      example:
+        definition:
+          id: id
+          type: type
+          version: version
+        rules:
+        - phase: phase
+          severity: severity
+          description: description
+          id: id
+          category: category
+        - phase: phase
+          severity: severity
+          description: description
+          id: id
+          category: category
+      properties:
+        definition:
+          $ref: '#/components/schemas/ManagedWafRuleSet_definition'
+        rules:
+          items:
+            $ref: '#/components/schemas/ManagedWafRuleSet_rules_inner'
+          type: array
     createAccount_request:
       properties:
         name:
@@ -12222,6 +12517,68 @@ components:
         gitlab:
           type: string
         bitbucket:
+          type: string
+    WafPolicy_rule_sets_inner:
+      example:
+        excluded_patterns:
+        - excluded_patterns
+        - excluded_patterns
+        category_thresholds:
+          key: 6
+        overall_threshold: 0
+        passive_mode: true
+        managed_id: managed_id
+        rule_overrides:
+          key:
+            action: action
+      properties:
+        managed_id:
+          type: string
+        excluded_patterns:
+          items:
+            type: string
+          type: array
+        passive_mode:
+          type: boolean
+        overall_threshold:
+          type: integer
+        category_thresholds:
+          additionalProperties:
+            type: integer
+        rule_overrides:
+          additionalProperties:
+            $ref: '#/components/schemas/WafPolicyRuleOverride'
+      required:
+      - overall_threshold
+    ManagedWafRuleSet_definition:
+      example:
+        id: id
+        type: type
+        version: version
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        version:
+          type: string
+    ManagedWafRuleSet_rules_inner:
+      example:
+        phase: phase
+        severity: severity
+        description: description
+        id: id
+        category: category
+      properties:
+        id:
+          type: string
+        description:
+          type: string
+        phase:
+          type: string
+        category:
+          type: string
+        severity:
           type: string
   securitySchemes:
     netlifyAuth:

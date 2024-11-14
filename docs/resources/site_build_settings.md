@@ -44,6 +44,7 @@ resource "netlify_site_build_settings" "blog" {
 - `package_directory` (String)
 - `pretty_urls` (Boolean)
 - `stop_builds` (Boolean)
+- `waf_policy_id` (String) See more details in the netlify_waf_policy resource.
 
 ### Read-Only
 

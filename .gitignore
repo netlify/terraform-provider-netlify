@@ -2,6 +2,7 @@
 /swagger_go.json
 /.env
 *.out
+/waf
 
 *.dll
 *.exe
