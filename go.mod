@@ -2,7 +2,7 @@ module github.com/netlify/terraform-provider-netlify
 
 go 1.22.7
 
-toolchain go1.23.3
+toolchain go1.23.4
 
 require (
 	github.com/go-swagger/go-swagger v0.30.5
