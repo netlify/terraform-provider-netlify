@@ -29,9 +29,9 @@ type AdminSite struct {
 	BranchDeployCustomDomain string `json:"branch_deploy_custom_domain"`
 	DeployPreviewCustomDomain string `json:"deploy_preview_custom_domain"`
 	DomainAliases []string `json:"domain_aliases"`
-	Password string `json:"password"`
-	PasswordContext string `json:"password_context"`
-	PasswordHash string `json:"password_hash"`
+	Password *string `json:"password,omitempty"`
+	PasswordContext *string `json:"password_context,omitempty"`
+	PasswordHash *string `json:"password_hash,omitempty"`
 	SsoLogin bool `json:"sso_login"`
 	SsoLoginContext string `json:"sso_login_context"`
 	NotificationEmail string `json:"notification_email"`
@@ -75,7 +75,7 @@ type _AdminSite AdminSite
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAdminSite(id string, plan string, name string, defaultDomain string, customDomain string, branchDeployCustomDomain string, deployPreviewCustomDomain string, domainAliases []string, password string, passwordContext string, passwordHash string, ssoLogin bool, ssoLoginContext string, notificationEmail string, url string, adminUrl string, deployUrl string, state string, screenshotUrl string, createdAt time.Time, updatedAt time.Time, sslUrl string, forceSsl bool, buildSettings Repo, processingSettings SiteProcessingSettings, deployHook string, managedDns bool, accountId string, accountSlug string, accountName string, capabilities map[string]interface{}, idDomain string, buildImage string, buildTimelimit float32, deployRetentionInDays float32, labels []SiteLabel, siteBuildTimelimit float32, siteBuildPreProcessTimeout float32, siteFunctionsConfig map[string]interface{}) *AdminSite {
+func NewAdminSite(id string, plan string, name string, defaultDomain string, customDomain string, branchDeployCustomDomain string, deployPreviewCustomDomain string, domainAliases []string, ssoLogin bool, ssoLoginContext string, notificationEmail string, url string, adminUrl string, deployUrl string, state string, screenshotUrl string, createdAt time.Time, updatedAt time.Time, sslUrl string, forceSsl bool, buildSettings Repo, processingSettings SiteProcessingSettings, deployHook string, managedDns bool, accountId string, accountSlug string, accountName string, capabilities map[string]interface{}, idDomain string, buildImage string, buildTimelimit float32, deployRetentionInDays float32, labels []SiteLabel, siteBuildTimelimit float32, siteBuildPreProcessTimeout float32, siteFunctionsConfig map[string]interface{}) *AdminSite {
 	this := AdminSite{}
 	this.Id = id
 	this.Plan = plan
@@ -85,9 +85,6 @@ func NewAdminSite(id string, plan string, name string, defaultDomain string, cus
 	this.BranchDeployCustomDomain = branchDeployCustomDomain
 	this.DeployPreviewCustomDomain = deployPreviewCustomDomain
 	this.DomainAliases = domainAliases
-	this.Password = password
-	this.PasswordContext = passwordContext
-	this.PasswordHash = passwordHash
 	this.SsoLogin = ssoLogin
 	this.SsoLoginContext = ssoLoginContext
 	this.NotificationEmail = notificationEmail
@@ -319,76 +316,100 @@ func (o *AdminSite) SetDomainAliases(v []string) {
 	o.DomainAliases = v
 }
 
-// GetPassword returns the Password field value
+// GetPassword returns the Password field value if set, zero value otherwise.
 func (o *AdminSite) GetPassword() string {
-	if o == nil {
+	if o == nil || IsNil(o.Password) {
 		var ret string
 		return ret
 	}
-
-	return o.Password
+	return *o.Password
 }
 
-// GetPasswordOk returns a tuple with the Password field value
+// GetPasswordOk returns a tuple with the Password field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AdminSite) GetPasswordOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Password) {
 		return nil, false
 	}
-	return &o.Password, true
+	return o.Password, true
 }
 
-// SetPassword sets field value
+// HasPassword returns a boolean if a field has been set.
+func (o *AdminSite) HasPassword() bool {
+	if o != nil && !IsNil(o.Password) {
+		return true
+	}
+
+	return false
+}
+
+// SetPassword gets a reference to the given string and assigns it to the Password field.
 func (o *AdminSite) SetPassword(v string) {
-	o.Password = v
+	o.Password = &v
 }
 
-// GetPasswordContext returns the PasswordContext field value
+// GetPasswordContext returns the PasswordContext field value if set, zero value otherwise.
 func (o *AdminSite) GetPasswordContext() string {
-	if o == nil {
+	if o == nil || IsNil(o.PasswordContext) {
 		var ret string
 		return ret
 	}
-
-	return o.PasswordContext
+	return *o.PasswordContext
 }
 
-// GetPasswordContextOk returns a tuple with the PasswordContext field value
+// GetPasswordContextOk returns a tuple with the PasswordContext field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AdminSite) GetPasswordContextOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.PasswordContext) {
 		return nil, false
 	}
-	return &o.PasswordContext, true
+	return o.PasswordContext, true
 }
 
-// SetPasswordContext sets field value
+// HasPasswordContext returns a boolean if a field has been set.
+func (o *AdminSite) HasPasswordContext() bool {
+	if o != nil && !IsNil(o.PasswordContext) {
+		return true
+	}
+
+	return false
+}
+
+// SetPasswordContext gets a reference to the given string and assigns it to the PasswordContext field.
 func (o *AdminSite) SetPasswordContext(v string) {
-	o.PasswordContext = v
+	o.PasswordContext = &v
 }
 
-// GetPasswordHash returns the PasswordHash field value
+// GetPasswordHash returns the PasswordHash field value if set, zero value otherwise.
 func (o *AdminSite) GetPasswordHash() string {
-	if o == nil {
+	if o == nil || IsNil(o.PasswordHash) {
 		var ret string
 		return ret
 	}
-
-	return o.PasswordHash
+	return *o.PasswordHash
 }
 
-// GetPasswordHashOk returns a tuple with the PasswordHash field value
+// GetPasswordHashOk returns a tuple with the PasswordHash field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AdminSite) GetPasswordHashOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.PasswordHash) {
 		return nil, false
 	}
-	return &o.PasswordHash, true
+	return o.PasswordHash, true
 }
 
-// SetPasswordHash sets field value
+// HasPasswordHash returns a boolean if a field has been set.
+func (o *AdminSite) HasPasswordHash() bool {
+	if o != nil && !IsNil(o.PasswordHash) {
+		return true
+	}
+
+	return false
+}
+
+// SetPasswordHash gets a reference to the given string and assigns it to the PasswordHash field.
 func (o *AdminSite) SetPasswordHash(v string) {
-	o.PasswordHash = v
+	o.PasswordHash = &v
 }
 
 // GetSsoLogin returns the SsoLogin field value
@@ -1273,9 +1294,15 @@ func (o AdminSite) ToMap() (map[string]interface{}, error) {
 	toSerialize["branch_deploy_custom_domain"] = o.BranchDeployCustomDomain
 	toSerialize["deploy_preview_custom_domain"] = o.DeployPreviewCustomDomain
 	toSerialize["domain_aliases"] = o.DomainAliases
-	toSerialize["password"] = o.Password
-	toSerialize["password_context"] = o.PasswordContext
-	toSerialize["password_hash"] = o.PasswordHash
+	if !IsNil(o.Password) {
+		toSerialize["password"] = o.Password
+	}
+	if !IsNil(o.PasswordContext) {
+		toSerialize["password_context"] = o.PasswordContext
+	}
+	if !IsNil(o.PasswordHash) {
+		toSerialize["password_hash"] = o.PasswordHash
+	}
 	toSerialize["sso_login"] = o.SsoLogin
 	toSerialize["sso_login_context"] = o.SsoLoginContext
 	toSerialize["notification_email"] = o.NotificationEmail
@@ -1343,9 +1370,6 @@ func (o *AdminSite) UnmarshalJSON(data []byte) (err error) {
 		"branch_deploy_custom_domain",
 		"deploy_preview_custom_domain",
 		"domain_aliases",
-		"password",
-		"password_context",
-		"password_hash",
 		"sso_login",
 		"sso_login_context",
 		"notification_email",

@@ -16,6 +16,7 @@ This project uses a modified `openapi.json`. Please maintain these instructions 
 1. Add a `cdp_enabled_contexts` property of type `array` of `string`s to the `Site` object.
 1. Add a `hud_enabled` property of type `boolean` to the `Site` object.
 1. Duplicate the `Site` object into `PartialSite` and remove the `required` properties.
+1. Remove `password`, `password_context`, and `password_hash` from the `required` array of the `Site` object.
 1. Change `updateSite` operation to use the `PartialSite` object as the request body schema (NOTE: not the response body schema).
 1. Change the type of `LogDrain.id` to `string`.
 1. Add the various `log_drains` paths from `bitballoon-openapi`'s `openapi.json` file.
