@@ -11056,9 +11056,6 @@ components:
       - managed_dns
       - name
       - notification_email
-      - password
-      - password_context
-      - password_hash
       - plan
       - processing_settings
       - screenshot_url
