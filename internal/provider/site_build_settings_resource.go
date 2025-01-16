@@ -359,6 +359,11 @@ func (r *siteBuildSettingsResource) write(ctx context.Context, plan *siteBuildSe
 	} else {
 		site.FunctionsRegion = plan.FunctionsRegion.ValueStringPointer()
 	}
+	if site.FunctionsRegion != nil &&
+		curState.FunctionsRegion.ValueStringPointer() != nil &&
+		*site.FunctionsRegion == curState.FunctionsRegion.ValueString() {
+		site.FunctionsRegion = nil
+	}
 
 	_, _, err := r.data.client.SitesAPI.
 		UpdateSite(ctx, plan.SiteID.ValueString()).
