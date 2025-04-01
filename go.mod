@@ -7,7 +7,7 @@ toolchain go1.23.4
 require (
 	github.com/go-swagger/go-swagger v0.30.5
 	github.com/hashicorp/terraform-plugin-docs v0.21.0
-	github.com/hashicorp/terraform-plugin-framework v1.13.0
+	github.com/hashicorp/terraform-plugin-framework v1.14.0
 	golang.org/x/oauth2 v0.25.0
 )
 
@@ -67,7 +67,7 @@ require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hashicorp/terraform-exec v0.22.0 // indirect
 	github.com/hashicorp/terraform-json v0.24.0 // indirect
-	github.com/hashicorp/terraform-plugin-framework-validators v0.16.0
+	github.com/hashicorp/terraform-plugin-framework-validators v0.17.0
 	github.com/hashicorp/terraform-plugin-go v0.26.0
 	github.com/hashicorp/terraform-plugin-log v0.9.0 // indirect
 	github.com/hashicorp/terraform-plugin-testing v1.12.0
