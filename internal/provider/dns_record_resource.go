@@ -91,7 +91,7 @@ func (r *dnsRecordResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 			},
 			"type": schema.StringAttribute{
 				Required:    true,
-				Description: "One of A, AAAA, ALIAS, CAA, CNAME, MX, NS, SPF, or TXT",
+				Description: "One of A, AAAA, ALIAS, CAA, CNAME, MX, NS, SPF, TXT, NETLIFY, or NETLIFYv6.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
@@ -106,6 +106,8 @@ func (r *dnsRecordResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 						"NS",
 						"SPF",
 						"TXT",
+						"NETLIFY",
+						"NETLIFYv6",
 					),
 					netlify_validators.RequiredIfEquals("CAA", path.MatchRoot("flag"), path.MatchRoot("tag")),
 					netlify_validators.RequiredIfEquals("MX", path.MatchRoot("priority")),
@@ -235,7 +237,16 @@ func (r *dnsRecordResource) Read(ctx context.Context, req resource.ReadRequest, 
 	recordType := dnsRecord.Type
 	state.Type = types.StringValue(recordType)
 	state.Hostname = types.StringValue(dnsRecord.Hostname)
-	state.Value = types.StringValue(dnsRecord.Value)
+	if recordType == "NETLIFY" || recordType == "NETLIFYv6" {
+		slug := strings.TrimSuffix(dnsRecord.Value, ".netlify.app")
+		siteId := r.siteIdFromSlug(ctx, state, resp, slug)
+		if siteId == nil {
+			return
+		}
+		state.Value = types.StringValue(*siteId)
+	} else {
+		state.Value = types.StringValue(dnsRecord.Value)
+	}
 	state.TTL = types.Int64Value(dnsRecord.Ttl)
 	if recordType == "CAA" {
 		state.Flag = types.Int64Value(dnsRecord.Flag)
@@ -303,4 +314,35 @@ func (r *dnsRecordResource) ImportState(ctx context.Context, req resource.Import
 		resp.Diagnostics.AddError("Unexpected Import Identifier", errorMessage)
 		return
 	}
+}
+
+func (r *dnsRecordResource) siteIdFromSlug(ctx context.Context, state dnsRecordResourceModel, resp *resource.ReadResponse, slug string) *string {
+	dnsZone, _, err := r.data.client.DNSZonesAPI.GetDnsZone(ctx, state.ZoneID.ValueString()).Execute()
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Error reading Netlify DNS zone",
+			fmt.Sprintf(
+				"Could not read Netlify DNS zone %q: %q",
+				state.ZoneID.ValueString(),
+				err.Error(),
+			),
+		)
+		return nil
+	}
+
+	sites, _, err := r.data.client.SitesAPI.
+		ListSitesForAccount(ctx, dnsZone.AccountSlug).
+		Name(slug).
+		Execute()
+	if err != nil {
+		resp.Diagnostics.AddError("Error reading Netlify team", fmt.Sprintf("Could not list Netlify sites in team %q: %q", dnsZone.AccountSlug, err.Error()))
+		return nil
+	}
+	for _, s := range sites {
+		if s.Name == slug {
+			return &s.Id
+		}
+	}
+	resp.Diagnostics.AddError("Site not found", fmt.Sprintf("Could not find Netlify site %q in team %q", slug, dnsZone.AccountSlug))
+	return nil
 }
