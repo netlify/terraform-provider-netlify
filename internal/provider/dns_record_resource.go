@@ -92,6 +92,9 @@ func (r *dnsRecordResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 			"type": schema.StringAttribute{
 				Required:    true,
 				Description: "One of A, AAAA, ALIAS, CAA, CNAME, MX, NS, SPF, or TXT",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"A",
