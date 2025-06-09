@@ -423,7 +423,7 @@ func (r *logDrainResource) Delete(ctx context.Context, req resource.DeleteReques
 func (r *logDrainResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	idParts := strings.Split(req.ID, ":")
 
-	errorMessage := fmt.Sprintf("Expected import identifier in the formats: site_id,log_drain_id. Got: %q", req.ID)
+	errorMessage := fmt.Sprintf("Expected import identifier in the formats: site_id:log_drain_id. Got: %q", req.ID)
 
 	if len(idParts) == 2 {
 		if idParts[0] == "" || idParts[1] == "" {
