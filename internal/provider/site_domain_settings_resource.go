@@ -133,13 +133,26 @@ func (r *siteDomainSettingsResource) Read(ctx context.Context, req resource.Read
 		return
 	}
 
-	state.CustomDomain = types.StringValue(site.CustomDomain)
+	if site.CustomDomain != "" {
+		state.CustomDomain = types.StringValue(site.CustomDomain)
+	} else {
+		state.CustomDomain = types.StringNull()
+	}
 	state.DomainAliases = make([]types.String, len(site.DomainAliases))
 	for i, domainAlias := range site.DomainAliases {
 		state.DomainAliases[i] = types.StringValue(domainAlias)
 	}
-	state.BranchDeployCustomDomain = types.StringValue(site.BranchDeployCustomDomain)
-	state.DeployPreviewCustomDomain = types.StringValue(site.DeployPreviewCustomDomain)
+	if site.BranchDeployCustomDomain != "" {
+		state.BranchDeployCustomDomain = types.StringValue(site.BranchDeployCustomDomain)
+	} else {
+		state.BranchDeployCustomDomain = types.StringNull()
+	}
+
+	if site.DeployPreviewCustomDomain != "" {
+		state.DeployPreviewCustomDomain = types.StringValue(site.DeployPreviewCustomDomain)
+	} else {
+		state.DeployPreviewCustomDomain = types.StringNull()
+	}
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 	if resp.Diagnostics.HasError() {
