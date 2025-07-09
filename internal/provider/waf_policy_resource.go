@@ -286,7 +286,7 @@ func (r *wafPolicyResource) Delete(ctx context.Context, req resource.DeleteReque
 func (r *wafPolicyResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	idParts := strings.Split(req.ID, ":")
 
-	errorMessage := fmt.Sprintf("Expected import identifier in the formats: team_id,waf_policy_id. Got: %q", req.ID)
+	errorMessage := fmt.Sprintf("Expected import identifier in the formats: team_id:waf_policy_id. Got: %q", req.ID)
 
 	if len(idParts) == 2 {
 		if idParts[0] == "" || idParts[1] == "" {
