@@ -27,6 +27,7 @@ require (
 	github.com/mitchellh/go-wordwrap v1.0.0 // indirect
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	google.golang.org/appengine v1.6.8 // indirect
+	gopkg.in/validator.v2 v2.0.1 // indirect
 )
 
 require (
