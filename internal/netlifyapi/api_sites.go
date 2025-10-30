@@ -87,7 +87,7 @@ func (a *SitesAPIService) CreateSiteExecute(r ApiCreateSiteRequest) (*Site, *htt
 	}
 
 	if r.configureDns != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "configure_dns", r.configureDns, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "configure_dns", r.configureDns, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -212,7 +212,7 @@ func (a *SitesAPIService) CreateSiteInTeamExecute(r ApiCreateSiteInTeamRequest) 
 	}
 
 	if r.configureDns != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "configure_dns", r.configureDns, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "configure_dns", r.configureDns, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -419,7 +419,7 @@ func (a *SitesAPIService) DeleteSiteFirewallRuleSetExecute(r ApiDeleteSiteFirewa
 		return nil, reportError("id is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "id", r.id, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "id", r.id, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -730,7 +730,7 @@ func (a *SitesAPIService) GetSiteFirewallRuleSetExecute(r ApiGetSiteFirewallRule
 		return localVarReturnValue, nil, reportError("id is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "id", r.id, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "id", r.id, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -990,36 +990,36 @@ func (a *SitesAPIService) ListSitesExecute(r ApiListSitesRequest) ([]Site, *http
 	localVarFormParams := url.Values{}
 
 	if r.filter != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "filter", r.filter, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "filter", r.filter, "form", "")
 	}
 	if r.includeFavorites != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "include_favorites", r.includeFavorites, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "include_favorites", r.includeFavorites, "form", "")
 	}
 	if r.labelIds != nil {
 		t := *r.labelIds
 		if reflect.TypeOf(t).Kind() == reflect.Slice {
 			s := reflect.ValueOf(t)
 			for i := 0; i < s.Len(); i++ {
-				parameterAddToHeaderOrQuery(localVarQueryParams, "label_ids", s.Index(i).Interface(), "multi")
+				parameterAddToHeaderOrQuery(localVarQueryParams, "label_ids", s.Index(i).Interface(), "form", "multi")
 			}
 		} else {
-			parameterAddToHeaderOrQuery(localVarQueryParams, "label_ids", t, "multi")
+			parameterAddToHeaderOrQuery(localVarQueryParams, "label_ids", t, "form", "multi")
 		}
 	}
 	if r.name != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "form", "")
 	}
 	if r.page != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "page", r.page, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "page", r.page, "form", "")
 	}
 	if r.perPage != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "per_page", r.perPage, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "per_page", r.perPage, "form", "")
 	}
 	if r.sortBy != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "sort_by", r.sortBy, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "sort_by", r.sortBy, "form", "")
 	}
 	if r.visibility != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "visibility", r.visibility, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "visibility", r.visibility, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1167,22 +1167,22 @@ func (a *SitesAPIService) ListSitesForAccountExecute(r ApiListSitesForAccountReq
 	localVarFormParams := url.Values{}
 
 	if r.filter != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "filter", r.filter, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "filter", r.filter, "form", "")
 	}
 	if r.name != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "form", "")
 	}
 	if r.page != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "page", r.page, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "page", r.page, "form", "")
 	}
 	if r.perPage != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "per_page", r.perPage, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "per_page", r.perPage, "form", "")
 	}
 	if r.sortBy != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "sort_by", r.sortBy, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "sort_by", r.sortBy, "form", "")
 	}
 	if r.visibility != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "visibility", r.visibility, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "visibility", r.visibility, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1622,7 +1622,7 @@ func (a *SitesAPIService) UpdateSiteFirewallRuleSetExecute(r ApiUpdateSiteFirewa
 		return nil, reportError("createSiteFirewallConfig is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "id", r.id, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "id", r.id, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 

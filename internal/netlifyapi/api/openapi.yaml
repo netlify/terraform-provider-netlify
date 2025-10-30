@@ -153,7 +153,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/AccountBuild'
+                  $ref: "#/components/schemas/AccountBuild"
                 type: array
           description: ""
       tags:
@@ -253,7 +253,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Member'
+                  $ref: "#/components/schemas/Member"
                 type: array
           description: ""
       tags:
@@ -309,7 +309,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Member'
+                $ref: "#/components/schemas/Member"
           description: ""
       tags:
       - Members
@@ -394,7 +394,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Site'
+                  $ref: "#/components/schemas/Site"
                 type: array
           description: ""
       tags:
@@ -425,7 +425,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Site'
+              $ref: "#/components/schemas/Site"
         description: ""
         required: true
       responses:
@@ -433,7 +433,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Site'
+                $ref: "#/components/schemas/Site"
           description: ""
       tags:
       - Sites
@@ -454,7 +454,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Account'
+                  $ref: "#/components/schemas/Account"
                 type: array
           description: ""
       tags:
@@ -469,7 +469,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createAccount_request'
+              $ref: "#/components/schemas/createAccount_request"
         description: ""
         required: true
       responses:
@@ -477,7 +477,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Account'
+                $ref: "#/components/schemas/Account"
           description: ""
       tags:
       - Accounts
@@ -520,7 +520,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Account'
+                $ref: "#/components/schemas/Account"
           description: ""
         "404":
           description: Not Found
@@ -544,7 +544,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AccountUpdateParams'
+              $ref: "#/components/schemas/AccountUpdateParams"
         description: ""
         required: true
       responses:
@@ -552,7 +552,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Account'
+                $ref: "#/components/schemas/Account"
           description: ""
         "422":
           description: Unprocessable Entity
@@ -570,7 +570,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AccountType'
+                $ref: "#/components/schemas/AccountType"
           description: ""
       tags:
       - Accounts
@@ -608,7 +608,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/AuditLog'
+                  $ref: "#/components/schemas/AuditLog"
                 type: array
           description: ""
       tags:
@@ -633,7 +633,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ServiceInstance'
+                $ref: "#/components/schemas/ServiceInstance"
           description: ""
         "422":
           description: "Payment Method not found, Analytics already enabled"
@@ -708,7 +708,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Asset'
+                  $ref: "#/components/schemas/Asset"
                 type: array
           description: ""
       tags:
@@ -733,7 +733,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AssetCreateParams'
+              $ref: "#/components/schemas/AssetCreateParams"
         description: ""
         required: true
       responses:
@@ -741,7 +741,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AssetCreateResult'
+                $ref: "#/components/schemas/AssetCreateResult"
           description: ""
       tags:
       - Site assets
@@ -804,7 +804,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Asset'
+                $ref: "#/components/schemas/Asset"
           description: ""
       tags:
       - Site assets
@@ -848,7 +848,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Asset'
+                $ref: "#/components/schemas/Asset"
           description: ""
       tags:
       - Site assets
@@ -883,7 +883,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/getSiteAssetPublicSignature_200_response'
+                $ref: "#/components/schemas/getSiteAssetPublicSignature_200_response"
           description: ""
       tags:
       - Site assets
@@ -910,7 +910,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/PaymentMethod'
+                  $ref: "#/components/schemas/PaymentMethod"
                 type: array
           description: ""
       tags:
@@ -936,7 +936,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/BuildHook'
+                  $ref: "#/components/schemas/BuildHook"
                 type: array
           description: ""
       tags:
@@ -959,7 +959,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateBuildHook'
+              $ref: "#/components/schemas/CreateBuildHook"
         description: ""
         required: true
       responses:
@@ -967,7 +967,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BuildHook'
+                $ref: "#/components/schemas/BuildHook"
           description: ""
       tags:
       - Build Hooks
@@ -1026,7 +1026,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BuildHook'
+                $ref: "#/components/schemas/BuildHook"
           description: ""
       tags:
       - Build Hooks
@@ -1056,7 +1056,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateBuildHook'
+              $ref: "#/components/schemas/UpdateBuildHook"
         description: ""
         required: true
       responses:
@@ -1083,7 +1083,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Build'
+                $ref: "#/components/schemas/Build"
           description: ""
       tags:
       - Builds
@@ -1107,7 +1107,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Build'
+                  $ref: "#/components/schemas/Build"
                 type: array
           description: ""
       tags:
@@ -1166,7 +1166,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Build'
+                $ref: "#/components/schemas/Build"
           description: ""
         "404":
           description: Not Found
@@ -1193,7 +1193,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/updateSiteBuildLog_request'
+              $ref: "#/components/schemas/updateSiteBuildLog_request"
         description: ""
         required: true
       responses:
@@ -1203,7 +1203,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/updateSiteBuildLog_422_response'
+                $ref: "#/components/schemas/updateSiteBuildLog_422_response"
           description: Unprocessable Entity
       tags:
       - Builds
@@ -1273,7 +1273,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/DeployKey'
+                  $ref: "#/components/schemas/DeployKey"
                 type: array
           description: ""
       tags:
@@ -1289,7 +1289,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeployKey'
+                $ref: "#/components/schemas/DeployKey"
           description: ""
       tags:
       - Deploy keys
@@ -1332,7 +1332,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeployKey'
+                $ref: "#/components/schemas/DeployKey"
           description: ""
       tags:
       - Deploy keys
@@ -1449,7 +1449,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Deploy'
+                  $ref: "#/components/schemas/Deploy"
                 type: array
           description: ""
       tags:
@@ -1480,7 +1480,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createSiteDeploy_request'
+              $ref: "#/components/schemas/createSiteDeploy_request"
         description: ""
         required: true
       responses:
@@ -1488,7 +1488,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Deploy'
+                $ref: "#/components/schemas/Deploy"
           description: ""
       tags:
       - Deploys
@@ -1512,7 +1512,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Deploy'
+                $ref: "#/components/schemas/Deploy"
           description: ""
       tags:
       - Deploys
@@ -1535,7 +1535,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Deploy'
+                $ref: "#/components/schemas/Deploy"
           description: ""
       tags:
       - Deploys
@@ -1567,7 +1567,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Deploy'
+                $ref: "#/components/schemas/Deploy"
           description: ""
       tags:
       - Deploys
@@ -1598,7 +1598,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Deploy'
+                $ref: "#/components/schemas/Deploy"
           description: ""
       tags:
       - Deploys
@@ -1628,7 +1628,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/updateSiteDeploy_request'
+              $ref: "#/components/schemas/updateSiteDeploy_request"
         description: ", await_ready_signal: boolean]"
         required: true
       responses:
@@ -1636,7 +1636,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Deploy'
+                $ref: "#/components/schemas/Deploy"
           description: ""
       tags:
       - Deploys
@@ -1668,7 +1668,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Deploy'
+                $ref: "#/components/schemas/Deploy"
           description: ""
       tags:
       - Deploys
@@ -1693,7 +1693,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Deploy'
+                $ref: "#/components/schemas/Deploy"
           description: ""
       tags:
       - Deploys
@@ -1717,7 +1717,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Deploy'
+                $ref: "#/components/schemas/Deploy"
           description: ""
       tags:
       - Deploys
@@ -1741,7 +1741,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Deploy'
+                $ref: "#/components/schemas/Deploy"
           description: ""
       tags:
       - Deploys
@@ -1765,7 +1765,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Deploy_Simple'
+                $ref: "#/components/schemas/Deploy_Simple"
           description: ""
       tags:
       - Deploys
@@ -1790,7 +1790,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/DevServerHook'
+                  $ref: "#/components/schemas/DevServerHook"
                 type: array
           description: ""
       tags:
@@ -1813,7 +1813,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateDevServerHook'
+              $ref: "#/components/schemas/CreateDevServerHook"
         description: ""
         required: true
       responses:
@@ -1821,7 +1821,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DevServerHook'
+                $ref: "#/components/schemas/DevServerHook"
           description: ""
       tags:
       - Dev Server Hooks
@@ -1880,7 +1880,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DevServerHook'
+                $ref: "#/components/schemas/DevServerHook"
           description: ""
       tags:
       - Dev Server Hooks
@@ -1910,7 +1910,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateDevServerHook'
+              $ref: "#/components/schemas/UpdateDevServerHook"
         description: ""
         required: true
       responses:
@@ -1939,7 +1939,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/DnsRecord'
+                  $ref: "#/components/schemas/DnsRecord"
                 type: array
           description: ""
       tags:
@@ -1962,7 +1962,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DnsRecordCreateParams'
+              $ref: "#/components/schemas/DnsRecordCreateParams"
         description: ""
         required: true
       responses:
@@ -1970,7 +1970,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DnsRecord'
+                $ref: "#/components/schemas/DnsRecord"
           description: ""
       tags:
       - DNS zones
@@ -2029,7 +2029,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DnsRecord'
+                $ref: "#/components/schemas/DnsRecord"
           description: ""
       tags:
       - DNS zones
@@ -2073,7 +2073,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/DnsZone'
+                  $ref: "#/components/schemas/DnsZone"
                 type: array
           description: ""
       tags:
@@ -2088,7 +2088,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DnsZoneCreateParams'
+              $ref: "#/components/schemas/DnsZoneCreateParams"
         description: ""
         required: true
       responses:
@@ -2096,7 +2096,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DnsZone'
+                $ref: "#/components/schemas/DnsZone"
           description: ""
       tags:
       - DNS zones
@@ -2139,7 +2139,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DnsZone'
+                $ref: "#/components/schemas/DnsZone"
           description: ""
       tags:
       - DNS zones
@@ -2163,7 +2163,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DnsZone'
+                $ref: "#/components/schemas/DnsZone"
           description: ""
       tags:
       - DNS zones
@@ -2186,7 +2186,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DnsZoneTransferParams'
+              $ref: "#/components/schemas/DnsZoneTransferParams"
         description: ""
         required: true
       responses:
@@ -2194,7 +2194,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/transferDnsZone_200_response'
+                $ref: "#/components/schemas/transferDnsZone_200_response"
           description: ""
       tags:
       - DNS zones
@@ -2219,7 +2219,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/DnsZone'
+                  $ref: "#/components/schemas/DnsZone"
                 type: array
           description: ""
       tags:
@@ -2249,7 +2249,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/DnsZone'
+                  $ref: "#/components/schemas/DnsZone"
                 type: array
           description: ""
       tags:
@@ -2312,7 +2312,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/EnvVar'
+                  $ref: "#/components/schemas/EnvVar"
                 type: array
           description: ""
         "401":
@@ -2360,7 +2360,7 @@ paths:
           application/json:
             schema:
               items:
-                $ref: '#/components/schemas/EnvVar'
+                $ref: "#/components/schemas/EnvVar"
               type: array
         description: The array of environment variables to create
         required: true
@@ -2370,7 +2370,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/EnvVar'
+                  $ref: "#/components/schemas/EnvVar"
                 type: array
           description: ""
         "400":
@@ -2434,7 +2434,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/EnvVar'
+                  $ref: "#/components/schemas/EnvVar"
                 type: array
           description: ""
         "401":
@@ -2521,7 +2521,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EnvVar'
+                $ref: "#/components/schemas/EnvVar"
           description: ""
         "401":
           description: Unauthorized (not logged in; not on team; not allowed to create
@@ -2565,7 +2565,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EnvVarSet'
+              $ref: "#/components/schemas/EnvVarSet"
         description: ""
         required: true
       responses:
@@ -2573,7 +2573,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EnvVar'
+                $ref: "#/components/schemas/EnvVar"
           description: ""
         "401":
           description: Unauthorized (not logged in; not on team; not allowed to update
@@ -2626,7 +2626,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/updateEnvVar_request'
+              $ref: "#/components/schemas/updateEnvVar_request"
         description: ""
         required: true
       responses:
@@ -2634,7 +2634,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EnvVar'
+                $ref: "#/components/schemas/EnvVar"
           description: ""
         "401":
           description: Unauthorized (not logged in; not on team; not allowed to update
@@ -2714,7 +2714,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/SiteFile'
+                  $ref: "#/components/schemas/SiteFile"
                 type: array
           description: ""
       tags:
@@ -2773,7 +2773,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Form'
+                  $ref: "#/components/schemas/Form"
                 type: array
           description: ""
         "401":
@@ -2858,7 +2858,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/uploadDeployFunction_200_response'
+                $ref: "#/components/schemas/uploadDeployFunction_200_response"
           description: ""
         "400":
           description: ""
@@ -2907,7 +2907,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/OutgoingHook'
+                  $ref: "#/components/schemas/OutgoingHook"
                 type: array
           description: ""
       tags:
@@ -2922,7 +2922,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateOutgoingHook'
+              $ref: "#/components/schemas/CreateOutgoingHook"
         description: ""
         required: true
       responses:
@@ -2930,7 +2930,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OutgoingHook'
+                $ref: "#/components/schemas/OutgoingHook"
           description: ""
         "404":
           description: Associated form with given form_id or form_name not found
@@ -2977,7 +2977,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OutgoingHook'
+                $ref: "#/components/schemas/OutgoingHook"
           description: ""
       tags:
       - Hooks
@@ -2999,7 +2999,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateOutgoingHook'
+              $ref: "#/components/schemas/UpdateOutgoingHook"
         description: ""
         required: true
       responses:
@@ -3007,7 +3007,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OutgoingHook'
+                $ref: "#/components/schemas/OutgoingHook"
           description: ""
         "404":
           description: Associated form with given form_id not found
@@ -3040,7 +3040,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/OutgoingHookType'
+                  $ref: "#/components/schemas/OutgoingHookType"
                 type: array
           description: ""
       tags:
@@ -3065,7 +3065,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OutgoingHook'
+                $ref: "#/components/schemas/OutgoingHook"
           description: ""
       tags:
       - Hooks
@@ -3143,7 +3143,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OAuth_Ticket'
+                $ref: "#/components/schemas/OAuth_Ticket"
           description: ""
         "404":
           description: OAuth ticket not found
@@ -3169,7 +3169,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OAuth_Ticket'
+                $ref: "#/components/schemas/OAuth_Ticket"
           description: Created
         "401":
           description: OAuth application not found
@@ -3226,7 +3226,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Doorkeeper_AccessToken'
+                $ref: "#/components/schemas/Doorkeeper_AccessToken"
           description: Created
         "401":
           description: OAuth ticket not authorized
@@ -3271,14 +3271,14 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Receipt'
+                  $ref: "#/components/schemas/Receipt"
                 type: array
           description: ""
         "422":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/getOrganizationReceipts_422_response'
+                $ref: "#/components/schemas/getOrganizationReceipts_422_response"
           description: ""
         "401":
           description: Only owners are allowed to view receipts
@@ -3315,7 +3315,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/getOrganizationReceipts_422_response'
+                $ref: "#/components/schemas/getOrganizationReceipts_422_response"
           description: ""
         "401":
           description: Only owners are allowed to view receipts
@@ -3335,7 +3335,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Organization'
+                  $ref: "#/components/schemas/Organization"
                 type: array
           description: ""
       tags:
@@ -3360,7 +3360,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Organization'
+                $ref: "#/components/schemas/Organization"
           description: ""
       tags:
       - Organizations
@@ -3400,7 +3400,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Organization'
+                  $ref: "#/components/schemas/Organization"
                 type: array
           description: ""
       tags:
@@ -3455,13 +3455,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/getSiteAssetPublicSignature_200_response'
+                $ref: "#/components/schemas/getSiteAssetPublicSignature_200_response"
           description: ""
         "422":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/getOrganizationReceipts_422_response'
+                $ref: "#/components/schemas/getOrganizationReceipts_422_response"
           description: ""
         "401":
           description: Only owners are allowed to upload logo
@@ -3488,7 +3488,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/OrganizationAccount'
+                  $ref: "#/components/schemas/OrganizationAccount"
                 type: array
           description: ""
       tags:
@@ -3514,7 +3514,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Billing_ZuoraInvoice'
+                  $ref: "#/components/schemas/Billing_ZuoraInvoice"
                 type: array
           description: ""
       tags:
@@ -3573,7 +3573,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/getOrganizationClientToken_200_response'
+                $ref: "#/components/schemas/getOrganizationClientToken_200_response"
           description: ""
       tags:
       - Organizations
@@ -3590,7 +3590,7 @@ paths:
         name: data
         required: false
         schema:
-          $ref: '#/components/schemas/createOrganizationPayment_data_parameter'
+          $ref: "#/components/schemas/createOrganizationPayment_data_parameter"
         style: form
       - description: Boolean to allow enterprise accounts to change payment type from
           ACH
@@ -3632,7 +3632,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaymentMethod'
+                $ref: "#/components/schemas/PaymentMethod"
           description: ""
       tags:
       - Organizations
@@ -3663,7 +3663,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ServiceInstance'
+                $ref: "#/components/schemas/ServiceInstance"
           description: ""
         "404":
           description: Not Found
@@ -3744,7 +3744,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ServiceInstance'
+                $ref: "#/components/schemas/ServiceInstance"
           description: ""
         "404":
           description: Not Found
@@ -3810,7 +3810,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/ServiceInstance'
+                  $ref: "#/components/schemas/ServiceInstance"
                 type: array
           description: ""
         "404":
@@ -3839,7 +3839,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Service'
+                  $ref: "#/components/schemas/Service"
                 type: array
           description: ""
         "401":
@@ -3865,7 +3865,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Service'
+                $ref: "#/components/schemas/Service"
           description: ""
         "401":
           description: Unauthorized
@@ -3992,7 +3992,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Site'
+                  $ref: "#/components/schemas/Site"
                 type: array
           description: ""
       tags:
@@ -4015,7 +4015,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Site'
+              $ref: "#/components/schemas/Site"
         description: ""
         required: true
       responses:
@@ -4023,7 +4023,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Site'
+                $ref: "#/components/schemas/Site"
           description: ""
       tags:
       - Sites
@@ -4066,7 +4066,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Site'
+                $ref: "#/components/schemas/Site"
           description: ""
       tags:
       - Sites
@@ -4088,7 +4088,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PartialSite'
+              $ref: "#/components/schemas/PartialSite"
         description: ""
         required: true
       responses:
@@ -4096,7 +4096,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Site'
+                $ref: "#/components/schemas/Site"
           description: ""
       tags:
       - Sites
@@ -4177,7 +4177,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Site'
+                $ref: "#/components/schemas/Site"
           description: ""
         "404":
           description: Site not found
@@ -4203,7 +4203,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Site_Simple'
+                $ref: "#/components/schemas/Site_Simple"
           description: ""
       tags:
       - Sites
@@ -4228,7 +4228,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Snippet'
+                  $ref: "#/components/schemas/Snippet"
                 type: array
           description: ""
       tags:
@@ -4251,7 +4251,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Snippet'
+              $ref: "#/components/schemas/Snippet"
         description: ""
         required: true
       responses:
@@ -4259,7 +4259,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Snippet'
+                $ref: "#/components/schemas/Snippet"
           description: ""
       tags:
       - Snippets
@@ -4318,7 +4318,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Snippet'
+                $ref: "#/components/schemas/Snippet"
           description: ""
       tags:
       - Snippets
@@ -4348,7 +4348,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Snippet'
+              $ref: "#/components/schemas/Snippet"
         description: ""
         required: true
       responses:
@@ -4356,7 +4356,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Snippet'
+                $ref: "#/components/schemas/Snippet"
           description: ""
       tags:
       - Snippets
@@ -4380,7 +4380,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SniCertificate'
+                $ref: "#/components/schemas/SniCertificate"
           description: ""
       tags:
       - SNI certificates
@@ -4406,7 +4406,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CertificateInfo'
+              $ref: "#/components/schemas/CertificateInfo"
         description: ""
         required: true
       responses:
@@ -4414,7 +4414,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SniCertificate'
+                $ref: "#/components/schemas/SniCertificate"
           description: ""
       tags:
       - SNI certificates
@@ -4454,7 +4454,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/FormSubmission'
+                  $ref: "#/components/schemas/FormSubmission"
                 type: array
           description: ""
         "404":
@@ -4499,7 +4499,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/FormSubmission'
+                  $ref: "#/components/schemas/FormSubmission"
                 type: array
           description: ""
         "404":
@@ -4565,7 +4565,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FormSubmission'
+                $ref: "#/components/schemas/FormSubmission"
           description: ""
         "401":
           description: Unauthorized
@@ -4609,7 +4609,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/SplitTest'
+                  $ref: "#/components/schemas/SplitTest"
                 type: array
           description: ""
         "404":
@@ -4635,7 +4635,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createSplitTest_request'
+              $ref: "#/components/schemas/createSplitTest_request"
         description: ""
         required: true
       responses:
@@ -4643,7 +4643,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SplitTest'
+                $ref: "#/components/schemas/SplitTest"
           description: ""
         "404":
           description: Not Found
@@ -4678,7 +4678,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SplitTest'
+                $ref: "#/components/schemas/SplitTest"
           description: ""
         "401":
           description: Unauthorized
@@ -4711,7 +4711,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createSplitTest_request'
+              $ref: "#/components/schemas/createSplitTest_request"
         description: ""
         required: true
       responses:
@@ -4719,7 +4719,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SplitTest'
+                $ref: "#/components/schemas/SplitTest"
           description: ""
         "401":
           description: Unauthorized
@@ -4801,7 +4801,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
           description: ""
       tags:
       - Users
@@ -4844,7 +4844,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/getDirectory_200_response'
+                $ref: "#/components/schemas/getDirectory_200_response"
           description: ""
         "404":
           description: Not Found
@@ -4890,7 +4890,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LogDrain'
+                $ref: "#/components/schemas/LogDrain"
           description: Return log drains
         "401":
           description: Unauthorized
@@ -4918,7 +4918,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LogDrain'
+              $ref: "#/components/schemas/LogDrain"
         description: ""
         required: true
       responses:
@@ -4926,7 +4926,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LogDrain'
+                $ref: "#/components/schemas/LogDrain"
           description: Create a log drain
         "401":
           description: Unauthorized
@@ -5000,7 +5000,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LogDrain'
+                $ref: "#/components/schemas/LogDrain"
           description: Return a log drain
         "401":
           description: Unauthorized
@@ -5036,7 +5036,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LogDrain'
+              $ref: "#/components/schemas/LogDrain"
         description: ""
         required: true
       responses:
@@ -5044,7 +5044,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LogDrain'
+                $ref: "#/components/schemas/LogDrain"
           description: Update log drain
         "401":
           description: Unauthorized
@@ -5084,7 +5084,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Log_Drains_verify_request'
+              $ref: "#/components/schemas/Log_Drains_verify_request"
         description: ""
         required: true
       responses:
@@ -5160,7 +5160,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SiteFirewallConfig'
+                $ref: "#/components/schemas/SiteFirewallConfig"
           description: ""
         "409":
           description: ""
@@ -5196,7 +5196,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateSiteFirewallConfig'
+              $ref: "#/components/schemas/CreateSiteFirewallConfig"
         description: ""
         required: true
       responses:
@@ -5265,7 +5265,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SiteFirewallConfig'
+                $ref: "#/components/schemas/SiteFirewallConfig"
           description: ""
         "409":
           description: ""
@@ -5293,7 +5293,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateSiteFirewallConfig'
+              $ref: "#/components/schemas/CreateSiteFirewallConfig"
         description: ""
         required: true
       responses:
@@ -5325,14 +5325,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/WafPolicy'
+              $ref: "#/components/schemas/WafPolicy"
         required: true
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WafPolicyUpdate'
+                $ref: "#/components/schemas/WafPolicyUpdate"
           description: WAF Policy created
       tags:
       - WAF Policies
@@ -5354,7 +5354,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WafPolicy'
+                $ref: "#/components/schemas/WafPolicy"
           description: WAF Policy retrieved
         "404":
           description: WAF Policy not found
@@ -5376,7 +5376,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/WafPolicyUpdate'
+              $ref: "#/components/schemas/WafPolicyUpdate"
         required: true
       responses:
         "200":
@@ -5438,7 +5438,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WafPolicy'
+                $ref: "#/components/schemas/WafPolicy"
           description: WAF Policy retrieved
       tags:
       - WAF Policies
@@ -5466,7 +5466,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/WafPolicy'
+              $ref: "#/components/schemas/WafPolicy"
         required: true
       responses:
         "202":
@@ -5493,7 +5493,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ManagedWafRules'
+                $ref: "#/components/schemas/ManagedWafRules"
           description: Managed WAF rules retrieved
       tags:
       - WAF Managed Rules
@@ -5550,7 +5550,7 @@ components:
         done:
           type: boolean
         priority:
-          $ref: '#/components/schemas/AccountBuild_priority'
+          $ref: "#/components/schemas/AccountBuild_priority"
         site_id:
           type: string
         subdomain:
@@ -5614,9 +5614,9 @@ components:
       description: AccountCompliance definition
       properties:
         private_corp_repos:
-          $ref: '#/components/schemas/AccountCompliance_private_corp_repos'
+          $ref: "#/components/schemas/AccountCompliance_private_corp_repos"
         max_members:
-          $ref: '#/components/schemas/AccountCompliance_max_members'
+          $ref: "#/components/schemas/AccountCompliance_max_members"
       required:
       - max_members
       - private_corp_repos
@@ -5626,9 +5626,9 @@ components:
         id:
           type: string
         unpublished_rules:
-          $ref: '#/components/schemas/FirewallRuleSet'
+          $ref: "#/components/schemas/FirewallRuleSet"
         published_rules:
-          $ref: '#/components/schemas/FirewallRuleSet'
+          $ref: "#/components/schemas/FirewallRuleSet"
         site_overrides:
           items:
             type: object
@@ -5690,9 +5690,9 @@ components:
             type: geo
       properties:
         unpublished:
-          $ref: '#/components/schemas/FirewallRuleSet'
+          $ref: "#/components/schemas/FirewallRuleSet"
         published:
-          $ref: '#/components/schemas/FirewallRuleSet'
+          $ref: "#/components/schemas/FirewallRuleSet"
     AccountMemberRole:
       example: {}
       properties: {}
@@ -5794,7 +5794,7 @@ components:
           type: string
         member_roles:
           items:
-            $ref: '#/components/schemas/AccountMemberRole'
+            $ref: "#/components/schemas/AccountMemberRole"
           type: array
         name:
           type: string
@@ -5886,16 +5886,16 @@ components:
           type: boolean
     AdminSite:
       allOf:
-      - $ref: '#/components/schemas/Site'
+      - $ref: "#/components/schemas/Site"
       - properties:
           site_build_timelimit:
             type: number
           site_build_pre_process_timeout:
             type: number
           site_functions_config:
-            $ref: '#/components/schemas/AdminSite_allOf_site_functions_config'
+            $ref: "#/components/schemas/AdminSite_allOf_site_functions_config"
           edge_functions_manifest:
-            $ref: '#/components/schemas/AdminSite_allOf_site_functions_config'
+            $ref: "#/components/schemas/AdminSite_allOf_site_functions_config"
         required:
         - site_build_pre_process_timeout
         - site_build_timelimit
@@ -6048,9 +6048,9 @@ components:
           uploaded_url: uploaded_url
       properties:
         form:
-          $ref: '#/components/schemas/AssetCreateForm'
+          $ref: "#/components/schemas/AssetCreateForm"
         asset:
-          $ref: '#/components/schemas/Asset'
+          $ref: "#/components/schemas/Asset"
     AssetCreateForm:
       example:
         fields:
@@ -6061,7 +6061,7 @@ components:
         url:
           type: string
         fields:
-          $ref: '#/components/schemas/AssetCreateForm_fields'
+          $ref: "#/components/schemas/AssetCreateForm_fields"
     AuditLog:
       description: AuditLog model definition
       example:
@@ -6281,7 +6281,7 @@ components:
         invoice_items:
           description: Zuora invoice items
           items:
-            $ref: '#/components/schemas/Billing_ZuoraInvoiceItem'
+            $ref: "#/components/schemas/Billing_ZuoraInvoiceItem"
           type: array
       required:
       - amount
@@ -6458,7 +6458,7 @@ components:
           description: Number of enqueued builds
           type: integer
         minutes:
-          $ref: '#/components/schemas/BuildStatus_minutes'
+          $ref: "#/components/schemas/BuildStatus_minutes"
       required:
       - active
       - enqueued
@@ -6470,7 +6470,7 @@ components:
           description: The ID of the Event
           type: string
         user:
-          $ref: '#/components/schemas/CDP_User'
+          $ref: "#/components/schemas/CDP_User"
         type:
           description: "The type of event (ticket, comment, view etc.)"
           type: string
@@ -6492,7 +6492,7 @@ components:
           description: Whether the comment has been resolved
           type: boolean
         resolved_by:
-          $ref: '#/components/schemas/CDP_User'
+          $ref: "#/components/schemas/CDP_User"
         service:
           description: The service the comment belongs to (github etc)
           type: string
@@ -6534,7 +6534,7 @@ components:
           description: The number of git additions in the PullRequest
           type: integer
         author:
-          $ref: '#/components/schemas/CDP_TicketData_Member'
+          $ref: "#/components/schemas/CDP_TicketData_Member"
         base:
           description: The base ref of the branch
           type: object
@@ -6588,10 +6588,10 @@ components:
         assignees:
           description: Information about the assignees for the PullRequest
           items:
-            $ref: '#/components/schemas/CDP_TicketData_Member'
+            $ref: "#/components/schemas/CDP_TicketData_Member"
           type: array
         author:
-          $ref: '#/components/schemas/CDP_TicketData_Member'
+          $ref: "#/components/schemas/CDP_TicketData_Member"
         base:
           description: The base ref of the PullRequest
           type: object
@@ -6621,7 +6621,7 @@ components:
         contributors:
           description: Array of information about the contributors to the PullRequest
           items:
-            $ref: '#/components/schemas/CDP_TicketData_Member'
+            $ref: "#/components/schemas/CDP_TicketData_Member"
           type: array
         created_at:
           description: When the PullRequest was created
@@ -6645,7 +6645,7 @@ components:
         labels:
           description: Array of information about the labels for the PullRequest
           items:
-            $ref: '#/components/schemas/CDP_TicketData_Label'
+            $ref: "#/components/schemas/CDP_TicketData_Label"
           type: array
         last_commit_at:
           description: When the last commit was authored
@@ -6656,7 +6656,7 @@ components:
           format: date-time
           type: string
         milestone:
-          $ref: '#/components/schemas/CDP_TicketData_Epic'
+          $ref: "#/components/schemas/CDP_TicketData_Epic"
         number:
           description: The review number of the PullRequest
           type: integer
@@ -6671,7 +6671,7 @@ components:
         reviewers:
           description: Array of information about the reviewers for the PullRequest
           items:
-            $ref: '#/components/schemas/CDP_TicketData_Member'
+            $ref: "#/components/schemas/CDP_TicketData_Member"
           type: array
         state:
           description: "The state of the PullRequest (open, merged, closed)"
@@ -6721,7 +6721,7 @@ components:
           description: The ID of the Event
           type: string
         user:
-          $ref: '#/components/schemas/CDP_User'
+          $ref: "#/components/schemas/CDP_User"
         type:
           description: "The type of event (ticket, comment, view etc.)"
           type: string
@@ -6749,7 +6749,7 @@ components:
           description: The ID of the Event
           type: string
         user:
-          $ref: '#/components/schemas/CDP_User'
+          $ref: "#/components/schemas/CDP_User"
         type:
           description: "The type of event (ticket, comment, view etc.)"
           type: string
@@ -6792,7 +6792,7 @@ components:
           type: array
         states:
           items:
-            $ref: '#/components/schemas/CDP_TicketData_State'
+            $ref: "#/components/schemas/CDP_TicketData_State"
           type: array
       required:
       - created_at
@@ -6948,7 +6948,7 @@ components:
           description: An array of issue types of the project. Only available for
             Jira
           items:
-            $ref: '#/components/schemas/CDP_TicketData_Project_IssueType'
+            $ref: "#/components/schemas/CDP_TicketData_Project_IssueType"
           type: array
       required:
       - archived
@@ -7177,7 +7177,7 @@ components:
           format: date-time
           type: string
         connected_accounts:
-          $ref: '#/components/schemas/CDP_User_connected_accounts'
+          $ref: "#/components/schemas/CDP_User_connected_accounts"
       required:
       - avatar_url
       - connected_accounts
@@ -7190,7 +7190,7 @@ components:
           description: The ID of the Event
           type: string
         user:
-          $ref: '#/components/schemas/CDP_User'
+          $ref: "#/components/schemas/CDP_User"
         type:
           description: "The type of event (ticket, comment, view etc.)"
           type: string
@@ -7749,14 +7749,14 @@ components:
           description: The initial route of the Deploy Preview
           type: string
         summary:
-          $ref: '#/components/schemas/Deploy_summary'
+          $ref: "#/components/schemas/Deploy_summary"
         views_count:
           description: The number of times the deploy has been viewed
           type: integer
         function_schedules:
           description: An array of function schedules
           items:
-            $ref: '#/components/schemas/createSiteDeploy_request_function_schedules_inner'
+            $ref: "#/components/schemas/createSiteDeploy_request_function_schedules_inner"
           type: array
         edge_functions_present:
           description: Whether the deploy includes at least one Edge Function
@@ -7817,7 +7817,7 @@ components:
         messages:
           description: The messages of the summary
           items:
-            $ref: '#/components/schemas/DeploySummaryMessage'
+            $ref: "#/components/schemas/DeploySummaryMessage"
           type: array
       required:
       - messages
@@ -8008,9 +8008,9 @@ components:
           description: The branch of the dev server environment
           type: string
         live:
-          $ref: '#/components/schemas/DevServer'
+          $ref: "#/components/schemas/DevServer"
         latest:
-          $ref: '#/components/schemas/DevServer'
+          $ref: "#/components/schemas/DevServer"
     DevServerConfig:
       properties:
         id:
@@ -8242,7 +8242,7 @@ components:
         records:
           description: An array of DNS records for this DNS zone
           items:
-            $ref: '#/components/schemas/DnsRecord'
+            $ref: "#/components/schemas/DnsRecord"
           type: array
         dns_servers:
           description: The name servers of the DNS zone
@@ -8262,7 +8262,7 @@ components:
           description: The account name
           type: string
         domain:
-          $ref: '#/components/schemas/Domain'
+          $ref: "#/components/schemas/Domain"
         ipv6_enabled:
           description: Whether IPv6 is enabled
           type: boolean
@@ -8571,7 +8571,7 @@ components:
         values:
           description: An array of Value objects containing values and metadata
           items:
-            $ref: '#/components/schemas/EnvVarValue'
+            $ref: "#/components/schemas/EnvVarValue"
           type: array
           x-faker: internet.password
         updated_at:
@@ -8580,7 +8580,7 @@ components:
           type: string
           x-faker: date.past
         updated_by:
-          $ref: '#/components/schemas/EnvVarUser'
+          $ref: "#/components/schemas/EnvVarUser"
         is_secret:
           description: Should this environment variable be treated as a write-only
             variable and not accesible outside of Netlify runtimes
@@ -8719,9 +8719,9 @@ components:
         id:
           type: string
         unpublished:
-          $ref: '#/components/schemas/FirewallRuleSet'
+          $ref: "#/components/schemas/FirewallRuleSet"
         published:
-          $ref: '#/components/schemas/FirewallRuleSet'
+          $ref: "#/components/schemas/FirewallRuleSet"
         created_at:
           description: When the deployed branch was created
           format: date-time
@@ -8778,9 +8778,9 @@ components:
             type: geo
       properties:
         unpublished:
-          $ref: '#/components/schemas/FirewallRuleSet'
+          $ref: "#/components/schemas/FirewallRuleSet"
         published:
-          $ref: '#/components/schemas/FirewallRuleSet'
+          $ref: "#/components/schemas/FirewallRuleSet"
     FirewallRule:
       example:
         data:
@@ -8842,7 +8842,7 @@ components:
           type: string
         rules:
           items:
-            $ref: '#/components/schemas/FirewallRule'
+            $ref: "#/components/schemas/FirewallRule"
           type: array
       required:
       - default
@@ -9007,7 +9007,7 @@ components:
         functions:
           description: An array of the functions of this function bundle
           items:
-            $ref: '#/components/schemas/Function'
+            $ref: "#/components/schemas/Function"
           type: array
         log_type:
           description: The function log type
@@ -9047,7 +9047,7 @@ components:
         ro:
           description: Routes for a function
           items:
-            $ref: '#/components/schemas/Function_ro_inner'
+            $ref: "#/components/schemas/Function_ro_inner"
           type: array
         endpoint:
           description: The endpoint of the function
@@ -9132,7 +9132,7 @@ components:
         dunning:
           type: boolean
         enterprise_features:
-          $ref: '#/components/schemas/EnterpriseFeatures'
+          $ref: "#/components/schemas/EnterpriseFeatures"
       required:
       - admin_url
       - build_node_pool
@@ -9150,29 +9150,29 @@ components:
       description: EnterpriseFeatures model definition.
       properties:
         high_performance_builds:
-          $ref: '#/components/schemas/HighPerformanceFeatureAttributes'
+          $ref: "#/components/schemas/HighPerformanceFeatureAttributes"
         high_performance_edge:
-          $ref: '#/components/schemas/HighPerformanceFeatureAttributes'
+          $ref: "#/components/schemas/HighPerformanceFeatureAttributes"
         support_level:
-          $ref: '#/components/schemas/EnterpriseFeatureAttributes'
+          $ref: "#/components/schemas/EnterpriseFeatureAttributes"
         concurrent_builds:
-          $ref: '#/components/schemas/EnterpriseFeatureAttributes'
+          $ref: "#/components/schemas/EnterpriseFeatureAttributes"
         build_minutes:
-          $ref: '#/components/schemas/EnterpriseFeatureAttributes'
+          $ref: "#/components/schemas/EnterpriseFeatureAttributes"
         additional_build_minutes:
-          $ref: '#/components/schemas/EnterpriseFeatureAttributes'
+          $ref: "#/components/schemas/EnterpriseFeatureAttributes"
         edge_functions:
-          $ref: '#/components/schemas/EnterpriseFeatureAttributes'
+          $ref: "#/components/schemas/EnterpriseFeatureAttributes"
         additional_edge_functions:
-          $ref: '#/components/schemas/EnterpriseFeatureAttributes'
+          $ref: "#/components/schemas/EnterpriseFeatureAttributes"
         bandwidth:
-          $ref: '#/components/schemas/EnterpriseFeatureAttributes'
+          $ref: "#/components/schemas/EnterpriseFeatureAttributes"
         additional_bandwidth:
-          $ref: '#/components/schemas/EnterpriseFeatureAttributes'
+          $ref: "#/components/schemas/EnterpriseFeatureAttributes"
         seats:
-          $ref: '#/components/schemas/EnterpriseFeatureAttributes'
+          $ref: "#/components/schemas/EnterpriseFeatureAttributes"
         additional_seats:
-          $ref: '#/components/schemas/EnterpriseFeatureAttributes'
+          $ref: "#/components/schemas/EnterpriseFeatureAttributes"
     EnterpriseFeatureAttributes:
       description: EnterpriseFeatureAttributes model definition.
       properties:
@@ -9232,33 +9232,33 @@ components:
           description: Whether Netlify Connect is enabled for the account
           type: boolean
         high_performance_builds:
-          $ref: '#/components/schemas/EnterpriseFeatureEnablePrice'
+          $ref: "#/components/schemas/EnterpriseFeatureEnablePrice"
         high_performance_edge:
-          $ref: '#/components/schemas/EnterpriseFeatureEnablePrice'
+          $ref: "#/components/schemas/EnterpriseFeatureEnablePrice"
         support_level:
-          $ref: '#/components/schemas/EnterpriseFeatureSupport'
+          $ref: "#/components/schemas/EnterpriseFeatureSupport"
         concurrent_builds:
-          $ref: '#/components/schemas/EnterpriseFeatureAttributes'
+          $ref: "#/components/schemas/EnterpriseFeatureAttributes"
         additional_concurrent_builds:
-          $ref: '#/components/schemas/EnterpriseFeatureAdditional'
+          $ref: "#/components/schemas/EnterpriseFeatureAdditional"
         build_minutes:
-          $ref: '#/components/schemas/EnterpriseFeatureAttributes'
+          $ref: "#/components/schemas/EnterpriseFeatureAttributes"
         additional_build_minutes:
-          $ref: '#/components/schemas/EnterpriseFeatureAdditional'
+          $ref: "#/components/schemas/EnterpriseFeatureAdditional"
         edge_functions:
-          $ref: '#/components/schemas/EnterpriseFeatureAttributes'
+          $ref: "#/components/schemas/EnterpriseFeatureAttributes"
         additional_edge_functions:
-          $ref: '#/components/schemas/EnterpriseFeatureAdditional'
+          $ref: "#/components/schemas/EnterpriseFeatureAdditional"
         bandwidth:
-          $ref: '#/components/schemas/EnterpriseFeatureAttributes'
+          $ref: "#/components/schemas/EnterpriseFeatureAttributes"
         additional_bandwidth:
-          $ref: '#/components/schemas/EnterpriseFeatureAdditional'
+          $ref: "#/components/schemas/EnterpriseFeatureAdditional"
         seats:
-          $ref: '#/components/schemas/EnterpriseFeatureAttributes'
+          $ref: "#/components/schemas/EnterpriseFeatureAttributes"
         additional_seats:
-          $ref: '#/components/schemas/EnterpriseFeatureAdditional'
+          $ref: "#/components/schemas/EnterpriseFeatureAdditional"
         additional_committers:
-          $ref: '#/components/schemas/EnterpriseFeatureAdditional'
+          $ref: "#/components/schemas/EnterpriseFeatureAdditional"
     HeroOrganization:
       description: "HeroOrganization model definition, see OrganizationSerializer\
         \ for other fields"
@@ -9520,7 +9520,7 @@ components:
         fields:
           description: The list of fields this hook type can take
           items:
-            $ref: '#/components/schemas/OutgoingHookType_fields_inner'
+            $ref: "#/components/schemas/OutgoingHookType_fields_inner"
           type: array
     IdentityVerification:
       properties:
@@ -9537,7 +9537,7 @@ components:
           description: The report from the identity verification service
           type: object
         user:
-          $ref: '#/components/schemas/User'
+          $ref: "#/components/schemas/User"
         state:
           description: The current state of the verification
           type: string
@@ -9593,7 +9593,7 @@ components:
           description: Whether to exclude PII from the user traffic logs
           type: boolean
         service_config:
-          $ref: '#/components/schemas/LogDrainServiceConfig'
+          $ref: "#/components/schemas/LogDrainServiceConfig"
       required:
       - destination
       - format
@@ -9683,7 +9683,7 @@ components:
             the UI
           type: object
         connected_accounts:
-          $ref: '#/components/schemas/CDP_User_connected_accounts'
+          $ref: "#/components/schemas/CDP_User_connected_accounts"
         site_ids:
           description: site ids this member has access to
           items:
@@ -9706,7 +9706,7 @@ components:
           description: flag indicating if the member is managed by an idp directory
           type: boolean
         committer_match_method:
-          $ref: '#/components/schemas/Member_committer_match_method'
+          $ref: "#/components/schemas/Member_committer_match_method"
         last_activity_date:
           description: "The last activity date of the member on the site. Note: activity\
             \ data cannot be accessed before Nov 17th 2023, null values indicate last\
@@ -9794,7 +9794,7 @@ components:
         slug: slug
       properties:
         bandwidth_usage:
-          $ref: '#/components/schemas/BandwidthUsage'
+          $ref: "#/components/schemas/BandwidthUsage"
         billing_email:
           description: The billing email for the account
           type: string
@@ -9802,7 +9802,7 @@ components:
           description: The billing name for the account
           type: string
         build_status:
-          $ref: '#/components/schemas/BuildStatus'
+          $ref: "#/components/schemas/BuildStatus"
         high_performance_builds_enabled:
           description: Whether the HP builds is enabled for the account
           type: boolean
@@ -9817,7 +9817,7 @@ components:
           type: integer
         member_roles:
           items:
-            $ref: '#/components/schemas/AccountMemberRole'
+            $ref: "#/components/schemas/AccountMemberRole"
           type: array
         name:
           description: The name for the account
@@ -10108,7 +10108,7 @@ components:
           description: The name for the organization
           type: string
         data:
-          $ref: '#/components/schemas/PaymentMethod_data'
+          $ref: "#/components/schemas/PaymentMethod_data"
         state:
           description: The state of the payment method
           enum:
@@ -10347,7 +10347,7 @@ components:
           description: "The total time, in seconds, it took to deploy"
           type: integer
         summary:
-          $ref: '#/components/schemas/Deploy_summary'
+          $ref: "#/components/schemas/Deploy_summary"
         plugin_state:
           description: The state of the deploy's plugins
           enum:
@@ -10883,6 +10883,7 @@ components:
         notification_email: notification_email
         capabilities: "{}"
         rum_enabled: true
+        prevent_non_git_prod_deploys: true
         hud_enabled: true
         admin_url: admin_url
         build_settings:
@@ -10993,12 +10994,14 @@ components:
           type: boolean
         rum_enabled:
           type: boolean
+        prevent_non_git_prod_deploys:
+          type: boolean
         analytics_instance_id:
           type: string
         build_settings:
-          $ref: '#/components/schemas/Repo'
+          $ref: "#/components/schemas/Repo"
         processing_settings:
-          $ref: '#/components/schemas/Site_processing_settings'
+          $ref: "#/components/schemas/Site_processing_settings"
         deploy_hook:
           type: string
         managed_dns:
@@ -11021,7 +11024,7 @@ components:
           type: number
         labels:
           items:
-            $ref: '#/components/schemas/SiteLabel'
+            $ref: "#/components/schemas/SiteLabel"
           type: array
         functions_region:
           type: string
@@ -11097,6 +11100,7 @@ components:
         notification_email: notification_email
         capabilities: "{}"
         rum_enabled: true
+        prevent_non_git_prod_deploys: true
         hud_enabled: true
         admin_url: admin_url
         build_settings:
@@ -11206,10 +11210,12 @@ components:
           type: boolean
         rum_enabled:
           type: boolean
+        prevent_non_git_prod_deploys:
+          type: boolean
         build_settings:
-          $ref: '#/components/schemas/Repo'
+          $ref: "#/components/schemas/Repo"
         processing_settings:
-          $ref: '#/components/schemas/Site_processing_settings'
+          $ref: "#/components/schemas/Site_processing_settings"
         deploy_hook:
           type: string
         managed_dns:
@@ -11232,7 +11238,7 @@ components:
           type: number
         labels:
           items:
-            $ref: '#/components/schemas/SiteLabel'
+            $ref: "#/components/schemas/SiteLabel"
           type: array
         functions_region:
           type: string
@@ -11359,7 +11365,7 @@ components:
           description: When the TeamWorkspace was updated
           type: datetime
         workspace:
-          $ref: '#/components/schemas/Slack_Workspace'
+          $ref: "#/components/schemas/Slack_Workspace"
       required:
       - workspace
     Slack_TeamWorkspaceSubscription:
@@ -11417,7 +11423,7 @@ components:
           description: The Slack User ID for user in the Workspace
           type: string
         workspace:
-          $ref: '#/components/schemas/Slack_Workspace'
+          $ref: "#/components/schemas/Slack_Workspace"
         configuration:
           description: The settings for the Workspace
           type: object
@@ -11573,9 +11579,9 @@ components:
     TrafficRule:
       properties:
         action:
-          $ref: '#/components/schemas/TrafficRule_Action'
+          $ref: "#/components/schemas/TrafficRule_Action"
         target:
-          $ref: '#/components/schemas/TrafficRule_Target'
+          $ref: "#/components/schemas/TrafficRule_Target"
         description:
           type: string
         id:
@@ -11592,7 +11598,7 @@ components:
           - rewrite
           type: string
         config:
-          $ref: '#/components/schemas/TrafficRule_Action_config'
+          $ref: "#/components/schemas/TrafficRule_Action_config"
       required:
       - config
       - type
@@ -11613,16 +11619,16 @@ components:
           - client_ip
           type: string
         config:
-          $ref: '#/components/schemas/TrafficRule_Target_config'
+          $ref: "#/components/schemas/TrafficRule_Target_config"
       required:
       - config
       - type
     ResponseConfig:
       properties:
         aggregate:
-          $ref: '#/components/schemas/RateLimitConfig_AggregateConfig'
+          $ref: "#/components/schemas/RateLimitConfig_AggregateConfig"
         rate_limit_config:
-          $ref: '#/components/schemas/RateLimitConfig'
+          $ref: "#/components/schemas/RateLimitConfig"
         status_code:
           description: "Response status code. Default: 429"
           type: integer
@@ -11633,7 +11639,7 @@ components:
       properties:
         keys:
           items:
-            $ref: '#/components/schemas/RateLimitConfig_AggregateConfig_AggregateKey'
+            $ref: "#/components/schemas/RateLimitConfig_AggregateConfig_AggregateKey"
           type: array
       required:
       - keys
@@ -11670,11 +11676,11 @@ components:
     RewriteConfig:
       properties:
         aggregate:
-          $ref: '#/components/schemas/RateLimitConfig_AggregateConfig'
+          $ref: "#/components/schemas/RateLimitConfig_AggregateConfig"
         limits:
-          $ref: '#/components/schemas/RateLimitConfig_RateLimits'
+          $ref: "#/components/schemas/RateLimitConfig_RateLimits"
         rate_limit_config:
-          $ref: '#/components/schemas/RateLimitConfig'
+          $ref: "#/components/schemas/RateLimitConfig"
         to:
           description: The path and query to rewrite the request to
           type: string
@@ -11687,7 +11693,7 @@ components:
       properties:
         conditions:
           items:
-            $ref: '#/components/schemas/TrafficRule_Target'
+            $ref: "#/components/schemas/TrafficRule_Target"
           type: array
       required:
       - conditions
@@ -11743,7 +11749,7 @@ components:
           type: string
         rules:
           items:
-            $ref: '#/components/schemas/TrafficRule'
+            $ref: "#/components/schemas/TrafficRule"
           type: array
         created_at:
           description: When the traffic rule config was created
@@ -11877,7 +11883,7 @@ components:
           description: The slug of the user
           type: string
         connected_accounts:
-          $ref: '#/components/schemas/User_connected_accounts'
+          $ref: "#/components/schemas/User_connected_accounts"
         tracking_id:
           description: The tracking ID of the user
           type: string
@@ -11962,7 +11968,7 @@ components:
           description: The job role (used for the user identify)
           type: string
         reviewer_signup:
-          $ref: '#/components/schemas/ReviewerSignupInfo'
+          $ref: "#/components/schemas/ReviewerSignupInfo"
     ReviewerSignupInfo:
       properties:
         deploy_id:
@@ -12045,7 +12051,7 @@ components:
           type: string
         rule_sets:
           items:
-            $ref: '#/components/schemas/WafPolicy_rule_sets_inner'
+            $ref: "#/components/schemas/WafPolicy_rule_sets_inner"
           type: array
       required:
       - description
@@ -12089,7 +12095,7 @@ components:
       properties:
         rule_sets:
           additionalProperties:
-            $ref: '#/components/schemas/ManagedWafRuleSet'
+            $ref: "#/components/schemas/ManagedWafRuleSet"
     ManagedWafRuleSet:
       example:
         definition:
@@ -12109,10 +12115,10 @@ components:
           category: category
       properties:
         definition:
-          $ref: '#/components/schemas/ManagedWafRuleSet_definition'
+          $ref: "#/components/schemas/ManagedWafRuleSet_definition"
         rules:
           items:
-            $ref: '#/components/schemas/ManagedWafRuleSet_rules_inner'
+            $ref: "#/components/schemas/ManagedWafRuleSet_rules_inner"
           type: array
     createAccount_request:
       properties:
@@ -12183,12 +12189,12 @@ components:
           type: string
         routes:
           items:
-            $ref: '#/components/schemas/createSiteDeploy_request_functions_config_name_routes_inner'
+            $ref: "#/components/schemas/createSiteDeploy_request_functions_config_name_routes_inner"
           type: array
     createSiteDeploy_request_functions_config:
       properties:
         name:
-          $ref: '#/components/schemas/createSiteDeploy_request_functions_config_name'
+          $ref: "#/components/schemas/createSiteDeploy_request_functions_config_name"
     createSiteDeploy_request:
       properties:
         files:
@@ -12201,10 +12207,10 @@ components:
           type: object
         function_schedules:
           items:
-            $ref: '#/components/schemas/createSiteDeploy_request_function_schedules_inner'
+            $ref: "#/components/schemas/createSiteDeploy_request_function_schedules_inner"
           type: array
         functions_config:
-          $ref: '#/components/schemas/createSiteDeploy_request_functions_config'
+          $ref: "#/components/schemas/createSiteDeploy_request_functions_config"
         branch:
           type: string
         framework:
@@ -12216,7 +12222,7 @@ components:
     updateSiteDeploy_request_functions_config:
       properties:
         name:
-          $ref: '#/components/schemas/updateSiteDeploy_request_functions_config_name'
+          $ref: "#/components/schemas/updateSiteDeploy_request_functions_config_name"
     updateSiteDeploy_request:
       properties:
         files:
@@ -12229,10 +12235,10 @@ components:
           type: object
         function_schedules:
           items:
-            $ref: '#/components/schemas/createSiteDeploy_request_function_schedules_inner'
+            $ref: "#/components/schemas/createSiteDeploy_request_function_schedules_inner"
           type: array
         functions_config:
-          $ref: '#/components/schemas/updateSiteDeploy_request_functions_config'
+          $ref: "#/components/schemas/updateSiteDeploy_request_functions_config"
         branch:
           type: string
         framework:
@@ -12250,7 +12256,7 @@ components:
       properties:
         values:
           items:
-            $ref: '#/components/schemas/EnvVarValue'
+            $ref: "#/components/schemas/EnvVarValue"
           type: array
         scopes:
           items:
@@ -12437,7 +12443,7 @@ components:
           type: string
         messages:
           items:
-            $ref: '#/components/schemas/Deploy_summary_messages_inner'
+            $ref: "#/components/schemas/Deploy_summary_messages_inner"
           type: array
     Function_ro_inner:
       properties:
@@ -12488,20 +12494,20 @@ components:
         ignore_html_forms: true
       properties:
         html:
-          $ref: '#/components/schemas/Site_processing_settings_html'
+          $ref: "#/components/schemas/Site_processing_settings_html"
         ignore_html_forms:
           type: boolean
     TrafficRule_Action_config:
       oneOf:
-      - $ref: '#/components/schemas/ResponseConfig'
-      - $ref: '#/components/schemas/RewriteConfig'
+      - $ref: "#/components/schemas/ResponseConfig"
+      - $ref: "#/components/schemas/RewriteConfig"
     TrafficRule_Target_config:
       oneOf:
-      - $ref: '#/components/schemas/CompositeTargetConfig'
-      - $ref: '#/components/schemas/GeoTargetConfig'
-      - $ref: '#/components/schemas/KeyValueTargetConfig'
-      - $ref: '#/components/schemas/ValueTargetConfig'
-      - $ref: '#/components/schemas/IPTargetConfig'
+      - $ref: "#/components/schemas/CompositeTargetConfig"
+      - $ref: "#/components/schemas/GeoTargetConfig"
+      - $ref: "#/components/schemas/KeyValueTargetConfig"
+      - $ref: "#/components/schemas/ValueTargetConfig"
+      - $ref: "#/components/schemas/IPTargetConfig"
     User_connected_accounts:
       description: Information of the connected providers' slug if any
       example:
@@ -12544,7 +12550,7 @@ components:
             type: integer
         rule_overrides:
           additionalProperties:
-            $ref: '#/components/schemas/WafPolicyRuleOverride'
+            $ref: "#/components/schemas/WafPolicyRuleOverride"
       required:
       - overall_threshold
     ManagedWafRuleSet_definition:

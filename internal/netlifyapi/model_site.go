@@ -45,6 +45,7 @@ type Site struct {
 	SslUrl string `json:"ssl_url"`
 	ForceSsl bool `json:"force_ssl"`
 	RumEnabled *bool `json:"rum_enabled,omitempty"`
+	PreventNonGitProdDeploys *bool `json:"prevent_non_git_prod_deploys,omitempty"`
 	AnalyticsInstanceId *string `json:"analytics_instance_id,omitempty"`
 	BuildSettings Repo `json:"build_settings"`
 	ProcessingSettings SiteProcessingSettings `json:"processing_settings"`
@@ -725,6 +726,38 @@ func (o *Site) SetRumEnabled(v bool) {
 	o.RumEnabled = &v
 }
 
+// GetPreventNonGitProdDeploys returns the PreventNonGitProdDeploys field value if set, zero value otherwise.
+func (o *Site) GetPreventNonGitProdDeploys() bool {
+	if o == nil || IsNil(o.PreventNonGitProdDeploys) {
+		var ret bool
+		return ret
+	}
+	return *o.PreventNonGitProdDeploys
+}
+
+// GetPreventNonGitProdDeploysOk returns a tuple with the PreventNonGitProdDeploys field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Site) GetPreventNonGitProdDeploysOk() (*bool, bool) {
+	if o == nil || IsNil(o.PreventNonGitProdDeploys) {
+		return nil, false
+	}
+	return o.PreventNonGitProdDeploys, true
+}
+
+// HasPreventNonGitProdDeploys returns a boolean if a field has been set.
+func (o *Site) HasPreventNonGitProdDeploys() bool {
+	if o != nil && !IsNil(o.PreventNonGitProdDeploys) {
+		return true
+	}
+
+	return false
+}
+
+// SetPreventNonGitProdDeploys gets a reference to the given bool and assigns it to the PreventNonGitProdDeploys field.
+func (o *Site) SetPreventNonGitProdDeploys(v bool) {
+	o.PreventNonGitProdDeploys = &v
+}
+
 // GetAnalyticsInstanceId returns the AnalyticsInstanceId field value if set, zero value otherwise.
 func (o *Site) GetAnalyticsInstanceId() string {
 	if o == nil || IsNil(o.AnalyticsInstanceId) {
@@ -1207,6 +1240,9 @@ func (o Site) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.RumEnabled) {
 		toSerialize["rum_enabled"] = o.RumEnabled
 	}
+	if !IsNil(o.PreventNonGitProdDeploys) {
+		toSerialize["prevent_non_git_prod_deploys"] = o.PreventNonGitProdDeploys
+	}
 	if !IsNil(o.AnalyticsInstanceId) {
 		toSerialize["analytics_instance_id"] = o.AnalyticsInstanceId
 	}
@@ -1331,6 +1367,7 @@ func (o *Site) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "ssl_url")
 		delete(additionalProperties, "force_ssl")
 		delete(additionalProperties, "rum_enabled")
+		delete(additionalProperties, "prevent_non_git_prod_deploys")
 		delete(additionalProperties, "analytics_instance_id")
 		delete(additionalProperties, "build_settings")
 		delete(additionalProperties, "processing_settings")

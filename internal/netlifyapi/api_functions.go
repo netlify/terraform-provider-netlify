@@ -95,7 +95,7 @@ func (a *FunctionsAPIService) UploadDeployFunctionExecute(r ApiUploadDeployFunct
 	}
 
 	if r.runtime != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "runtime", r.runtime, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "runtime", r.runtime, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}

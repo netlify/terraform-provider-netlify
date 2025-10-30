@@ -231,14 +231,14 @@ func (a *OrganizationsAPIService) CreateOrganizationPaymentExecute(r ApiCreateOr
 	}
 
 	if r.data != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "data", r.data, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "data", r.data, "form", "")
 	}
 	if r.enterpriseException != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "enterprise_exception", r.enterpriseException, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "enterprise_exception", r.enterpriseException, "form", "")
 	}
-	parameterAddToHeaderOrQuery(localVarQueryParams, "type", r.type_, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "type", r.type_, "form", "")
 	if r.zuoraId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "zuora_id", r.zuoraId, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "zuora_id", r.zuoraId, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -441,7 +441,7 @@ func (a *OrganizationsAPIService) GetOrganizationExecute(r ApiGetOrganizationReq
 		return localVarReturnValue, nil, reportError("id is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "id", r.id, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "id", r.id, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -1080,12 +1080,12 @@ func (a *OrganizationsAPIService) UpdateOrganizationExecute(r ApiUpdateOrganizat
 		return localVarReturnValue, nil, reportError("id is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "id", r.id, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "id", r.id, "form", "")
 	if r.name != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "form", "")
 	}
 	if r.slug != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "slug", r.slug, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "slug", r.slug, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}

@@ -78,7 +78,7 @@ func (a *OAuthTicketsAPIService) AuthorizeWithTicketExecute(r ApiAuthorizeWithTi
 	localVarFormParams := url.Values{}
 
 	if r.grantSaml != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "grant_saml", r.grantSaml, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "grant_saml", r.grantSaml, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -178,7 +178,7 @@ func (a *OAuthTicketsAPIService) CreateTicketExecute(r ApiCreateTicketRequest) (
 	localVarFormParams := url.Values{}
 
 	if r.clientId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "client_id", r.clientId, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "client_id", r.clientId, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}

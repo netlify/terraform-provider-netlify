@@ -97,10 +97,10 @@ func (a *EnvironmentVariablesAPIService) CreateEnvVarsExecute(r ApiCreateEnvVars
 	}
 
 	if r.client != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "client", r.client, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "client", r.client, "form", "")
 	}
 	if r.siteId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -217,7 +217,7 @@ func (a *EnvironmentVariablesAPIService) DeleteEnvVarExecute(r ApiDeleteEnvVarRe
 	localVarFormParams := url.Values{}
 
 	if r.siteId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -327,7 +327,7 @@ func (a *EnvironmentVariablesAPIService) DeleteEnvVarValueExecute(r ApiDeleteEnv
 	localVarFormParams := url.Values{}
 
 	if r.siteId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -435,7 +435,7 @@ func (a *EnvironmentVariablesAPIService) GetEnvVarExecute(r ApiGetEnvVarRequest)
 	localVarFormParams := url.Values{}
 
 	if r.siteId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -562,13 +562,13 @@ func (a *EnvironmentVariablesAPIService) GetEnvVarsExecute(r ApiGetEnvVarsReques
 	localVarFormParams := url.Values{}
 
 	if r.context != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "context", r.context, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "context", r.context, "form", "")
 	}
 	if r.scope != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "form", "")
 	}
 	if r.siteId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -688,10 +688,10 @@ func (a *EnvironmentVariablesAPIService) GetSiteEnvVarsExecute(r ApiGetSiteEnvVa
 	localVarFormParams := url.Values{}
 
 	if r.context != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "context", r.context, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "context", r.context, "form", "")
 	}
 	if r.scope != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -818,7 +818,7 @@ func (a *EnvironmentVariablesAPIService) SetEnvVarValueExecute(r ApiSetEnvVarVal
 	}
 
 	if r.siteId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -956,9 +956,9 @@ func (a *EnvironmentVariablesAPIService) UpdateEnvVarExecute(r ApiUpdateEnvVarRe
 		return localVarReturnValue, nil, reportError("updateEnvVarRequest is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "key", r.key, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "key", r.key, "form", "")
 	if r.siteId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}

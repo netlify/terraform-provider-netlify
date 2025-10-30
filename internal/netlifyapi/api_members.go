@@ -98,11 +98,11 @@ func (a *MembersAPIService) AddMemberToAccountExecute(r ApiAddMemberToAccountReq
 	}
 
 	if r.buildId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "build_id", r.buildId, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "build_id", r.buildId, "form", "")
 	}
-	parameterAddToHeaderOrQuery(localVarQueryParams, "email", r.email, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "email", r.email, "form", "")
 	if r.role != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "role", r.role, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "role", r.role, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -261,44 +261,44 @@ func (a *MembersAPIService) ListMembersForAccountExecute(r ApiListMembersForAcco
 		if reflect.TypeOf(t).Kind() == reflect.Slice {
 			s := reflect.ValueOf(t)
 			for i := 0; i < s.Len(); i++ {
-				parameterAddToHeaderOrQuery(localVarQueryParams, "emails", s.Index(i).Interface(), "multi")
+				parameterAddToHeaderOrQuery(localVarQueryParams, "emails", s.Index(i).Interface(), "form", "multi")
 			}
 		} else {
-			parameterAddToHeaderOrQuery(localVarQueryParams, "emails", t, "multi")
+			parameterAddToHeaderOrQuery(localVarQueryParams, "emails", t, "form", "multi")
 		}
 	}
 	if r.page != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "page", r.page, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "page", r.page, "form", "")
 	}
 	if r.perPage != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "per_page", r.perPage, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "per_page", r.perPage, "form", "")
 	}
 	if r.roles != nil {
 		t := *r.roles
 		if reflect.TypeOf(t).Kind() == reflect.Slice {
 			s := reflect.ValueOf(t)
 			for i := 0; i < s.Len(); i++ {
-				parameterAddToHeaderOrQuery(localVarQueryParams, "roles", s.Index(i).Interface(), "multi")
+				parameterAddToHeaderOrQuery(localVarQueryParams, "roles", s.Index(i).Interface(), "form", "multi")
 			}
 		} else {
-			parameterAddToHeaderOrQuery(localVarQueryParams, "roles", t, "multi")
+			parameterAddToHeaderOrQuery(localVarQueryParams, "roles", t, "form", "multi")
 		}
 	}
 	if r.siteId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "form", "")
 	}
 	if r.sortBy != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "sort_by", r.sortBy, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "sort_by", r.sortBy, "form", "")
 	}
 	if r.states != nil {
 		t := *r.states
 		if reflect.TypeOf(t).Kind() == reflect.Slice {
 			s := reflect.ValueOf(t)
 			for i := 0; i < s.Len(); i++ {
-				parameterAddToHeaderOrQuery(localVarQueryParams, "states", s.Index(i).Interface(), "multi")
+				parameterAddToHeaderOrQuery(localVarQueryParams, "states", s.Index(i).Interface(), "form", "multi")
 			}
 		} else {
-			parameterAddToHeaderOrQuery(localVarQueryParams, "states", t, "multi")
+			parameterAddToHeaderOrQuery(localVarQueryParams, "states", t, "form", "multi")
 		}
 	}
 	// to determine the Content-Type header
