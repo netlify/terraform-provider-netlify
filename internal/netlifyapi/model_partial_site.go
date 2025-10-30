@@ -44,6 +44,7 @@ type PartialSite struct {
 	SslUrl *string `json:"ssl_url,omitempty"`
 	ForceSsl *bool `json:"force_ssl,omitempty"`
 	RumEnabled *bool `json:"rum_enabled,omitempty"`
+	PreventNonGitProdDeploys *bool `json:"prevent_non_git_prod_deploys,omitempty"`
 	BuildSettings *Repo `json:"build_settings,omitempty"`
 	ProcessingSettings *SiteProcessingSettings `json:"processing_settings,omitempty"`
 	DeployHook *string `json:"deploy_hook,omitempty"`
@@ -850,6 +851,38 @@ func (o *PartialSite) SetRumEnabled(v bool) {
 	o.RumEnabled = &v
 }
 
+// GetPreventNonGitProdDeploys returns the PreventNonGitProdDeploys field value if set, zero value otherwise.
+func (o *PartialSite) GetPreventNonGitProdDeploys() bool {
+	if o == nil || IsNil(o.PreventNonGitProdDeploys) {
+		var ret bool
+		return ret
+	}
+	return *o.PreventNonGitProdDeploys
+}
+
+// GetPreventNonGitProdDeploysOk returns a tuple with the PreventNonGitProdDeploys field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PartialSite) GetPreventNonGitProdDeploysOk() (*bool, bool) {
+	if o == nil || IsNil(o.PreventNonGitProdDeploys) {
+		return nil, false
+	}
+	return o.PreventNonGitProdDeploys, true
+}
+
+// HasPreventNonGitProdDeploys returns a boolean if a field has been set.
+func (o *PartialSite) HasPreventNonGitProdDeploys() bool {
+	if o != nil && !IsNil(o.PreventNonGitProdDeploys) {
+		return true
+	}
+
+	return false
+}
+
+// SetPreventNonGitProdDeploys gets a reference to the given bool and assigns it to the PreventNonGitProdDeploys field.
+func (o *PartialSite) SetPreventNonGitProdDeploys(v bool) {
+	o.PreventNonGitProdDeploys = &v
+}
+
 // GetBuildSettings returns the BuildSettings field value if set, zero value otherwise.
 func (o *PartialSite) GetBuildSettings() Repo {
 	if o == nil || IsNil(o.BuildSettings) {
@@ -1444,6 +1477,9 @@ func (o PartialSite) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.RumEnabled) {
 		toSerialize["rum_enabled"] = o.RumEnabled
 	}
+	if !IsNil(o.PreventNonGitProdDeploys) {
+		toSerialize["prevent_non_git_prod_deploys"] = o.PreventNonGitProdDeploys
+	}
 	if !IsNil(o.BuildSettings) {
 		toSerialize["build_settings"] = o.BuildSettings
 	}
@@ -1538,6 +1574,7 @@ func (o *PartialSite) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "ssl_url")
 		delete(additionalProperties, "force_ssl")
 		delete(additionalProperties, "rum_enabled")
+		delete(additionalProperties, "prevent_non_git_prod_deploys")
 		delete(additionalProperties, "build_settings")
 		delete(additionalProperties, "processing_settings")
 		delete(additionalProperties, "deploy_hook")

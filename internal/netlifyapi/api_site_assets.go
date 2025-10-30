@@ -518,10 +518,10 @@ func (a *SiteAssetsAPIService) ListSiteAssetsExecute(r ApiListSiteAssetsRequest)
 	localVarFormParams := url.Values{}
 
 	if r.filter != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "filter", r.filter, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "filter", r.filter, "form", "")
 	}
 	if r.search != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "search", r.search, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "search", r.search, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -641,7 +641,7 @@ func (a *SiteAssetsAPIService) UpdateSiteAssetExecute(r ApiUpdateSiteAssetReques
 		return localVarReturnValue, nil, reportError("state is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "state", r.state, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "state", r.state, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 

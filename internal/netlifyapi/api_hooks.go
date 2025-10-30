@@ -488,7 +488,7 @@ func (a *HooksAPIService) ListHookTypesExecute(r ApiListHookTypesRequest) ([]Out
 	localVarFormParams := url.Values{}
 
 	if r.siteId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -615,12 +615,12 @@ func (a *HooksAPIService) ListHooksBySiteIdExecute(r ApiListHooksBySiteIdRequest
 	}
 
 	if r.event != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "event", r.event, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "event", r.event, "form", "")
 	}
 	if r.formId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "form_id", r.formId, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "form_id", r.formId, "form", "")
 	}
-	parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 

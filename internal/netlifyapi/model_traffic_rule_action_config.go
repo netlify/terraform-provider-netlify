@@ -13,6 +13,7 @@ package netlifyapi
 import (
 	"encoding/json"
 	"fmt"
+	"gopkg.in/validator.v2"
 )
 
 // TrafficRuleActionConfig - struct for TrafficRuleActionConfig
@@ -47,7 +48,11 @@ func (dst *TrafficRuleActionConfig) UnmarshalJSON(data []byte) error {
 		if string(jsonResponseConfig) == "{}" { // empty struct
 			dst.ResponseConfig = nil
 		} else {
-			match++
+			if err = validator.Validate(dst.ResponseConfig); err != nil {
+				dst.ResponseConfig = nil
+			} else {
+				match++
+			}
 		}
 	} else {
 		dst.ResponseConfig = nil
@@ -60,7 +65,11 @@ func (dst *TrafficRuleActionConfig) UnmarshalJSON(data []byte) error {
 		if string(jsonRewriteConfig) == "{}" { // empty struct
 			dst.RewriteConfig = nil
 		} else {
-			match++
+			if err = validator.Validate(dst.RewriteConfig); err != nil {
+				dst.RewriteConfig = nil
+			} else {
+				match++
+			}
 		}
 	} else {
 		dst.RewriteConfig = nil
@@ -103,6 +112,20 @@ func (obj *TrafficRuleActionConfig) GetActualInstance() (interface{}) {
 
 	if obj.RewriteConfig != nil {
 		return obj.RewriteConfig
+	}
+
+	// all schemas are nil
+	return nil
+}
+
+// Get the actual instance value
+func (obj TrafficRuleActionConfig) GetActualInstanceValue() (interface{}) {
+	if obj.ResponseConfig != nil {
+		return *obj.ResponseConfig
+	}
+
+	if obj.RewriteConfig != nil {
+		return *obj.RewriteConfig
 	}
 
 	// all schemas are nil

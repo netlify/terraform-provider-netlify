@@ -481,7 +481,7 @@ func (a *AccountsAPIService) GetAccountFirewallRuleSetExecute(r ApiGetAccountFir
 		return localVarReturnValue, nil, reportError("id is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "id", r.id, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "id", r.id, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -597,10 +597,10 @@ func (a *AccountsAPIService) ListAccountAuditEventsExecute(r ApiListAccountAudit
 		if reflect.TypeOf(t).Kind() == reflect.Slice {
 			s := reflect.ValueOf(t)
 			for i := 0; i < s.Len(); i++ {
-				parameterAddToHeaderOrQuery(localVarQueryParams, "log_type", s.Index(i).Interface(), "multi")
+				parameterAddToHeaderOrQuery(localVarQueryParams, "log_type", s.Index(i).Interface(), "form", "multi")
 			}
 		} else {
-			parameterAddToHeaderOrQuery(localVarQueryParams, "log_type", t, "multi")
+			parameterAddToHeaderOrQuery(localVarQueryParams, "log_type", t, "form", "multi")
 		}
 	}
 	// to determine the Content-Type header

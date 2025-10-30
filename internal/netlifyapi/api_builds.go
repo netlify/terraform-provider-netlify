@@ -101,16 +101,16 @@ func (a *BuildsAPIService) CreateSiteBuildExecute(r ApiCreateSiteBuildRequest) (
 	localVarFormParams := url.Values{}
 
 	if r.branch != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "branch", r.branch, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "branch", r.branch, "form", "")
 	}
 	if r.clearCache != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "clear_cache", r.clearCache, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "clear_cache", r.clearCache, "form", "")
 	}
 	if r.image != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "image", r.image, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "image", r.image, "form", "")
 	}
 	if r.templateId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "template_id", r.templateId, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "template_id", r.templateId, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -228,10 +228,10 @@ func (a *BuildsAPIService) GetAccountBuildStatusExecute(r ApiGetAccountBuildStat
 	localVarFormParams := url.Values{}
 
 	if r.siteId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "form", "")
 	}
 	if r.state != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "state", r.state, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "state", r.state, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -551,10 +551,10 @@ func (a *BuildsAPIService) NotifyBuildStartExecute(r ApiNotifyBuildStartRequest)
 	localVarFormParams := url.Values{}
 
 	if r.buildVersion != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "build_version", r.buildVersion, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "build_version", r.buildVersion, "form", "")
 	}
 	if r.buildbotVersion != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "buildbot_version", r.buildbotVersion, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "buildbot_version", r.buildbotVersion, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}

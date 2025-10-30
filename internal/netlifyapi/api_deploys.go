@@ -193,7 +193,7 @@ func (a *DeploysAPIService) CreateSiteDeployExecute(r ApiCreateSiteDeployRequest
 	}
 
 	if r.title != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "title", r.title, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "title", r.title, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -887,31 +887,31 @@ func (a *DeploysAPIService) ListSiteDeploysExecute(r ApiListSiteDeploysRequest) 
 	localVarFormParams := url.Values{}
 
 	if r.branch != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "branch", r.branch, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "branch", r.branch, "form", "")
 	}
 	if r.deployPreviews != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "deploy-previews", r.deployPreviews, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "deploy-previews", r.deployPreviews, "form", "")
 	}
 	if r.from != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "from", r.from, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "from", r.from, "form", "")
 	}
 	if r.latestPublished != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "latest-published", r.latestPublished, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "latest-published", r.latestPublished, "form", "")
 	}
 	if r.page != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "page", r.page, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "page", r.page, "form", "")
 	}
 	if r.perPage != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "per_page", r.perPage, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "per_page", r.perPage, "form", "")
 	}
 	if r.production != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "production", r.production, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "production", r.production, "form", "")
 	}
 	if r.state != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "state", r.state, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "state", r.state, "form", "")
 	}
 	if r.to != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "to", r.to, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "to", r.to, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}

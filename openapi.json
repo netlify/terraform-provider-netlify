@@ -13860,6 +13860,9 @@
           "rum_enabled": {
             "type": "boolean"
           },
+          "prevent_non_git_prod_deploys": {
+            "type": "boolean"
+          },
           "analytics_instance_id": {
             "type": "string"
           },
@@ -14046,6 +14049,9 @@
             "type": "boolean"
           },
           "rum_enabled": {
+            "type": "boolean"
+          },
+          "prevent_non_git_prod_deploys": {
             "type": "boolean"
           },
           "build_settings": {

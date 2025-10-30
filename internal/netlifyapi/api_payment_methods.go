@@ -76,7 +76,7 @@ func (a *PaymentMethodsAPIService) ListPaymentMethodsForUserExecute(r ApiListPay
 	localVarFormParams := url.Values{}
 
 	if r.accountId != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "account_id", r.accountId, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "account_id", r.accountId, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}

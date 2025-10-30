@@ -13,6 +13,7 @@ package netlifyapi
 import (
 	"encoding/json"
 	"fmt"
+	"gopkg.in/validator.v2"
 )
 
 // TrafficRuleTargetConfig - struct for TrafficRuleTargetConfig
@@ -71,7 +72,11 @@ func (dst *TrafficRuleTargetConfig) UnmarshalJSON(data []byte) error {
 		if string(jsonCompositeTargetConfig) == "{}" { // empty struct
 			dst.CompositeTargetConfig = nil
 		} else {
-			match++
+			if err = validator.Validate(dst.CompositeTargetConfig); err != nil {
+				dst.CompositeTargetConfig = nil
+			} else {
+				match++
+			}
 		}
 	} else {
 		dst.CompositeTargetConfig = nil
@@ -84,7 +89,11 @@ func (dst *TrafficRuleTargetConfig) UnmarshalJSON(data []byte) error {
 		if string(jsonGeoTargetConfig) == "{}" { // empty struct
 			dst.GeoTargetConfig = nil
 		} else {
-			match++
+			if err = validator.Validate(dst.GeoTargetConfig); err != nil {
+				dst.GeoTargetConfig = nil
+			} else {
+				match++
+			}
 		}
 	} else {
 		dst.GeoTargetConfig = nil
@@ -97,7 +106,11 @@ func (dst *TrafficRuleTargetConfig) UnmarshalJSON(data []byte) error {
 		if string(jsonIPTargetConfig) == "{}" { // empty struct
 			dst.IPTargetConfig = nil
 		} else {
-			match++
+			if err = validator.Validate(dst.IPTargetConfig); err != nil {
+				dst.IPTargetConfig = nil
+			} else {
+				match++
+			}
 		}
 	} else {
 		dst.IPTargetConfig = nil
@@ -110,7 +123,11 @@ func (dst *TrafficRuleTargetConfig) UnmarshalJSON(data []byte) error {
 		if string(jsonKeyValueTargetConfig) == "{}" { // empty struct
 			dst.KeyValueTargetConfig = nil
 		} else {
-			match++
+			if err = validator.Validate(dst.KeyValueTargetConfig); err != nil {
+				dst.KeyValueTargetConfig = nil
+			} else {
+				match++
+			}
 		}
 	} else {
 		dst.KeyValueTargetConfig = nil
@@ -123,7 +140,11 @@ func (dst *TrafficRuleTargetConfig) UnmarshalJSON(data []byte) error {
 		if string(jsonValueTargetConfig) == "{}" { // empty struct
 			dst.ValueTargetConfig = nil
 		} else {
-			match++
+			if err = validator.Validate(dst.ValueTargetConfig); err != nil {
+				dst.ValueTargetConfig = nil
+			} else {
+				match++
+			}
 		}
 	} else {
 		dst.ValueTargetConfig = nil
@@ -193,6 +214,32 @@ func (obj *TrafficRuleTargetConfig) GetActualInstance() (interface{}) {
 
 	if obj.ValueTargetConfig != nil {
 		return obj.ValueTargetConfig
+	}
+
+	// all schemas are nil
+	return nil
+}
+
+// Get the actual instance value
+func (obj TrafficRuleTargetConfig) GetActualInstanceValue() (interface{}) {
+	if obj.CompositeTargetConfig != nil {
+		return *obj.CompositeTargetConfig
+	}
+
+	if obj.GeoTargetConfig != nil {
+		return *obj.GeoTargetConfig
+	}
+
+	if obj.IPTargetConfig != nil {
+		return *obj.IPTargetConfig
+	}
+
+	if obj.KeyValueTargetConfig != nil {
+		return *obj.KeyValueTargetConfig
+	}
+
+	if obj.ValueTargetConfig != nil {
+		return *obj.ValueTargetConfig
 	}
 
 	// all schemas are nil

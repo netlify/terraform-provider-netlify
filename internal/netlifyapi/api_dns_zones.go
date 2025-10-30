@@ -1025,13 +1025,13 @@ func (a *DNSZonesAPIService) GetDnsZonesExecute(r ApiGetDnsZonesRequest) ([]DnsZ
 	localVarFormParams := url.Values{}
 
 	if r.accountSlug != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "account_slug", r.accountSlug, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "account_slug", r.accountSlug, "form", "")
 	}
 	if r.page != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "page", r.page, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "page", r.page, "form", "")
 	}
 	if r.perPage != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "per_page", r.perPage, "")
+		parameterAddToHeaderOrQuery(localVarQueryParams, "per_page", r.perPage, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
