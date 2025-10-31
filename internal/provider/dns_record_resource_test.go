@@ -11,19 +11,19 @@ import (
 )
 
 func TestAccDnsRecordA(t *testing.T) {
-	var zoneId = "66afdbce3cf2b4f0fab520d9"
+	var zoneId = "69052bba28ce689f129b1ac8"
 	accTest(t, []resource.TestStep{
 		{
 			Config: `resource "netlify_dns_record" "example" {
 	type = "A"
-	zone_id = "66afdbce3cf2b4f0fab520d9"
-	hostname = "testacc.examplepetstore.com"
+	zone_id = "69052bba28ce689f129b1ac8"
+	hostname = "testacc.nf-terraform-test.com"
 	value = "10.0.0.0"
 }`,
 			Check: resource.ComposeTestCheckFunc(
 				resource.TestCheckResourceAttr("netlify_dns_record.example", "type", "A"),
 				resource.TestCheckResourceAttr("netlify_dns_record.example", "zone_id", zoneId),
-				resource.TestCheckResourceAttr("netlify_dns_record.example", "hostname", "testacc.examplepetstore.com"),
+				resource.TestCheckResourceAttr("netlify_dns_record.example", "hostname", "testacc.nf-terraform-test.com"),
 				resource.TestCheckResourceAttr("netlify_dns_record.example", "value", "10.0.0.0"),
 			),
 		},
@@ -44,8 +44,8 @@ func TestAccDnsRecordA(t *testing.T) {
 		{
 			Config: `resource "netlify_dns_record" "example" {
 	type = "A"
-	zone_id = "66afdbce3cf2b4f0fab520d9"
-	hostname = "testacc.examplepetstore.com"
+	zone_id = "69052bba28ce689f129b1ac8"
+	hostname = "testacc.nf-terraform-test.com"
 	value = "10.0.0.1"
 }`,
 			ConfigPlanChecks: resource.ConfigPlanChecks{
@@ -56,7 +56,7 @@ func TestAccDnsRecordA(t *testing.T) {
 			Check: resource.ComposeAggregateTestCheckFunc(
 				resource.TestCheckResourceAttr("netlify_dns_record.example", "type", "A"),
 				resource.TestCheckResourceAttr("netlify_dns_record.example", "zone_id", zoneId),
-				resource.TestCheckResourceAttr("netlify_dns_record.example", "hostname", "testacc.examplepetstore.com"),
+				resource.TestCheckResourceAttr("netlify_dns_record.example", "hostname", "testacc.nf-terraform-test.com"),
 				resource.TestCheckResourceAttr("netlify_dns_record.example", "value", "10.0.0.1"),
 			),
 		},
@@ -64,12 +64,12 @@ func TestAccDnsRecordA(t *testing.T) {
 }
 
 func testAccDnsRecordCheckDestroy(s *terraform.State) error {
-	records, _, err := testAccProvider.client.DNSZonesAPI.GetDnsRecords(context.Background(), "66afdbce3cf2b4f0fab520d9").Execute()
+	records, _, err := testAccProvider.client.DNSZonesAPI.GetDnsRecords(context.Background(), "69052bba28ce689f129b1ac8").Execute()
 	if err != nil {
 		return err
 	}
 	for _, record := range records {
-		if record.Hostname == "testacc.examplepetstore.com" {
+		if record.Hostname == "testacc.nf-terraform-test.com" {
 			return fmt.Errorf("DNS record still exists")
 		}
 	}
