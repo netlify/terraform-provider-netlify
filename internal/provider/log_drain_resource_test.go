@@ -20,7 +20,7 @@ func TestAccLogDrain(t *testing.T) {
   format      = "ndjson"
   exclude_pii = false
   service_config = {
-    url = "https://httpstat.us/200"
+    url = "https://tools-httpstatus.pickup-services.com/200"
   }
 }`,
 			Check: resource.ComposeAggregateTestCheckFunc(
@@ -52,7 +52,7 @@ func TestAccLogDrain(t *testing.T) {
   format      = "ndjson"
   exclude_pii = true
   service_config = {
-    url = "https://httpstat.us/200"
+    url = "https://tools-httpstatus.pickup-services.com/200"
   }
 }`,
 			ConfigPlanChecks: resource.ConfigPlanChecks{
