@@ -31,6 +31,31 @@ func TestAccFreeEnvVar(t *testing.T) {
 	}, func(s *terraform.State) error { return nil })
 }
 
+func TestAccFreeSecretEnvVar(t *testing.T) {
+	accTest(t, []resource.TestStep{
+		{
+			Config: `resource "netlify_environment_variable" "site_level_secret" {
+  team_id = "66e98216e3fe031846dc998a"
+  site_id = "fbba82b0-f1e9-4e92-9203-eefc62857545"
+  key     = "TEST_SITE_LEVEL_SECRET"
+	scopes  = ["functions", "builds", "runtime"]
+  secret_values = [
+    {
+      value   = "ill-never-tell",
+      context = "production",
+    }
+  ]
+}
+`,
+			Check: resource.ComposeAggregateTestCheckFunc(
+				resource.TestCheckResourceAttr("netlify_environment_variable.site_level_secret", "team_id", "66e98216e3fe031846dc998a"),
+				resource.TestCheckResourceAttr("netlify_environment_variable.site_level_secret", "site_id", "fbba82b0-f1e9-4e92-9203-eefc62857545"),
+				resource.TestCheckResourceAttr("netlify_environment_variable.site_level_secret", "key", "TEST_SITE_LEVEL_SECRET"),
+			),
+		},
+	}, func(s *terraform.State) error { return nil })
+}
+
 func TestAccFreeSiteBuildSettings(t *testing.T) {
 	accTest(t, []resource.TestStep{
 		{
