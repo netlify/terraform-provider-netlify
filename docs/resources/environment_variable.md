@@ -94,7 +94,9 @@ resource "netlify_environment_variable" "astro_database_file" {
 
 ### Optional
 
-- `scopes` (Set of String) One or more of builds, functions, runtime, and post-processing
+- `scopes` (Set of String) One or more of builds, functions, runtime, and post-processing.
+
+Customizing scopes is not supported on free plans. However, free plan users managing a secret environment variable can and must explicitly set this to `["builds", "functions", "runtime"]`.
 - `secret_values` (Attributes Set) (see [below for nested schema](#nestedatt--secret_values))
 - `site_id` (String)
 - `team_id` (String) Required if a default team was not configured in the provider configuration.
