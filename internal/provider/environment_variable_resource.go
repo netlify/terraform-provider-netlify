@@ -52,13 +52,15 @@ type environmentVariableValueModel struct {
 	ContextParameter types.String `tfsdk:"context_parameter"`
 }
 
-var allScopes = []string{"builds", "functions", "runtime", "post-processing"}
-var allScopesValues = []attr.Value{
-	types.StringValue("builds"),
-	types.StringValue("functions"),
-	types.StringValue("runtime"),
-	types.StringValue("post-processing"),
-}
+var (
+	allScopes       = []string{"builds", "functions", "runtime", "post-processing"}
+	allScopesValues = []attr.Value{
+		types.StringValue("builds"),
+		types.StringValue("functions"),
+		types.StringValue("runtime"),
+		types.StringValue("post-processing"),
+	}
+)
 
 func (r *environmentVariableResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_environment_variable"
@@ -115,7 +117,7 @@ func (r *environmentVariableResource) Schema(_ context.Context, _ resource.Schem
 				Optional:    true,
 				Computed:    true,
 				ElementType: types.StringType,
-				Description: "One or more of builds, functions, runtime, and post-processing",
+				Description: "One or more of builds, functions, runtime, and post-processing.\n\nCustomizing scopes is not supported on free plans. However, free plan users managing a secret environment variable can and must explicitly set this to `[\"builds\", \"functions\", \"runtime\"]`.",
 				Validators: []validator.Set{
 					setvalidator.ValueStringsAre(
 						stringvalidator.OneOf(allScopes...),
