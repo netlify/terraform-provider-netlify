@@ -46,10 +46,11 @@ type siteBuildSettingsResourceModel struct {
 	StopBuilds         types.Bool   `tfsdk:"stop_builds"`
 	// Runtime            types.String `tfsdk:"runtime"`             // ?!?! is this plugins.package?
 
-	ProductionBranch        types.String   `tfsdk:"production_branch"`
-	BranchDeployAllBranches types.Bool     `tfsdk:"branch_deploy_all_branches"`
-	BranchDeployBranches    []types.String `tfsdk:"branch_deploy_branches"`
-	DeployPreviews          types.Bool     `tfsdk:"deploy_previews"`
+	ProductionBranch         types.String   `tfsdk:"production_branch"`
+	BranchDeployAllBranches  types.Bool     `tfsdk:"branch_deploy_all_branches"`
+	BranchDeployBranches     []types.String `tfsdk:"branch_deploy_branches"`
+	DeployPreviews           types.Bool     `tfsdk:"deploy_previews"`
+	PreventNonGitProdDeploys types.Bool     `tfsdk:"prevent_non_git_prod_deploys"`
 
 	BuildImage types.String `tfsdk:"build_image"`
 	// NodeJSVersion types.String `tfsdk:"node_js_version"` // versions.node.active / default: versions.node.active or versions.node.default
@@ -151,6 +152,12 @@ func (r *siteBuildSettingsResource) Schema(_ context.Context, _ resource.SchemaR
 				Optional: true,
 				Computed: true,
 				Default:  booldefault.StaticBool(true),
+			},
+			"prevent_non_git_prod_deploys": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Default:     booldefault.StaticBool(false),
+				Description: "When enabled, prevents production deploys from sources other than the linked git repository.",
 			},
 			"build_image": schema.StringAttribute{
 				Optional: true,
@@ -288,6 +295,7 @@ func (r *siteBuildSettingsResource) read(ctx context.Context, state *siteBuildSe
 	} else {
 		state.DeployPreviews = types.BoolValue(!*site.BuildSettings.SkipPrs)
 	}
+	state.PreventNonGitProdDeploys = types.BoolPointerValue(site.PreventNonGitProdDeploys)
 	state.BuildImage = types.StringValue(site.BuildImage)
 	state.FunctionsRegion = types.StringPointerValue(site.FunctionsRegion)
 	state.PrettyURLs = types.BoolPointerValue(site.ProcessingSettings.Html.PrettyUrls)
@@ -340,6 +348,7 @@ func (r *siteBuildSettingsResource) write(ctx context.Context, plan *siteBuildSe
 				PrettyUrls: plan.PrettyURLs.ValueBoolPointer(),
 			},
 		},
+		PreventNonGitProdDeploys: plan.PreventNonGitProdDeploys.ValueBoolPointer(),
 	}
 
 	if plan.BuildImage.IsUnknown() {
