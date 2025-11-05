@@ -14,11 +14,12 @@ description: |-
 
 ```terraform
 resource "netlify_site_build_settings" "blog" {
-  site_id                = data.netlify_site.blog.id
-  build_command          = "npm run build"
-  publish_directory      = "dist"
-  production_branch      = "main"
-  branch_deploy_branches = ["preview", "staging"]
+  site_id                      = data.netlify_site.blog.id
+  build_command                = "npm run build"
+  publish_directory            = "dist"
+  production_branch            = "main"
+  branch_deploy_branches       = ["preview", "staging"]
+  prevent_non_git_prod_deploys = true
 }
 ```
 
@@ -43,6 +44,7 @@ resource "netlify_site_build_settings" "blog" {
 - `functions_region` (String)
 - `package_directory` (String)
 - `pretty_urls` (Boolean)
+- `prevent_non_git_prod_deploys` (Boolean) When enabled, prevents production deploys from sources other than the linked git repository.
 - `stop_builds` (Boolean)
 - `waf_policy_id` (String) See more details in the netlify_waf_policy resource.
 
