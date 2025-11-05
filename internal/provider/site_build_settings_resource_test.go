@@ -24,6 +24,7 @@ func TestAccSiteBuildSettings(t *testing.T) {
 				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "production_branch", "preview"),
 				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "branch_deploy_branches.#", "1"),
 				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "branch_deploy_branches.0", "staging"),
+				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "prevent_non_git_prod_deploys", "false"),
 			),
 		},
 		{
@@ -57,6 +58,58 @@ resource "netlify_waf_policy" "example" {
 				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "branch_deploy_branches.0", "preview"),
 				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "branch_deploy_branches.1", "staging"),
 				resource.TestCheckResourceAttrSet("netlify_site_build_settings.example", "waf_policy_id"),
+			),
+		},
+		{
+			ResourceName:                         "netlify_site_build_settings.example",
+			ImportState:                          true,
+			ImportStateId:                        "49137d35-1470-4db1-810f-c185b8381cd3",
+			ImportStateVerifyIdentifierAttribute: "site_id",
+			ImportStateVerify:                    true,
+			ImportStateVerifyIgnore:              []string{"last_updated"},
+		},
+	}, func(s *terraform.State) error { return nil })
+}
+
+func TestAccSiteBuildSettingsNonGitDeploys(t *testing.T) {
+	accTest(t, []resource.TestStep{
+		{
+			Config: `resource "netlify_site_build_settings" "example" {
+  site_id                      = "49137d35-1470-4db1-810f-c185b8381cd3"
+  build_command                = "npm run build && true"
+  publish_directory            = "dist/dist"
+  production_branch            = "preview"
+  branch_deploy_branches       = ["staging"]
+  prevent_non_git_prod_deploys = true	
+}`,
+			Check: resource.ComposeAggregateTestCheckFunc(
+				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "site_id", "49137d35-1470-4db1-810f-c185b8381cd3"),
+				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "build_command", "npm run build && true"),
+				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "publish_directory", "dist/dist"),
+				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "production_branch", "preview"),
+				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "branch_deploy_branches.#", "1"),
+				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "branch_deploy_branches.0", "staging"),
+				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "prevent_non_git_prod_deploys", "true"),
+			),
+		},
+		{
+			Config: `resource "netlify_site_build_settings" "example" {
+  site_id                      = "49137d35-1470-4db1-810f-c185b8381cd3"
+  build_command                = "npm run build"
+  publish_directory            = "dist"
+  production_branch            = "main"
+  branch_deploy_branches       = ["preview", "staging"]
+  prevent_non_git_prod_deploys = false
+}`,
+			Check: resource.ComposeAggregateTestCheckFunc(
+				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "site_id", "49137d35-1470-4db1-810f-c185b8381cd3"),
+				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "build_command", "npm run build"),
+				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "publish_directory", "dist"),
+				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "production_branch", "main"),
+				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "branch_deploy_branches.#", "2"),
+				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "branch_deploy_branches.0", "preview"),
+				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "branch_deploy_branches.1", "staging"),
+				resource.TestCheckResourceAttr("netlify_site_build_settings.example", "prevent_non_git_prod_deploys", "false"),
 			),
 		},
 		{
