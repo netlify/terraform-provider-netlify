@@ -1,6 +1,6 @@
 module github.com/netlify/terraform-provider-netlify
 
-go 1.23.0
+go 1.24.0
 
 toolchain go1.24.4
 
@@ -8,7 +8,8 @@ require (
 	github.com/go-swagger/go-swagger v0.30.5
 	github.com/hashicorp/terraform-plugin-docs v0.21.0
 	github.com/hashicorp/terraform-plugin-framework v1.14.1
-	golang.org/x/oauth2 v0.29.0
+	golang.org/x/oauth2 v0.33.0
+	gopkg.in/validator.v2 v2.0.1
 )
 
 require (
@@ -27,7 +28,6 @@ require (
 	github.com/mitchellh/go-wordwrap v1.0.0 // indirect
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	google.golang.org/appengine v1.6.8 // indirect
-	gopkg.in/validator.v2 v2.0.1 // indirect
 )
 
 require (
