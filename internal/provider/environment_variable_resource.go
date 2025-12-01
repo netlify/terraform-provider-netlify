@@ -135,9 +135,9 @@ func (r *environmentVariableResource) Schema(_ context.Context, _ resource.Schem
 						},
 						"context": schema.StringAttribute{
 							Required:    true,
-							Description: "One of all, dev, branch-deploy, deploy-preview, production, or branch",
+							Description: "One of all, dev, dev-server, branch-deploy, deploy-preview, production, or branch",
 							Validators: []validator.String{
-								stringvalidator.OneOf("all", "dev", "branch-deploy", "deploy-preview", "production", "branch"),
+								stringvalidator.OneOf("all", "dev", "dev-server", "branch-deploy", "deploy-preview", "production", "branch"),
 							},
 						},
 						"context_parameter": schema.StringAttribute{
@@ -166,9 +166,9 @@ func (r *environmentVariableResource) Schema(_ context.Context, _ resource.Schem
 						},
 						"context": schema.StringAttribute{
 							Required:    true,
-							Description: "One of all, dev, branch-deploy, deploy-preview, production, or branch",
+							Description: "One of all, dev, dev-server, branch-deploy, deploy-preview, production, or branch",
 							Validators: []validator.String{
-								stringvalidator.OneOf("all", "dev", "branch-deploy", "deploy-preview", "production", "branch"),
+								stringvalidator.OneOf("all", "dev", "dev-server", "branch-deploy", "deploy-preview", "production", "branch"),
 							},
 						},
 						"context_parameter": schema.StringAttribute{

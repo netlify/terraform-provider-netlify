@@ -3076,6 +3076,7 @@
               "enum": [
                 "all",
                 "dev",
+                "dev-server",
                 "branch-deploy",
                 "deploy-preview",
                 "production"
@@ -3231,6 +3232,7 @@
               "enum": [
                 "all",
                 "dev",
+                "dev-server",
                 "branch-deploy",
                 "deploy-preview",
                 "production"
@@ -11237,6 +11239,7 @@
             "enum": [
               "all",
               "dev",
+              "dev-server",
               "branch-deploy",
               "deploy-preview",
               "production",
@@ -11283,6 +11286,7 @@
             "type": "string",
             "enum": [
               "dev",
+              "dev-server",
               "branch-deploy",
               "deploy-preview",
               "production",
