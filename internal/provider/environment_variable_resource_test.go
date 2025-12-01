@@ -123,6 +123,10 @@ resource "netlify_environment_variable" "b" {
     {
       value   = "deploy-preview"
       context = "deploy-preview"
+    },
+    {
+      value = "dev-server"
+      context = "dev-server"
     }
   ]
 }

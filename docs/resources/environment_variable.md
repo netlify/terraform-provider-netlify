@@ -111,7 +111,7 @@ Customizing scopes is not supported on free plans. However, free plan users mana
 
 Required:
 
-- `context` (String) One of all, dev, branch-deploy, deploy-preview, production, or branch
+- `context` (String) One of all, dev, dev-server, branch-deploy, deploy-preview, production, or branch
 - `value` (String, Sensitive)
 
 Optional:
@@ -124,7 +124,7 @@ Optional:
 
 Required:
 
-- `context` (String) One of all, dev, branch-deploy, deploy-preview, production, or branch
+- `context` (String) One of all, dev, dev-server, branch-deploy, deploy-preview, production, or branch
 - `value` (String)
 
 Optional:
