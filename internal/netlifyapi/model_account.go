@@ -38,7 +38,7 @@ type Account struct {
 	TypeName string `json:"type_name"`
 	TypeSlug string `json:"type_slug"`
 	UpdatedAt time.Time `json:"updated_at"`
-	Vat string `json:"vat"`
+	Vat *string `json:"vat,omitempty"`
 	SupportAdministrationEnabled bool `json:"support_administration_enabled"`
 	DeployDiagnosticsSetting string `json:"deploy_diagnostics_setting"`
 	AdditionalProperties map[string]interface{}
@@ -50,7 +50,7 @@ type _Account Account
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAccount(billingEmail string, billingName string, billingPeriod string, capabilities map[string]interface{}, createdAt time.Time, id string, memberRoles []map[string]interface{}, name string, ownerIds []string, paymentMethodId string, role string, rolesAllowed []string, slug string, typeId string, typeName string, typeSlug string, updatedAt time.Time, vat string, supportAdministrationEnabled bool, deployDiagnosticsSetting string) *Account {
+func NewAccount(billingEmail string, billingName string, billingPeriod string, capabilities map[string]interface{}, createdAt time.Time, id string, memberRoles []map[string]interface{}, name string, ownerIds []string, paymentMethodId string, role string, rolesAllowed []string, slug string, typeId string, typeName string, typeSlug string, updatedAt time.Time, supportAdministrationEnabled bool, deployDiagnosticsSetting string) *Account {
 	this := Account{}
 	this.BillingEmail = billingEmail
 	this.BillingName = billingName
@@ -69,7 +69,6 @@ func NewAccount(billingEmail string, billingName string, billingPeriod string, c
 	this.TypeName = typeName
 	this.TypeSlug = typeSlug
 	this.UpdatedAt = updatedAt
-	this.Vat = vat
 	this.SupportAdministrationEnabled = supportAdministrationEnabled
 	this.DeployDiagnosticsSetting = deployDiagnosticsSetting
 	return &this
@@ -491,28 +490,36 @@ func (o *Account) SetUpdatedAt(v time.Time) {
 	o.UpdatedAt = v
 }
 
-// GetVat returns the Vat field value
+// GetVat returns the Vat field value if set, zero value otherwise.
 func (o *Account) GetVat() string {
-	if o == nil {
+	if o == nil || IsNil(o.Vat) {
 		var ret string
 		return ret
 	}
-
-	return o.Vat
+	return *o.Vat
 }
 
-// GetVatOk returns a tuple with the Vat field value
+// GetVatOk returns a tuple with the Vat field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Account) GetVatOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Vat) {
 		return nil, false
 	}
-	return &o.Vat, true
+	return o.Vat, true
 }
 
-// SetVat sets field value
+// HasVat returns a boolean if a field has been set.
+func (o *Account) HasVat() bool {
+	if o != nil && !IsNil(o.Vat) {
+		return true
+	}
+
+	return false
+}
+
+// SetVat gets a reference to the given string and assigns it to the Vat field.
 func (o *Account) SetVat(v string) {
-	o.Vat = v
+	o.Vat = &v
 }
 
 // GetSupportAdministrationEnabled returns the SupportAdministrationEnabled field value
@@ -590,7 +597,9 @@ func (o Account) ToMap() (map[string]interface{}, error) {
 	toSerialize["type_name"] = o.TypeName
 	toSerialize["type_slug"] = o.TypeSlug
 	toSerialize["updated_at"] = o.UpdatedAt
-	toSerialize["vat"] = o.Vat
+	if !IsNil(o.Vat) {
+		toSerialize["vat"] = o.Vat
+	}
 	toSerialize["support_administration_enabled"] = o.SupportAdministrationEnabled
 	toSerialize["deploy_diagnostics_setting"] = o.DeployDiagnosticsSetting
 
@@ -623,7 +632,6 @@ func (o *Account) UnmarshalJSON(data []byte) (err error) {
 		"type_name",
 		"type_slug",
 		"updated_at",
-		"vat",
 		"support_administration_enabled",
 		"deploy_diagnostics_setting",
 	}

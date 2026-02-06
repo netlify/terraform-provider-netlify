@@ -5849,7 +5849,6 @@ components:
       - type_name
       - type_slug
       - updated_at
-      - vat
     AccountUpdateParams:
       example:
         payment_method_id: payment_method_id

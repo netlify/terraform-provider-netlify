@@ -7985,7 +7985,6 @@
           "type_name",
           "type_slug",
           "updated_at",
-          "vat",
           "support_administration_enabled",
           "deploy_diagnostics_setting"
         ],
