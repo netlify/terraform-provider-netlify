@@ -1,5 +1,7 @@
 //go:build tools
 
+// haha UPDATE PLS
+
 package tools
 
 import (
