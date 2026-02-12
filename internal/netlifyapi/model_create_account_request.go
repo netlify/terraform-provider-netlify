@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -22,6 +22,7 @@ type CreateAccountRequest struct {
 	Name *string `json:"name,omitempty"`
 	TypeId *string `json:"type_id,omitempty"`
 	PaymentMethodId *string `json:"payment_method_id,omitempty"`
+	StripeCustomerId *string `json:"stripe_customer_id,omitempty"`
 	Period *string `json:"period,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
@@ -141,6 +142,38 @@ func (o *CreateAccountRequest) SetPaymentMethodId(v string) {
 	o.PaymentMethodId = &v
 }
 
+// GetStripeCustomerId returns the StripeCustomerId field value if set, zero value otherwise.
+func (o *CreateAccountRequest) GetStripeCustomerId() string {
+	if o == nil || IsNil(o.StripeCustomerId) {
+		var ret string
+		return ret
+	}
+	return *o.StripeCustomerId
+}
+
+// GetStripeCustomerIdOk returns a tuple with the StripeCustomerId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateAccountRequest) GetStripeCustomerIdOk() (*string, bool) {
+	if o == nil || IsNil(o.StripeCustomerId) {
+		return nil, false
+	}
+	return o.StripeCustomerId, true
+}
+
+// HasStripeCustomerId returns a boolean if a field has been set.
+func (o *CreateAccountRequest) HasStripeCustomerId() bool {
+	if o != nil && !IsNil(o.StripeCustomerId) {
+		return true
+	}
+
+	return false
+}
+
+// SetStripeCustomerId gets a reference to the given string and assigns it to the StripeCustomerId field.
+func (o *CreateAccountRequest) SetStripeCustomerId(v string) {
+	o.StripeCustomerId = &v
+}
+
 // GetPeriod returns the Period field value if set, zero value otherwise.
 func (o *CreateAccountRequest) GetPeriod() string {
 	if o == nil || IsNil(o.Period) {
@@ -192,6 +225,9 @@ func (o CreateAccountRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.PaymentMethodId) {
 		toSerialize["payment_method_id"] = o.PaymentMethodId
 	}
+	if !IsNil(o.StripeCustomerId) {
+		toSerialize["stripe_customer_id"] = o.StripeCustomerId
+	}
 	if !IsNil(o.Period) {
 		toSerialize["period"] = o.Period
 	}
@@ -220,6 +256,7 @@ func (o *CreateAccountRequest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "type_id")
 		delete(additionalProperties, "payment_method_id")
+		delete(additionalProperties, "stripe_customer_id")
 		delete(additionalProperties, "period")
 		o.AdditionalProperties = additionalProperties
 	}

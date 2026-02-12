@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -30,11 +30,11 @@ type HeroUser struct {
 	BitbucketSlug string `json:"bitbucket_slug"`
 	AllSites int64 `json:"all_sites"`
 	SupportPriority int64 `json:"support_priority"`
-	ZuoraUrl string `json:"zuora_url"`
 	AllAccounts []string `json:"all_accounts"`
 	AllOrganizations []string `json:"all_organizations"`
 	SiftSpamScore float32 `json:"sift_spam_score"`
 	SafeToSpam bool `json:"safe_to_spam"`
+	MfaEnabled bool `json:"mfa_enabled"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -44,7 +44,7 @@ type _HeroUser HeroUser
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewHeroUser(disabled bool, disabledReason string, spam bool, spamScore float32, billingDetails string, paymentsGatewayName string, githubSlug string, bitbucketSlug string, allSites int64, supportPriority int64, zuoraUrl string, allAccounts []string, allOrganizations []string, siftSpamScore float32, safeToSpam bool) *HeroUser {
+func NewHeroUser(disabled bool, disabledReason string, spam bool, spamScore float32, billingDetails string, paymentsGatewayName string, githubSlug string, bitbucketSlug string, allSites int64, supportPriority int64, allAccounts []string, allOrganizations []string, siftSpamScore float32, safeToSpam bool, mfaEnabled bool) *HeroUser {
 	this := HeroUser{}
 	this.Disabled = disabled
 	this.DisabledReason = disabledReason
@@ -56,11 +56,11 @@ func NewHeroUser(disabled bool, disabledReason string, spam bool, spamScore floa
 	this.BitbucketSlug = bitbucketSlug
 	this.AllSites = allSites
 	this.SupportPriority = supportPriority
-	this.ZuoraUrl = zuoraUrl
 	this.AllAccounts = allAccounts
 	this.AllOrganizations = allOrganizations
 	this.SiftSpamScore = siftSpamScore
 	this.SafeToSpam = safeToSpam
+	this.MfaEnabled = mfaEnabled
 	return &this
 }
 
@@ -312,30 +312,6 @@ func (o *HeroUser) SetSupportPriority(v int64) {
 	o.SupportPriority = v
 }
 
-// GetZuoraUrl returns the ZuoraUrl field value
-func (o *HeroUser) GetZuoraUrl() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.ZuoraUrl
-}
-
-// GetZuoraUrlOk returns a tuple with the ZuoraUrl field value
-// and a boolean to check if the value has been set.
-func (o *HeroUser) GetZuoraUrlOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.ZuoraUrl, true
-}
-
-// SetZuoraUrl sets field value
-func (o *HeroUser) SetZuoraUrl(v string) {
-	o.ZuoraUrl = v
-}
-
 // GetAllAccounts returns the AllAccounts field value
 func (o *HeroUser) GetAllAccounts() []string {
 	if o == nil {
@@ -432,6 +408,30 @@ func (o *HeroUser) SetSafeToSpam(v bool) {
 	o.SafeToSpam = v
 }
 
+// GetMfaEnabled returns the MfaEnabled field value
+func (o *HeroUser) GetMfaEnabled() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.MfaEnabled
+}
+
+// GetMfaEnabledOk returns a tuple with the MfaEnabled field value
+// and a boolean to check if the value has been set.
+func (o *HeroUser) GetMfaEnabledOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.MfaEnabled, true
+}
+
+// SetMfaEnabled sets field value
+func (o *HeroUser) SetMfaEnabled(v bool) {
+	o.MfaEnabled = v
+}
+
 func (o HeroUser) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -452,11 +452,11 @@ func (o HeroUser) ToMap() (map[string]interface{}, error) {
 	toSerialize["bitbucket_slug"] = o.BitbucketSlug
 	toSerialize["all_sites"] = o.AllSites
 	toSerialize["support_priority"] = o.SupportPriority
-	toSerialize["zuora_url"] = o.ZuoraUrl
 	toSerialize["all_accounts"] = o.AllAccounts
 	toSerialize["all_organizations"] = o.AllOrganizations
 	toSerialize["sift_spam_score"] = o.SiftSpamScore
 	toSerialize["safe_to_spam"] = o.SafeToSpam
+	toSerialize["mfa_enabled"] = o.MfaEnabled
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -480,11 +480,11 @@ func (o *HeroUser) UnmarshalJSON(data []byte) (err error) {
 		"bitbucket_slug",
 		"all_sites",
 		"support_priority",
-		"zuora_url",
 		"all_accounts",
 		"all_organizations",
 		"sift_spam_score",
 		"safe_to_spam",
+		"mfa_enabled",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -524,11 +524,11 @@ func (o *HeroUser) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "bitbucket_slug")
 		delete(additionalProperties, "all_sites")
 		delete(additionalProperties, "support_priority")
-		delete(additionalProperties, "zuora_url")
 		delete(additionalProperties, "all_accounts")
 		delete(additionalProperties, "all_organizations")
 		delete(additionalProperties, "sift_spam_score")
 		delete(additionalProperties, "safe_to_spam")
+		delete(additionalProperties, "mfa_enabled")
 		o.AdditionalProperties = additionalProperties
 	}
 

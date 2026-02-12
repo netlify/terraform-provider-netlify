@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -22,8 +22,8 @@ var _ MappedNullable = &AccountFirewallConfig{}
 // AccountFirewallConfig AccountFirewallConfig model definition
 type AccountFirewallConfig struct {
 	Id string `json:"id"`
-	UnpublishedRules FirewallRuleSet `json:"unpublished_rules"`
-	PublishedRules FirewallRuleSet `json:"published_rules"`
+	Unpublished FirewallRuleSet `json:"unpublished"`
+	Published FirewallRuleSet `json:"published"`
 	SiteOverrides []map[string]interface{} `json:"site_overrides"`
 	// When the deployed branch was created
 	CreatedAt time.Time `json:"created_at"`
@@ -38,11 +38,11 @@ type _AccountFirewallConfig AccountFirewallConfig
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAccountFirewallConfig(id string, unpublishedRules FirewallRuleSet, publishedRules FirewallRuleSet, siteOverrides []map[string]interface{}, createdAt time.Time, updatedAt time.Time) *AccountFirewallConfig {
+func NewAccountFirewallConfig(id string, unpublished FirewallRuleSet, published FirewallRuleSet, siteOverrides []map[string]interface{}, createdAt time.Time, updatedAt time.Time) *AccountFirewallConfig {
 	this := AccountFirewallConfig{}
 	this.Id = id
-	this.UnpublishedRules = unpublishedRules
-	this.PublishedRules = publishedRules
+	this.Unpublished = unpublished
+	this.Published = published
 	this.SiteOverrides = siteOverrides
 	this.CreatedAt = createdAt
 	this.UpdatedAt = updatedAt
@@ -81,52 +81,52 @@ func (o *AccountFirewallConfig) SetId(v string) {
 	o.Id = v
 }
 
-// GetUnpublishedRules returns the UnpublishedRules field value
-func (o *AccountFirewallConfig) GetUnpublishedRules() FirewallRuleSet {
+// GetUnpublished returns the Unpublished field value
+func (o *AccountFirewallConfig) GetUnpublished() FirewallRuleSet {
 	if o == nil {
 		var ret FirewallRuleSet
 		return ret
 	}
 
-	return o.UnpublishedRules
+	return o.Unpublished
 }
 
-// GetUnpublishedRulesOk returns a tuple with the UnpublishedRules field value
+// GetUnpublishedOk returns a tuple with the Unpublished field value
 // and a boolean to check if the value has been set.
-func (o *AccountFirewallConfig) GetUnpublishedRulesOk() (*FirewallRuleSet, bool) {
+func (o *AccountFirewallConfig) GetUnpublishedOk() (*FirewallRuleSet, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.UnpublishedRules, true
+	return &o.Unpublished, true
 }
 
-// SetUnpublishedRules sets field value
-func (o *AccountFirewallConfig) SetUnpublishedRules(v FirewallRuleSet) {
-	o.UnpublishedRules = v
+// SetUnpublished sets field value
+func (o *AccountFirewallConfig) SetUnpublished(v FirewallRuleSet) {
+	o.Unpublished = v
 }
 
-// GetPublishedRules returns the PublishedRules field value
-func (o *AccountFirewallConfig) GetPublishedRules() FirewallRuleSet {
+// GetPublished returns the Published field value
+func (o *AccountFirewallConfig) GetPublished() FirewallRuleSet {
 	if o == nil {
 		var ret FirewallRuleSet
 		return ret
 	}
 
-	return o.PublishedRules
+	return o.Published
 }
 
-// GetPublishedRulesOk returns a tuple with the PublishedRules field value
+// GetPublishedOk returns a tuple with the Published field value
 // and a boolean to check if the value has been set.
-func (o *AccountFirewallConfig) GetPublishedRulesOk() (*FirewallRuleSet, bool) {
+func (o *AccountFirewallConfig) GetPublishedOk() (*FirewallRuleSet, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.PublishedRules, true
+	return &o.Published, true
 }
 
-// SetPublishedRules sets field value
-func (o *AccountFirewallConfig) SetPublishedRules(v FirewallRuleSet) {
-	o.PublishedRules = v
+// SetPublished sets field value
+func (o *AccountFirewallConfig) SetPublished(v FirewallRuleSet) {
+	o.Published = v
 }
 
 // GetSiteOverrides returns the SiteOverrides field value
@@ -212,8 +212,8 @@ func (o AccountFirewallConfig) MarshalJSON() ([]byte, error) {
 func (o AccountFirewallConfig) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id
-	toSerialize["unpublished_rules"] = o.UnpublishedRules
-	toSerialize["published_rules"] = o.PublishedRules
+	toSerialize["unpublished"] = o.Unpublished
+	toSerialize["published"] = o.Published
 	toSerialize["site_overrides"] = o.SiteOverrides
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["updated_at"] = o.UpdatedAt
@@ -231,8 +231,8 @@ func (o *AccountFirewallConfig) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"id",
-		"unpublished_rules",
-		"published_rules",
+		"unpublished",
+		"published",
 		"site_overrides",
 		"created_at",
 		"updated_at",
@@ -266,8 +266,8 @@ func (o *AccountFirewallConfig) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "id")
-		delete(additionalProperties, "unpublished_rules")
-		delete(additionalProperties, "published_rules")
+		delete(additionalProperties, "unpublished")
+		delete(additionalProperties, "published")
 		delete(additionalProperties, "site_overrides")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "updated_at")

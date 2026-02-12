@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -42,9 +42,9 @@ func NewManagedWafRulesWithDefaults() *ManagedWafRules {
 	return &this
 }
 
-// GetRuleSets returns the RuleSets field value if set, zero value otherwise.
+// GetRuleSets returns the RuleSets field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *ManagedWafRules) GetRuleSets() map[string]ManagedWafRuleSet {
-	if o == nil || IsNil(o.RuleSets) {
+	if o == nil {
 		var ret map[string]ManagedWafRuleSet
 		return ret
 	}
@@ -53,11 +53,12 @@ func (o *ManagedWafRules) GetRuleSets() map[string]ManagedWafRuleSet {
 
 // GetRuleSetsOk returns a tuple with the RuleSets field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ManagedWafRules) GetRuleSetsOk() (map[string]ManagedWafRuleSet, bool) {
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *ManagedWafRules) GetRuleSetsOk() (*map[string]ManagedWafRuleSet, bool) {
 	if o == nil || IsNil(o.RuleSets) {
-		return map[string]ManagedWafRuleSet{}, false
+		return nil, false
 	}
-	return o.RuleSets, true
+	return &o.RuleSets, true
 }
 
 // HasRuleSets returns a boolean if a field has been set.
@@ -84,7 +85,7 @@ func (o ManagedWafRules) MarshalJSON() ([]byte, error) {
 
 func (o ManagedWafRules) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if !IsNil(o.RuleSets) {
+	if o.RuleSets != nil {
 		toSerialize["rule_sets"] = o.RuleSets
 	}
 

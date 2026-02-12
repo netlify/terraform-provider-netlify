@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -169,9 +169,9 @@ func (o *WafPolicyRuleSetsInner) SetOverallThreshold(v int64) {
 	o.OverallThreshold = v
 }
 
-// GetCategoryThresholds returns the CategoryThresholds field value if set, zero value otherwise.
+// GetCategoryThresholds returns the CategoryThresholds field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *WafPolicyRuleSetsInner) GetCategoryThresholds() map[string]int64 {
-	if o == nil || IsNil(o.CategoryThresholds) {
+	if o == nil {
 		var ret map[string]int64
 		return ret
 	}
@@ -180,11 +180,12 @@ func (o *WafPolicyRuleSetsInner) GetCategoryThresholds() map[string]int64 {
 
 // GetCategoryThresholdsOk returns a tuple with the CategoryThresholds field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *WafPolicyRuleSetsInner) GetCategoryThresholdsOk() (map[string]int64, bool) {
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *WafPolicyRuleSetsInner) GetCategoryThresholdsOk() (*map[string]int64, bool) {
 	if o == nil || IsNil(o.CategoryThresholds) {
-		return map[string]int64{}, false
+		return nil, false
 	}
-	return o.CategoryThresholds, true
+	return &o.CategoryThresholds, true
 }
 
 // HasCategoryThresholds returns a boolean if a field has been set.
@@ -201,9 +202,9 @@ func (o *WafPolicyRuleSetsInner) SetCategoryThresholds(v map[string]int64) {
 	o.CategoryThresholds = v
 }
 
-// GetRuleOverrides returns the RuleOverrides field value if set, zero value otherwise.
+// GetRuleOverrides returns the RuleOverrides field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *WafPolicyRuleSetsInner) GetRuleOverrides() map[string]WafPolicyRuleOverride {
-	if o == nil || IsNil(o.RuleOverrides) {
+	if o == nil {
 		var ret map[string]WafPolicyRuleOverride
 		return ret
 	}
@@ -212,11 +213,12 @@ func (o *WafPolicyRuleSetsInner) GetRuleOverrides() map[string]WafPolicyRuleOver
 
 // GetRuleOverridesOk returns a tuple with the RuleOverrides field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *WafPolicyRuleSetsInner) GetRuleOverridesOk() (map[string]WafPolicyRuleOverride, bool) {
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *WafPolicyRuleSetsInner) GetRuleOverridesOk() (*map[string]WafPolicyRuleOverride, bool) {
 	if o == nil || IsNil(o.RuleOverrides) {
-		return map[string]WafPolicyRuleOverride{}, false
+		return nil, false
 	}
-	return o.RuleOverrides, true
+	return &o.RuleOverrides, true
 }
 
 // HasRuleOverrides returns a boolean if a field has been set.
@@ -253,10 +255,10 @@ func (o WafPolicyRuleSetsInner) ToMap() (map[string]interface{}, error) {
 		toSerialize["passive_mode"] = o.PassiveMode
 	}
 	toSerialize["overall_threshold"] = o.OverallThreshold
-	if !IsNil(o.CategoryThresholds) {
+	if o.CategoryThresholds != nil {
 		toSerialize["category_thresholds"] = o.CategoryThresholds
 	}
-	if !IsNil(o.RuleOverrides) {
+	if o.RuleOverrides != nil {
 		toSerialize["rule_overrides"] = o.RuleOverrides
 	}
 

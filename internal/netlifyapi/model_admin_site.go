@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -26,12 +26,11 @@ type AdminSite struct {
 	Name string `json:"name"`
 	DefaultDomain string `json:"default_domain"`
 	CustomDomain string `json:"custom_domain"`
+	RecordTxtValue *string `json:"record_txt_value,omitempty"`
 	BranchDeployCustomDomain string `json:"branch_deploy_custom_domain"`
 	DeployPreviewCustomDomain string `json:"deploy_preview_custom_domain"`
 	DomainAliases []string `json:"domain_aliases"`
-	Password *string `json:"password,omitempty"`
 	PasswordContext *string `json:"password_context,omitempty"`
-	PasswordHash *string `json:"password_hash,omitempty"`
 	SsoLogin bool `json:"sso_login"`
 	SsoLoginContext string `json:"sso_login_context"`
 	NotificationEmail string `json:"notification_email"`
@@ -44,9 +43,6 @@ type AdminSite struct {
 	UpdatedAt time.Time `json:"updated_at"`
 	SslUrl string `json:"ssl_url"`
 	ForceSsl bool `json:"force_ssl"`
-	RumEnabled *bool `json:"rum_enabled,omitempty"`
-	PreventNonGitProdDeploys *bool `json:"prevent_non_git_prod_deploys,omitempty"`
-	AnalyticsInstanceId *string `json:"analytics_instance_id,omitempty"`
 	BuildSettings Repo `json:"build_settings"`
 	ProcessingSettings SiteProcessingSettings `json:"processing_settings"`
 	DeployHook string `json:"deploy_hook"`
@@ -60,13 +56,18 @@ type AdminSite struct {
 	BuildTimelimit float32 `json:"build_timelimit"`
 	DeployRetentionInDays float32 `json:"deploy_retention_in_days"`
 	Labels []SiteLabel `json:"labels"`
-	FunctionsRegion *string `json:"functions_region,omitempty"`
+	AnalyticsInstanceId *string `json:"analytics_instance_id,omitempty"`
 	CdpEnabledContexts []string `json:"cdp_enabled_contexts,omitempty"`
+	FunctionsRegion *string `json:"functions_region,omitempty"`
 	HudEnabled *bool `json:"hud_enabled,omitempty"`
+	RumEnabled *bool `json:"rum_enabled,omitempty"`
+	PreventNonGitProdDeploys *bool `json:"prevent_non_git_prod_deploys,omitempty"`
 	SiteBuildTimelimit float32 `json:"site_build_timelimit"`
 	SiteBuildPreProcessTimeout float32 `json:"site_build_pre_process_timeout"`
 	SiteFunctionsConfig map[string]interface{} `json:"site_functions_config"`
 	EdgeFunctionsManifest map[string]interface{} `json:"edge_functions_manifest,omitempty"`
+	// Array of paid add-ons for this site
+	PaidAddons []string `json:"paid_addons"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -76,7 +77,7 @@ type _AdminSite AdminSite
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAdminSite(id string, plan string, name string, defaultDomain string, customDomain string, branchDeployCustomDomain string, deployPreviewCustomDomain string, domainAliases []string, ssoLogin bool, ssoLoginContext string, notificationEmail string, url string, adminUrl string, deployUrl string, state string, screenshotUrl string, createdAt time.Time, updatedAt time.Time, sslUrl string, forceSsl bool, buildSettings Repo, processingSettings SiteProcessingSettings, deployHook string, managedDns bool, accountId string, accountSlug string, accountName string, capabilities map[string]interface{}, idDomain string, buildImage string, buildTimelimit float32, deployRetentionInDays float32, labels []SiteLabel, siteBuildTimelimit float32, siteBuildPreProcessTimeout float32, siteFunctionsConfig map[string]interface{}) *AdminSite {
+func NewAdminSite(id string, plan string, name string, defaultDomain string, customDomain string, branchDeployCustomDomain string, deployPreviewCustomDomain string, domainAliases []string, ssoLogin bool, ssoLoginContext string, notificationEmail string, url string, adminUrl string, deployUrl string, state string, screenshotUrl string, createdAt time.Time, updatedAt time.Time, sslUrl string, forceSsl bool, buildSettings Repo, processingSettings SiteProcessingSettings, deployHook string, managedDns bool, accountId string, accountSlug string, accountName string, capabilities map[string]interface{}, idDomain string, buildImage string, buildTimelimit float32, deployRetentionInDays float32, labels []SiteLabel, siteBuildTimelimit float32, siteBuildPreProcessTimeout float32, siteFunctionsConfig map[string]interface{}, paidAddons []string) *AdminSite {
 	this := AdminSite{}
 	this.Id = id
 	this.Plan = plan
@@ -114,6 +115,7 @@ func NewAdminSite(id string, plan string, name string, defaultDomain string, cus
 	this.SiteBuildTimelimit = siteBuildTimelimit
 	this.SiteBuildPreProcessTimeout = siteBuildPreProcessTimeout
 	this.SiteFunctionsConfig = siteFunctionsConfig
+	this.PaidAddons = paidAddons
 	return &this
 }
 
@@ -245,6 +247,38 @@ func (o *AdminSite) SetCustomDomain(v string) {
 	o.CustomDomain = v
 }
 
+// GetRecordTxtValue returns the RecordTxtValue field value if set, zero value otherwise.
+func (o *AdminSite) GetRecordTxtValue() string {
+	if o == nil || IsNil(o.RecordTxtValue) {
+		var ret string
+		return ret
+	}
+	return *o.RecordTxtValue
+}
+
+// GetRecordTxtValueOk returns a tuple with the RecordTxtValue field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AdminSite) GetRecordTxtValueOk() (*string, bool) {
+	if o == nil || IsNil(o.RecordTxtValue) {
+		return nil, false
+	}
+	return o.RecordTxtValue, true
+}
+
+// HasRecordTxtValue returns a boolean if a field has been set.
+func (o *AdminSite) HasRecordTxtValue() bool {
+	if o != nil && !IsNil(o.RecordTxtValue) {
+		return true
+	}
+
+	return false
+}
+
+// SetRecordTxtValue gets a reference to the given string and assigns it to the RecordTxtValue field.
+func (o *AdminSite) SetRecordTxtValue(v string) {
+	o.RecordTxtValue = &v
+}
+
 // GetBranchDeployCustomDomain returns the BranchDeployCustomDomain field value
 func (o *AdminSite) GetBranchDeployCustomDomain() string {
 	if o == nil {
@@ -317,38 +351,6 @@ func (o *AdminSite) SetDomainAliases(v []string) {
 	o.DomainAliases = v
 }
 
-// GetPassword returns the Password field value if set, zero value otherwise.
-func (o *AdminSite) GetPassword() string {
-	if o == nil || IsNil(o.Password) {
-		var ret string
-		return ret
-	}
-	return *o.Password
-}
-
-// GetPasswordOk returns a tuple with the Password field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *AdminSite) GetPasswordOk() (*string, bool) {
-	if o == nil || IsNil(o.Password) {
-		return nil, false
-	}
-	return o.Password, true
-}
-
-// HasPassword returns a boolean if a field has been set.
-func (o *AdminSite) HasPassword() bool {
-	if o != nil && !IsNil(o.Password) {
-		return true
-	}
-
-	return false
-}
-
-// SetPassword gets a reference to the given string and assigns it to the Password field.
-func (o *AdminSite) SetPassword(v string) {
-	o.Password = &v
-}
-
 // GetPasswordContext returns the PasswordContext field value if set, zero value otherwise.
 func (o *AdminSite) GetPasswordContext() string {
 	if o == nil || IsNil(o.PasswordContext) {
@@ -379,38 +381,6 @@ func (o *AdminSite) HasPasswordContext() bool {
 // SetPasswordContext gets a reference to the given string and assigns it to the PasswordContext field.
 func (o *AdminSite) SetPasswordContext(v string) {
 	o.PasswordContext = &v
-}
-
-// GetPasswordHash returns the PasswordHash field value if set, zero value otherwise.
-func (o *AdminSite) GetPasswordHash() string {
-	if o == nil || IsNil(o.PasswordHash) {
-		var ret string
-		return ret
-	}
-	return *o.PasswordHash
-}
-
-// GetPasswordHashOk returns a tuple with the PasswordHash field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *AdminSite) GetPasswordHashOk() (*string, bool) {
-	if o == nil || IsNil(o.PasswordHash) {
-		return nil, false
-	}
-	return o.PasswordHash, true
-}
-
-// HasPasswordHash returns a boolean if a field has been set.
-func (o *AdminSite) HasPasswordHash() bool {
-	if o != nil && !IsNil(o.PasswordHash) {
-		return true
-	}
-
-	return false
-}
-
-// SetPasswordHash gets a reference to the given string and assigns it to the PasswordHash field.
-func (o *AdminSite) SetPasswordHash(v string) {
-	o.PasswordHash = &v
 }
 
 // GetSsoLogin returns the SsoLogin field value
@@ -699,102 +669,6 @@ func (o *AdminSite) GetForceSslOk() (*bool, bool) {
 // SetForceSsl sets field value
 func (o *AdminSite) SetForceSsl(v bool) {
 	o.ForceSsl = v
-}
-
-// GetRumEnabled returns the RumEnabled field value if set, zero value otherwise.
-func (o *AdminSite) GetRumEnabled() bool {
-	if o == nil || IsNil(o.RumEnabled) {
-		var ret bool
-		return ret
-	}
-	return *o.RumEnabled
-}
-
-// GetRumEnabledOk returns a tuple with the RumEnabled field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *AdminSite) GetRumEnabledOk() (*bool, bool) {
-	if o == nil || IsNil(o.RumEnabled) {
-		return nil, false
-	}
-	return o.RumEnabled, true
-}
-
-// HasRumEnabled returns a boolean if a field has been set.
-func (o *AdminSite) HasRumEnabled() bool {
-	if o != nil && !IsNil(o.RumEnabled) {
-		return true
-	}
-
-	return false
-}
-
-// SetRumEnabled gets a reference to the given bool and assigns it to the RumEnabled field.
-func (o *AdminSite) SetRumEnabled(v bool) {
-	o.RumEnabled = &v
-}
-
-// GetPreventNonGitProdDeploys returns the PreventNonGitProdDeploys field value if set, zero value otherwise.
-func (o *AdminSite) GetPreventNonGitProdDeploys() bool {
-	if o == nil || IsNil(o.PreventNonGitProdDeploys) {
-		var ret bool
-		return ret
-	}
-	return *o.PreventNonGitProdDeploys
-}
-
-// GetPreventNonGitProdDeploysOk returns a tuple with the PreventNonGitProdDeploys field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *AdminSite) GetPreventNonGitProdDeploysOk() (*bool, bool) {
-	if o == nil || IsNil(o.PreventNonGitProdDeploys) {
-		return nil, false
-	}
-	return o.PreventNonGitProdDeploys, true
-}
-
-// HasPreventNonGitProdDeploys returns a boolean if a field has been set.
-func (o *AdminSite) HasPreventNonGitProdDeploys() bool {
-	if o != nil && !IsNil(o.PreventNonGitProdDeploys) {
-		return true
-	}
-
-	return false
-}
-
-// SetPreventNonGitProdDeploys gets a reference to the given bool and assigns it to the PreventNonGitProdDeploys field.
-func (o *AdminSite) SetPreventNonGitProdDeploys(v bool) {
-	o.PreventNonGitProdDeploys = &v
-}
-
-// GetAnalyticsInstanceId returns the AnalyticsInstanceId field value if set, zero value otherwise.
-func (o *AdminSite) GetAnalyticsInstanceId() string {
-	if o == nil || IsNil(o.AnalyticsInstanceId) {
-		var ret string
-		return ret
-	}
-	return *o.AnalyticsInstanceId
-}
-
-// GetAnalyticsInstanceIdOk returns a tuple with the AnalyticsInstanceId field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *AdminSite) GetAnalyticsInstanceIdOk() (*string, bool) {
-	if o == nil || IsNil(o.AnalyticsInstanceId) {
-		return nil, false
-	}
-	return o.AnalyticsInstanceId, true
-}
-
-// HasAnalyticsInstanceId returns a boolean if a field has been set.
-func (o *AdminSite) HasAnalyticsInstanceId() bool {
-	if o != nil && !IsNil(o.AnalyticsInstanceId) {
-		return true
-	}
-
-	return false
-}
-
-// SetAnalyticsInstanceId gets a reference to the given string and assigns it to the AnalyticsInstanceId field.
-func (o *AdminSite) SetAnalyticsInstanceId(v string) {
-	o.AnalyticsInstanceId = &v
 }
 
 // GetBuildSettings returns the BuildSettings field value
@@ -1109,36 +983,36 @@ func (o *AdminSite) SetLabels(v []SiteLabel) {
 	o.Labels = v
 }
 
-// GetFunctionsRegion returns the FunctionsRegion field value if set, zero value otherwise.
-func (o *AdminSite) GetFunctionsRegion() string {
-	if o == nil || IsNil(o.FunctionsRegion) {
+// GetAnalyticsInstanceId returns the AnalyticsInstanceId field value if set, zero value otherwise.
+func (o *AdminSite) GetAnalyticsInstanceId() string {
+	if o == nil || IsNil(o.AnalyticsInstanceId) {
 		var ret string
 		return ret
 	}
-	return *o.FunctionsRegion
+	return *o.AnalyticsInstanceId
 }
 
-// GetFunctionsRegionOk returns a tuple with the FunctionsRegion field value if set, nil otherwise
+// GetAnalyticsInstanceIdOk returns a tuple with the AnalyticsInstanceId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AdminSite) GetFunctionsRegionOk() (*string, bool) {
-	if o == nil || IsNil(o.FunctionsRegion) {
+func (o *AdminSite) GetAnalyticsInstanceIdOk() (*string, bool) {
+	if o == nil || IsNil(o.AnalyticsInstanceId) {
 		return nil, false
 	}
-	return o.FunctionsRegion, true
+	return o.AnalyticsInstanceId, true
 }
 
-// HasFunctionsRegion returns a boolean if a field has been set.
-func (o *AdminSite) HasFunctionsRegion() bool {
-	if o != nil && !IsNil(o.FunctionsRegion) {
+// HasAnalyticsInstanceId returns a boolean if a field has been set.
+func (o *AdminSite) HasAnalyticsInstanceId() bool {
+	if o != nil && !IsNil(o.AnalyticsInstanceId) {
 		return true
 	}
 
 	return false
 }
 
-// SetFunctionsRegion gets a reference to the given string and assigns it to the FunctionsRegion field.
-func (o *AdminSite) SetFunctionsRegion(v string) {
-	o.FunctionsRegion = &v
+// SetAnalyticsInstanceId gets a reference to the given string and assigns it to the AnalyticsInstanceId field.
+func (o *AdminSite) SetAnalyticsInstanceId(v string) {
+	o.AnalyticsInstanceId = &v
 }
 
 // GetCdpEnabledContexts returns the CdpEnabledContexts field value if set, zero value otherwise.
@@ -1173,6 +1047,38 @@ func (o *AdminSite) SetCdpEnabledContexts(v []string) {
 	o.CdpEnabledContexts = v
 }
 
+// GetFunctionsRegion returns the FunctionsRegion field value if set, zero value otherwise.
+func (o *AdminSite) GetFunctionsRegion() string {
+	if o == nil || IsNil(o.FunctionsRegion) {
+		var ret string
+		return ret
+	}
+	return *o.FunctionsRegion
+}
+
+// GetFunctionsRegionOk returns a tuple with the FunctionsRegion field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AdminSite) GetFunctionsRegionOk() (*string, bool) {
+	if o == nil || IsNil(o.FunctionsRegion) {
+		return nil, false
+	}
+	return o.FunctionsRegion, true
+}
+
+// HasFunctionsRegion returns a boolean if a field has been set.
+func (o *AdminSite) HasFunctionsRegion() bool {
+	if o != nil && !IsNil(o.FunctionsRegion) {
+		return true
+	}
+
+	return false
+}
+
+// SetFunctionsRegion gets a reference to the given string and assigns it to the FunctionsRegion field.
+func (o *AdminSite) SetFunctionsRegion(v string) {
+	o.FunctionsRegion = &v
+}
+
 // GetHudEnabled returns the HudEnabled field value if set, zero value otherwise.
 func (o *AdminSite) GetHudEnabled() bool {
 	if o == nil || IsNil(o.HudEnabled) {
@@ -1203,6 +1109,70 @@ func (o *AdminSite) HasHudEnabled() bool {
 // SetHudEnabled gets a reference to the given bool and assigns it to the HudEnabled field.
 func (o *AdminSite) SetHudEnabled(v bool) {
 	o.HudEnabled = &v
+}
+
+// GetRumEnabled returns the RumEnabled field value if set, zero value otherwise.
+func (o *AdminSite) GetRumEnabled() bool {
+	if o == nil || IsNil(o.RumEnabled) {
+		var ret bool
+		return ret
+	}
+	return *o.RumEnabled
+}
+
+// GetRumEnabledOk returns a tuple with the RumEnabled field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AdminSite) GetRumEnabledOk() (*bool, bool) {
+	if o == nil || IsNil(o.RumEnabled) {
+		return nil, false
+	}
+	return o.RumEnabled, true
+}
+
+// HasRumEnabled returns a boolean if a field has been set.
+func (o *AdminSite) HasRumEnabled() bool {
+	if o != nil && !IsNil(o.RumEnabled) {
+		return true
+	}
+
+	return false
+}
+
+// SetRumEnabled gets a reference to the given bool and assigns it to the RumEnabled field.
+func (o *AdminSite) SetRumEnabled(v bool) {
+	o.RumEnabled = &v
+}
+
+// GetPreventNonGitProdDeploys returns the PreventNonGitProdDeploys field value if set, zero value otherwise.
+func (o *AdminSite) GetPreventNonGitProdDeploys() bool {
+	if o == nil || IsNil(o.PreventNonGitProdDeploys) {
+		var ret bool
+		return ret
+	}
+	return *o.PreventNonGitProdDeploys
+}
+
+// GetPreventNonGitProdDeploysOk returns a tuple with the PreventNonGitProdDeploys field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AdminSite) GetPreventNonGitProdDeploysOk() (*bool, bool) {
+	if o == nil || IsNil(o.PreventNonGitProdDeploys) {
+		return nil, false
+	}
+	return o.PreventNonGitProdDeploys, true
+}
+
+// HasPreventNonGitProdDeploys returns a boolean if a field has been set.
+func (o *AdminSite) HasPreventNonGitProdDeploys() bool {
+	if o != nil && !IsNil(o.PreventNonGitProdDeploys) {
+		return true
+	}
+
+	return false
+}
+
+// SetPreventNonGitProdDeploys gets a reference to the given bool and assigns it to the PreventNonGitProdDeploys field.
+func (o *AdminSite) SetPreventNonGitProdDeploys(v bool) {
+	o.PreventNonGitProdDeploys = &v
 }
 
 // GetSiteBuildTimelimit returns the SiteBuildTimelimit field value
@@ -1309,6 +1279,30 @@ func (o *AdminSite) SetEdgeFunctionsManifest(v map[string]interface{}) {
 	o.EdgeFunctionsManifest = v
 }
 
+// GetPaidAddons returns the PaidAddons field value
+func (o *AdminSite) GetPaidAddons() []string {
+	if o == nil {
+		var ret []string
+		return ret
+	}
+
+	return o.PaidAddons
+}
+
+// GetPaidAddonsOk returns a tuple with the PaidAddons field value
+// and a boolean to check if the value has been set.
+func (o *AdminSite) GetPaidAddonsOk() ([]string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.PaidAddons, true
+}
+
+// SetPaidAddons sets field value
+func (o *AdminSite) SetPaidAddons(v []string) {
+	o.PaidAddons = v
+}
+
 func (o AdminSite) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -1324,17 +1318,14 @@ func (o AdminSite) ToMap() (map[string]interface{}, error) {
 	toSerialize["name"] = o.Name
 	toSerialize["default_domain"] = o.DefaultDomain
 	toSerialize["custom_domain"] = o.CustomDomain
+	if !IsNil(o.RecordTxtValue) {
+		toSerialize["record_txt_value"] = o.RecordTxtValue
+	}
 	toSerialize["branch_deploy_custom_domain"] = o.BranchDeployCustomDomain
 	toSerialize["deploy_preview_custom_domain"] = o.DeployPreviewCustomDomain
 	toSerialize["domain_aliases"] = o.DomainAliases
-	if !IsNil(o.Password) {
-		toSerialize["password"] = o.Password
-	}
 	if !IsNil(o.PasswordContext) {
 		toSerialize["password_context"] = o.PasswordContext
-	}
-	if !IsNil(o.PasswordHash) {
-		toSerialize["password_hash"] = o.PasswordHash
 	}
 	toSerialize["sso_login"] = o.SsoLogin
 	toSerialize["sso_login_context"] = o.SsoLoginContext
@@ -1348,15 +1339,6 @@ func (o AdminSite) ToMap() (map[string]interface{}, error) {
 	toSerialize["updated_at"] = o.UpdatedAt
 	toSerialize["ssl_url"] = o.SslUrl
 	toSerialize["force_ssl"] = o.ForceSsl
-	if !IsNil(o.RumEnabled) {
-		toSerialize["rum_enabled"] = o.RumEnabled
-	}
-	if !IsNil(o.PreventNonGitProdDeploys) {
-		toSerialize["prevent_non_git_prod_deploys"] = o.PreventNonGitProdDeploys
-	}
-	if !IsNil(o.AnalyticsInstanceId) {
-		toSerialize["analytics_instance_id"] = o.AnalyticsInstanceId
-	}
 	toSerialize["build_settings"] = o.BuildSettings
 	toSerialize["processing_settings"] = o.ProcessingSettings
 	toSerialize["deploy_hook"] = o.DeployHook
@@ -1370,14 +1352,23 @@ func (o AdminSite) ToMap() (map[string]interface{}, error) {
 	toSerialize["build_timelimit"] = o.BuildTimelimit
 	toSerialize["deploy_retention_in_days"] = o.DeployRetentionInDays
 	toSerialize["labels"] = o.Labels
-	if !IsNil(o.FunctionsRegion) {
-		toSerialize["functions_region"] = o.FunctionsRegion
+	if !IsNil(o.AnalyticsInstanceId) {
+		toSerialize["analytics_instance_id"] = o.AnalyticsInstanceId
 	}
 	if !IsNil(o.CdpEnabledContexts) {
 		toSerialize["cdp_enabled_contexts"] = o.CdpEnabledContexts
 	}
+	if !IsNil(o.FunctionsRegion) {
+		toSerialize["functions_region"] = o.FunctionsRegion
+	}
 	if !IsNil(o.HudEnabled) {
 		toSerialize["hud_enabled"] = o.HudEnabled
+	}
+	if !IsNil(o.RumEnabled) {
+		toSerialize["rum_enabled"] = o.RumEnabled
+	}
+	if !IsNil(o.PreventNonGitProdDeploys) {
+		toSerialize["prevent_non_git_prod_deploys"] = o.PreventNonGitProdDeploys
 	}
 	toSerialize["site_build_timelimit"] = o.SiteBuildTimelimit
 	toSerialize["site_build_pre_process_timeout"] = o.SiteBuildPreProcessTimeout
@@ -1385,6 +1376,7 @@ func (o AdminSite) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.EdgeFunctionsManifest) {
 		toSerialize["edge_functions_manifest"] = o.EdgeFunctionsManifest
 	}
+	toSerialize["paid_addons"] = o.PaidAddons
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -1434,6 +1426,7 @@ func (o *AdminSite) UnmarshalJSON(data []byte) (err error) {
 		"site_build_timelimit",
 		"site_build_pre_process_timeout",
 		"site_functions_config",
+		"paid_addons",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -1468,12 +1461,11 @@ func (o *AdminSite) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "default_domain")
 		delete(additionalProperties, "custom_domain")
+		delete(additionalProperties, "record_txt_value")
 		delete(additionalProperties, "branch_deploy_custom_domain")
 		delete(additionalProperties, "deploy_preview_custom_domain")
 		delete(additionalProperties, "domain_aliases")
-		delete(additionalProperties, "password")
 		delete(additionalProperties, "password_context")
-		delete(additionalProperties, "password_hash")
 		delete(additionalProperties, "sso_login")
 		delete(additionalProperties, "sso_login_context")
 		delete(additionalProperties, "notification_email")
@@ -1486,9 +1478,6 @@ func (o *AdminSite) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "updated_at")
 		delete(additionalProperties, "ssl_url")
 		delete(additionalProperties, "force_ssl")
-		delete(additionalProperties, "rum_enabled")
-		delete(additionalProperties, "prevent_non_git_prod_deploys")
-		delete(additionalProperties, "analytics_instance_id")
 		delete(additionalProperties, "build_settings")
 		delete(additionalProperties, "processing_settings")
 		delete(additionalProperties, "deploy_hook")
@@ -1502,13 +1491,17 @@ func (o *AdminSite) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "build_timelimit")
 		delete(additionalProperties, "deploy_retention_in_days")
 		delete(additionalProperties, "labels")
-		delete(additionalProperties, "functions_region")
+		delete(additionalProperties, "analytics_instance_id")
 		delete(additionalProperties, "cdp_enabled_contexts")
+		delete(additionalProperties, "functions_region")
 		delete(additionalProperties, "hud_enabled")
+		delete(additionalProperties, "rum_enabled")
+		delete(additionalProperties, "prevent_non_git_prod_deploys")
 		delete(additionalProperties, "site_build_timelimit")
 		delete(additionalProperties, "site_build_pre_process_timeout")
 		delete(additionalProperties, "site_functions_config")
 		delete(additionalProperties, "edge_functions_manifest")
+		delete(additionalProperties, "paid_addons")
 		o.AdditionalProperties = additionalProperties
 	}
 

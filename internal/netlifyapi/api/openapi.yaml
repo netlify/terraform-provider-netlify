@@ -10,20 +10,20 @@ info:
 
     This document is an OpenAPI reference for the Netlify API that you can
     explore. For more detailed instructions for common uses, please visit the
-    [online documentation](https://docs.netlify.com/api/get-started/). Visit our
+    [online documentation](https://www.netlify.com/docs/api/). Visit our
     Community forum to join the conversation about
-    [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).
+    [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).
 
 
     Additionally, we have two API clients for your convenience:
     - [Go Client](https://github.com/netlify/open-api#go-client)
-    - [JS Client](https://github.com/netlify/js-client)
+    - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client)
   termsOfService: https://www.netlify.com/legal/terms-of-use/
   title: Netlify's API documentation
   version: "1.0"
   x-logo:
     url: netlifyapi.png
-    href: https://docs.netlify.com/
+    href: https://www.netlify.com/docs/
     altText: Netlify
 externalDocs:
   description: Getting Started in Netlfy Docs
@@ -34,13 +34,9 @@ security:
 - netlifyAuth: []
 - bearerAuth: []
 tags:
-- description: This document describes the API for revoking access tokens.
-  name: Access tokens
 - description: "Endpoints for managing accounts. In the Netlify UI, accounts are known\
     \ as teams."
   name: Accounts
-- description: Endpoints for managing Analytics.
-  name: Analytics
 - description: Endpoints for managing build hooks.
   name: Build Hooks
 - description: ""
@@ -102,23 +98,7 @@ tags:
   name: Split tests
 - description: Endpoints for managing users.
   name: Users
-- description: Endpoints to manage WorkOS SCIM integration.
-  name: WorkOSScim
 paths:
-  /api/v1/access_tokens/revoke:
-    delete:
-      description: |-
-        Revokes the token that the client is currently using to access to the
-        API.
-      operationId: revokeAccessToken
-      parameters: []
-      responses:
-        "204":
-          description: successfully revoked
-      tags:
-      - Access tokens
-      x-controller: api/v1/access_tokens
-      x-action: revoke
   /api/v1/accounts/{account_id}/builds/status:
     get:
       operationId: getAccountBuildStatus
@@ -288,20 +268,14 @@ paths:
         schema:
           type: string
         style: form
-      - description: Role of the new member
+      - description: Name of the role for the new member (DefaultMemberRole.names)
         explode: true
         in: query
         name: role
         required: false
         schema:
           enum:
-          - Reviewer
-          - Billing Admin
-          - Content Editor
-          - Publisher
-          - Developer Lite
-          - Developer
-          - Owner
+          - array
           type: string
         style: form
       responses:
@@ -315,6 +289,103 @@ paths:
       - Members
       x-controller: api/v1/account_members
       x-action: create
+  /api/v1/{account_id}/members/{member_id}:
+    delete:
+      description: Remove a member from an account (team).
+      operationId: removeAccountMember
+      parameters:
+      - description: Account ID or slug
+        explode: false
+        in: path
+        name: account_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Member ID
+        explode: false
+        in: path
+        name: member_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: ""
+      tags:
+      - Members
+      x-controller: api/v1/account_members
+      x-action: destroy
+    get:
+      description: Returns details for a member of an account (team).
+      operationId: getAccountMember
+      parameters:
+      - description: Account ID or slug
+        explode: false
+        in: path
+        name: account_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Member ID
+        explode: false
+        in: path
+        name: member_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+          description: ""
+      tags:
+      - Members
+      x-controller: api/v1/account_members
+      x-action: show
+    put:
+      description: Update the details for an account (team) member.
+      operationId: updateAccountMember
+      parameters:
+      - description: Account ID or slug
+        explode: false
+        in: path
+        name: account_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Member ID
+        explode: false
+        in: path
+        name: member_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/updateAccountMember_request"
+        description: ""
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+          description: ""
+      tags:
+      - Members
+      x-controller: api/v1/account_members
+      x-action: update
   /api/v1/{account_slug}/sites:
     get:
       description: Returns a list of sites for an account (team).
@@ -338,6 +409,14 @@ paths:
           - owner
           - guest
           type: string
+        style: form
+      - description: include_favorites
+        explode: true
+        in: query
+        name: include_favorites
+        required: false
+        schema:
+          type: boolean
         style: form
       - description: name
         explode: true
@@ -560,22 +639,6 @@ paths:
       - Accounts
       x-controller: api/v1/accounts
       x-action: update
-  /api/v1/accounts/types:
-    get:
-      description: Returns a list of account types.
-      operationId: listAccountTypesForUser
-      parameters: []
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AccountType"
-          description: ""
-      tags:
-      - Accounts
-      x-controller: api/v1/accounts
-      x-action: types
   /api/v1/accounts/{account_id}/audit:
     get:
       description: Return an account's audit logs.
@@ -615,62 +678,6 @@ paths:
       - Accounts
       x-controller: api/v1/accounts
       x-action: audit
-  /api/v1/sites/{site_id}/analytics:
-    post:
-      description: Enables Analytics for the site.
-      operationId: enableAnalytics
-      parameters:
-      - description: The site ID
-        explode: false
-        in: path
-        name: site_id
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "201":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ServiceInstance"
-          description: ""
-        "422":
-          description: "Payment Method not found, Analytics already enabled"
-      tags:
-      - Analytics
-      x-controller: api/v1/analytics
-      x-action: create
-  /api/v1/sites/{site_id}/analytics/{id}:
-    delete:
-      description: Disables Analytics for the site.
-      operationId: disableAnalytics
-      parameters:
-      - description: Scope response to id
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: string
-        style: simple
-      - description: The site ID
-        explode: false
-        in: path
-        name: site_id
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "204":
-          description: ""
-        "422":
-          description: Error during disabling
-      tags:
-      - Analytics
-      x-controller: api/v1/analytics
-      x-action: destroy
   /api/v1/sites/{site_id}/assets:
     get:
       description: |-
@@ -1116,9 +1123,9 @@ paths:
       x-action: index
   /api/v1/sites/{site_id}/builds:
     post:
-      description: "Runs a build for a site. The build will be scheduled to run at\
-        \ the first opportunity, but it might not start immediately if insufficient\
-        \ account build capacity is available."
+      description: |-
+        Runs a build for a site. The build will be scheduled to run at the first opportunity, but it might not start immediately if insufficient account build capacity is available.
+        Files for build could be also uploaded as a zipped site.
       operationId: createSiteBuild
       parameters:
       - description: The branch to build; defaults to main branch
@@ -1161,6 +1168,14 @@ paths:
         schema:
           type: string
         style: form
+      - description: The title of the build
+        explode: true
+        in: query
+        name: title
+        required: false
+        schema:
+          type: string
+        style: form
       responses:
         "200":
           content:
@@ -1170,6 +1185,8 @@ paths:
           description: ""
         "404":
           description: Not Found
+        "400":
+          description: Bad Request
         "422":
           description: Unprocessable Entity
       tags:
@@ -1238,6 +1255,14 @@ paths:
         schema:
           type: string
         style: form
+      - description: task_id
+        explode: true
+        in: query
+        name: task_id
+        required: false
+        schema:
+          type: string
+        style: form
       responses:
         "204":
           description: ""
@@ -1245,6 +1270,32 @@ paths:
       - Builds
       x-controller: api/v1/builds
       x-action: start
+  /api/v1/builds/{build_id}/download:
+    get:
+      description: Get a presigned download URL for the build zip file.
+      operationId: getBuildZipDownloadUrl
+      parameters:
+      - description: build_id
+        explode: false
+        in: path
+        name: build_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getSiteAssetPublicSignature_200_response"
+          description: ""
+        "404":
+          description: Not Found - Build zip file not found
+      tags:
+      - Builds
+      x-controller: api/v1/builds
+      x-action: download
   /api/v1/deploy_keys:
     get:
       description: Returns a list of deploy keys.
@@ -1747,12 +1798,12 @@ paths:
       - Deploys
       x-controller: api/v1/deploys
       x-action: cancel
-  /api/v1/deploys/{deploy_id}/simple:
+  /api/v1/deploys/{deploy_id}/download:
     get:
-      description: Returns public information about a deploy.
-      operationId: getSimplePublicDeploy
+      description: Get a presigned download URL for the deploy source zip file.
+      operationId: getDeploySourceDownloadUrl
       parameters:
-      - description: The ID of the deploy
+      - description: deploy_id
         explode: false
         in: path
         name: deploy_id
@@ -1765,12 +1816,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Deploy_Simple"
+                $ref: "#/components/schemas/getSiteAssetPublicSignature_200_response"
           description: ""
+        "404":
+          description: Not Found - Deploy source zip file not found
       tags:
       - Deploys
       x-controller: api/v1/deploys
-      x-action: "/api/v1/deploys/{deploy_id}/simple_GET"
+      x-action: download
   /api/v1/sites/{site_id}/dev_server_hooks:
     get:
       description: Returns a list of dev server hooks for a site.
@@ -2700,8 +2753,16 @@ paths:
   /api/v1/sites/{site_id}/files:
     get:
       description: Returns a list of files for a site.
-      operationId: listSiteFiles
+      operationId: listSiteFiles or listDeployFiles
       parameters:
+      - description: The deploy ID
+        explode: true
+        in: query
+        name: deploy_id
+        required: false
+        schema:
+          type: string
+        style: form
       - description: The site ID
         explode: false
         in: path
@@ -2818,6 +2879,41 @@ paths:
       - Forms
       x-controller: api/v1/forms
       x-action: destroy
+    get:
+      description: Returns the details of a form.
+      operationId: getSiteForm
+      parameters:
+      - description: The ID or name of the form
+        explode: false
+        in: path
+        name: form_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID or subdomain of the site
+        explode: false
+        in: path
+        name: site_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Form"
+          description: ""
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - Forms
+      x-controller: api/v1/forms
+      x-action: show
   /api/v1/deploys/{deploy_id}/functions/{name}:
     put:
       description: Uploads a function of the deploy.
@@ -3179,37 +3275,6 @@ paths:
       - OAuth tickets
       x-controller: api/v1/oauth/tickets
       x-action: create
-  /api/v1/oauth/tickets/{ticket_id}/authorize:
-    post:
-      description: Authorizes a current user with the OAuth ticket.
-      operationId: authorizeWithTicket
-      parameters:
-      - description: Whether token should allow API access to currently authenticated
-          SAML protected account
-        explode: true
-        in: query
-        name: grant_saml
-        required: false
-        schema:
-          type: boolean
-        style: form
-      - description: The ticket ID
-        explode: false
-        in: path
-        name: ticket_id
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          description: Authorized
-        "404":
-          description: OAuth ticket not found
-      tags:
-      - OAuth tickets
-      x-controller: api/v1/oauth/tickets
-      x-action: authorize
   /api/v1/oauth/tickets/{ticket_id}/exchange:
     post:
       description: Exchanges an OAuth ticket to an OAuth token.
@@ -3325,49 +3390,7 @@ paths:
       - Organization receipts
       x-controller: api/v1/organization_receipts
       x-action: show
-  /api/v1/organizations:
-    get:
-      description: Returns a list of all organizations that the current user is an
-        owner of.
-      operationId: listOrganizationsForUser
-      parameters: []
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: "#/components/schemas/Organization"
-                type: array
-          description: ""
-      tags:
-      - Organizations
-      x-controller: api/v1/organizations
-      x-action: index
   /api/v1/organizations/:id:
-    get:
-      description: Returns an organization.
-      operationId: getOrganization
-      parameters:
-      - description: The organization ID
-        explode: true
-        in: query
-        name: id
-        required: true
-        schema:
-          type: string
-        style: form
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Organization"
-          description: ""
-      tags:
-      - Organizations
-      x-controller: api/v1/organizations
-      x-action: show
     put:
       description: Updates an organization.
       operationId: updateOrganization
@@ -3409,237 +3432,6 @@ paths:
       - Organizations
       x-controller: api/v1/organizations
       x-action: update
-  /api/v1/organizations/{id}/logo:
-    delete:
-      description: Removes an organizations logo.
-      operationId: deleteOrganizationLogo
-      parameters:
-      - description: The organization ID
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "204":
-          description: ""
-        "401":
-          description: Only owners are allowed to remove the logo
-      tags:
-      - Organizations
-      x-controller: api/v1/organizations
-      x-action: destroy_logo
-    post:
-      description: "Uploads an organization logo as multipart/form-data. Maximum file\
-        \ size is 1 MB. Accepts JPEG, PNG, GIF image formats."
-      operationId: createOrganizationLogo
-      parameters:
-      - description: The organization ID
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: string
-        style: simple
-      requestBody:
-        content:
-          application/json:
-            schema:
-              format: binary
-              type: string
-        description: ""
-        required: true
-      responses:
-        "201":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/getSiteAssetPublicSignature_200_response"
-          description: ""
-        "422":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/getOrganizationReceipts_422_response"
-          description: ""
-        "401":
-          description: Only owners are allowed to upload logo
-      tags:
-      - Organizations
-      x-controller: api/v1/organizations
-      x-action: logo
-  /api/v1/organizations/{id}/accounts:
-    get:
-      description: Get all accounts associated to an organization.
-      operationId: getOrganizationAccounts
-      parameters:
-      - description: The organization ID
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: "#/components/schemas/OrganizationAccount"
-                type: array
-          description: ""
-      tags:
-      - Organizations
-      x-controller: api/v1/organizations
-      x-action: accounts
-  /api/v1/organizations/{id}/invoices:
-    get:
-      description: Lists all the invoices for an organization.
-      operationId: getOrganizationInvoices
-      parameters:
-      - description: The organization ID
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: "#/components/schemas/Billing_ZuoraInvoice"
-                type: array
-          description: ""
-      tags:
-      - Organizations
-      x-controller: api/v1/organizations
-      x-action: invoices
-  /api/v1/organizations/{id}/invoices/{invoice_id}:
-    get:
-      description: Returns the invoice PDF for an organization.
-      operationId: getOrganizationInvoice
-      parameters:
-      - description: The organization ID
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: string
-        style: simple
-      - description: The invoice ID
-        explode: false
-        in: path
-        name: invoice_id
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                format: binary
-                type: string
-          description: ""
-      tags:
-      - Organizations
-      x-controller: api/v1/organizations
-      x-action: invoice_pdf
-  /api/v1/organizations/{id}/client_token:
-    get:
-      description: Returns a client token for an organization to use with credit card
-        payments.
-      operationId: getOrganizationClientToken
-      parameters:
-      - description: The organization ID
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/getOrganizationClientToken_200_response"
-          description: ""
-      tags:
-      - Organizations
-      x-controller: api/v1/organizations
-      x-action: client_token
-  /api/v1/organizations/{id}/payments:
-    post:
-      description: Sets the payment method for an organization.
-      operationId: createOrganizationPayment
-      parameters:
-      - description: The payment method data
-        explode: true
-        in: query
-        name: data
-        required: false
-        schema:
-          $ref: "#/components/schemas/createOrganizationPayment_data_parameter"
-        style: form
-      - description: Boolean to allow enterprise accounts to change payment type from
-          ACH
-        explode: true
-        in: query
-        name: enterprise_exception
-        required: false
-        schema:
-          type: boolean
-        style: form
-      - description: The organization ID
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: string
-        style: simple
-      - description: The type of payment method
-        explode: true
-        in: query
-        name: type
-        required: true
-        schema:
-          enum:
-          - card
-          type: string
-        style: form
-      - description: The Zuora payment method ID
-        explode: true
-        in: query
-        name: zuora_id
-        required: false
-        schema:
-          type: string
-        style: form
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PaymentMethod"
-          description: ""
-      tags:
-      - Organizations
-      x-controller: api/v1/organizations
-      x-action: payments
   /api/v1/sites/{site_id}/services/{addon}/instances:
     post:
       operationId: createServiceInstance
@@ -4104,6 +3896,54 @@ paths:
       - Sites
       x-controller: api/v1/sites
       x-action: update
+  /api/v1/sites/{site_id}/enable:
+    put:
+      description: Enable a site.
+      operationId: enableSite
+      parameters:
+      - description: The ID of the site
+        explode: false
+        in: path
+        name: site_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: ""
+      tags:
+      - Sites
+      x-controller: api/v1/sites
+      x-action: enable
+  /api/v1/sites/{site_id}/disable:
+    put:
+      description: Disable a site.
+      operationId: disableSite
+      parameters:
+      - description: Reason for disabling the site
+        explode: true
+        in: query
+        name: reason
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: The ID of the site
+        explode: false
+        in: path
+        name: site_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: ""
+      tags:
+      - Sites
+      x-controller: api/v1/sites
+      x-action: disable
   /api/v1/sites/{site_id}/deployed-branches:
     get:
       description: Returns the deployed branches for a site.
@@ -4130,6 +3970,30 @@ paths:
       - Sites
       x-controller: api/v1/sites
       x-action: list_deployed_branches
+  /api/v1/sites/{id}/functions:
+    get:
+      description: Searches the site for matching functions.
+      operationId: searchSiteFunctions
+      parameters:
+      - description: The site ID
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+          description: ""
+      tags:
+      - Sites
+      x-controller: api/v1/sites
+      x-action: search_functions
   /api/v1/sites/{site_id}/rollback:
     put:
       description: |-
@@ -4164,6 +4028,7 @@ paths:
         * Delete associated deploy keys
         * Delete outgoing webhooks for the repo
         * Delete the site's build hooks
+        * Delete associated visual editing project
       operationId: unlinkSiteRepo
       parameters:
       - description: The ID of the site
@@ -4187,30 +4052,6 @@ paths:
       - Sites
       x-controller: api/v1/sites
       x-action: unlink_repo
-  /api/v1/sites/{site_id}/simple:
-    get:
-      description: Returns public information about a site.
-      operationId: getSimplePublicSite
-      parameters:
-      - description: The ID of the site
-        explode: false
-        in: path
-        name: site_id
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Site_Simple"
-          description: ""
-      tags:
-      - Sites
-      x-controller: api/v1/sites
-      x-action: "/api/v1/sites/{site_id}/simple_GET"
   /api/v1/sites/{site_id}/snippets:
     get:
       description: Returns a list of snippets for a site.
@@ -4390,10 +4231,15 @@ paths:
       x-action: show
     post:
       description: |-
-        Creates a certificate with the site. If the certificate param is passed,
-        create a custom certificate with it. Otherwise, initiate the Let's
-        Encrypt certificate provisioning.
-        If there is already associated certificate with the site, update it.
+        Provisions or updates a TLS certificate for the site.
+
+        **Creating a certificate (site has no certificate):**
+        - Omit certificate params to initiate Let's Encrypt provisioning
+        - Provide certificate, key, and ca_certificates to upload a custom certificate
+
+        **Updating a certificate (site already has a certificate):**
+        - REQUIRES certificate, key, and ca_certificates to replace with a new custom certificate
+        - Use POST /api/v1/sites/{site_id}/ssl/renew to renew an existing Let's Encrypt certificate
       operationId: provisionSiteTLSCertificate
       parameters:
       - description: The ID of the site
@@ -4409,7 +4255,8 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/CertificateInfo"
-        description: ""
+        description: "Certificate data. Optional for initial provisioning, required\
+          \ for updates."
         required: true
       responses:
         "200":
@@ -4418,10 +4265,51 @@ paths:
               schema:
                 $ref: "#/components/schemas/SniCertificate"
           description: ""
+        "422":
+          description: Unprocessable Entity
       tags:
       - SNI certificates
       x-controller: api/v1/ssl
       x-action: create
+  /api/v1/sites/{site_id}/ssl/certificates:
+    get:
+      description: Returns details about certificates associated with a domain. The
+        site must be using the domain.
+      operationId: getAllCertificates
+      parameters:
+      - description: Domain that certificates are being requested for.
+        explode: true
+        in: query
+        name: domain
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: The ID of the site
+        explode: false
+        in: path
+        name: site_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/SniCertificate"
+                type: array
+          description: ""
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+      tags:
+      - SNI certificates
+      x-controller: api/v1/ssl
+      x-action: get_all_certificates
   /api/v1/form/{form_id}/submissions:
     get:
       operationId: listFormSubmissions
@@ -4809,34 +4697,43 @@ paths:
       - Users
       x-controller: api/v1/users
       x-action: show
-  /api/v1/organizations/{organization_id}/workos_scim:
-    delete:
-      description: Deletes the WorkOS directory
-      operationId: deleteDirectory
+  /api/v1/accounts/{account_id}/waf/policies:
+    post:
+      description: Creates a new WAF policy for the account.
+      operationId: createWafPolicy
       parameters:
-      - description: The ID of the organization
+      - description: The ID of the account
         explode: false
         in: path
-        name: organization_id
+        name: account_id
         required: true
         schema:
           type: string
         style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WafPolicy"
+        required: true
       responses:
-        "204":
-          description: ""
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WafPolicyUpdate"
+          description: WAF Policy created
       tags:
-      - WorkOSScim
-      x-controller: api/v1/workos_scim
-      x-action: destroy
+      - WAF Policies
+  /api/v1/sites/{site_id}/waf/policy:
     get:
-      description: Returns the details of an existing directory.
-      operationId: getDirectory
+      description: Retrieves the WAF policy for the site.
+      operationId: getSiteWafPolicy
       parameters:
-      - description: The ID of the organization
+      - description: The ID of the site
         explode: false
         in: path
-        name: organization_id
+        name: site_id
         required: true
         schema:
           type: string
@@ -4846,34 +4743,149 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/getDirectory_200_response"
-          description: ""
+                $ref: "#/components/schemas/WafPolicy"
+          description: WAF Policy retrieved
         "404":
-          description: Not Found
+          description: WAF Policy not found
       tags:
-      - WorkOSScim
-      x-controller: api/v1/workos_scim
-      x-action: show
-  /api/v1/organizations/{organization_id}/workos_scim/delete_directory_sync:
-    delete:
-      description: Deletes the WorkOS directory keeping users in their teams.
-      operationId: deleteDirectorySync
+      - WAF Policies
+    put:
+      description: Updates the WAF policy for the site.
+      operationId: updateSiteWafPolicy
       parameters:
-      - description: The ID of the organization
+      - description: The ID of the site
         explode: false
         in: path
-        name: organization_id
+        name: site_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WafPolicyUpdate"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json: {}
+          description: WAF Policy updated
+      tags:
+      - WAF Policies
+  /api/v1/accounts/{account_id}/waf/policies/{policy_id}:
+    delete:
+      description: Deletes the WAF policy for the account.
+      operationId: deleteWafPolicy
+      parameters:
+      - description: The ID of the account
+        explode: false
+        in: path
+        name: account_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID of the WAF policy
+        explode: false
+        in: path
+        name: policy_id
         required: true
         schema:
           type: string
         style: simple
       responses:
-        "204":
-          description: ""
+        "202":
+          content:
+            application/json: {}
+          description: WAF Policy deleted
       tags:
-      - WorkOSScim
-      x-controller: api/v1/workos_scim
-      x-action: delete_directory_sync
+      - WAF Policies
+    get:
+      description: Retrieves the WAF policy for the account.
+      operationId: getWafPolicy
+      parameters:
+      - description: The ID of the account
+        explode: false
+        in: path
+        name: account_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID of the WAF policy
+        explode: false
+        in: path
+        name: policy_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WafPolicy"
+          description: WAF Policy retrieved
+      tags:
+      - WAF Policies
+    put:
+      description: Updates the WAF policy for the account.
+      operationId: updateWafPolicy
+      parameters:
+      - description: The ID of the account
+        explode: false
+        in: path
+        name: account_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The ID of the WAF policy
+        explode: false
+        in: path
+        name: policy_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WafPolicy"
+        required: true
+      responses:
+        "202":
+          content:
+            application/json: {}
+          description: WAF Policy updated
+      tags:
+      - WAF Policies
+  /api/v1/accounts/{account_id}/waf/managed:
+    get:
+      description: Retrieves the managed WAF rules for the account.
+      operationId: getManagedWafRules
+      parameters:
+      - description: The ID of the account
+        explode: false
+        in: path
+        name: account_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ManagedWafRules"
+          description: Managed WAF rules retrieved
+      tags:
+      - WAF Managed Rules
   /api/v1/sites/{site_id}/log_drains:
     get:
       description: Returns a list of log drains for a site.
@@ -5310,40 +5322,12 @@ paths:
       x-internal: "true"
       x-controller: api/v1/accounts
       x-action: update_firewall_rule_set
-  /api/v1/accounts/{account_id}/waf/policies:
+  /api/v1/sites/{site_id}/analytics:
     post:
-      description: Creates a new WAF policy for the account.
-      operationId: createWafPolicy
+      description: Enables Analytics for the site.
+      operationId: enableAnalytics
       parameters:
-      - description: The ID of the account
-        explode: false
-        in: path
-        name: account_id
-        required: true
-        schema:
-          type: string
-        style: simple
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/WafPolicy"
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/WafPolicyUpdate"
-          description: WAF Policy created
-      tags:
-      - WAF Policies
-  /api/v1/sites/{site_id}/waf/policy:
-    get:
-      description: Retrieves the WAF policy for the site.
-      operationId: getSiteWafPolicy
-      parameters:
-      - description: The ID of the site
+      - description: The site ID
         explode: false
         in: path
         name: site_id
@@ -5352,153 +5336,48 @@ paths:
           type: string
         style: simple
       responses:
-        "200":
+        "201":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WafPolicy"
-          description: WAF Policy retrieved
-        "404":
-          description: WAF Policy not found
+                $ref: "#/components/schemas/ServiceInstance"
+          description: ""
+        "422":
+          description: "Payment Method not found, Analytics already enabled"
       tags:
-      - WAF Policies
-    put:
-      description: Updates the WAF policy for the site.
-      operationId: updateSiteWafPolicy
-      parameters:
-      - description: The ID of the site
-        explode: false
-        in: path
-        name: site_id
-        required: true
-        schema:
-          type: string
-        style: simple
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/WafPolicyUpdate"
-        required: true
-      responses:
-        "200":
-          content:
-            application/json: {}
-          description: WAF Policy updated
-      tags:
-      - WAF Policies
-  /api/v1/accounts/{account_id}/waf/policies/{policy_id}:
+      - Analytics
+      x-controller: api/v1/analytics
+      x-action: create
+  /api/v1/sites/{site_id}/analytics/{id}:
     delete:
-      description: Deletes the WAF policy for the account.
-      operationId: deleteWafPolicy
+      description: Disables Analytics for the site.
+      operationId: disableAnalytics
       parameters:
-      - description: The ID of the account
+      - description: Scope response to id
         explode: false
         in: path
-        name: account_id
+        name: id
         required: true
         schema:
           type: string
         style: simple
-      - description: The ID of the WAF policy
+      - description: The site ID
         explode: false
         in: path
-        name: policy_id
+        name: site_id
         required: true
         schema:
           type: string
         style: simple
       responses:
-        "202":
-          content:
-            application/json: {}
-          description: WAF Policy deleted
+        "204":
+          description: ""
+        "422":
+          description: Error during disabling
       tags:
-      - WAF Policies
-    get:
-      description: Retrieves the WAF policy for the account.
-      operationId: getWafPolicy
-      parameters:
-      - description: The ID of the account
-        explode: false
-        in: path
-        name: account_id
-        required: true
-        schema:
-          type: string
-        style: simple
-      - description: The ID of the WAF policy
-        explode: false
-        in: path
-        name: policy_id
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/WafPolicy"
-          description: WAF Policy retrieved
-      tags:
-      - WAF Policies
-    put:
-      description: Updates the WAF policy for the account.
-      operationId: updateWafPolicy
-      parameters:
-      - description: The ID of the account
-        explode: false
-        in: path
-        name: account_id
-        required: true
-        schema:
-          type: string
-        style: simple
-      - description: The ID of the WAF policy
-        explode: false
-        in: path
-        name: policy_id
-        required: true
-        schema:
-          type: string
-        style: simple
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/WafPolicy"
-        required: true
-      responses:
-        "202":
-          content:
-            application/json: {}
-          description: WAF Policy updated
-      tags:
-      - WAF Policies
-  /api/v1/accounts/{account_id}/waf/managed:
-    get:
-      description: Retrieves the managed WAF rules for the account.
-      operationId: getManagedWafRules
-      parameters:
-      - description: The ID of the account
-        explode: false
-        in: path
-        name: account_id
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ManagedWafRules"
-          description: Managed WAF rules retrieved
-      tags:
-      - WAF Managed Rules
+      - Analytics
+      x-controller: api/v1/analytics
+      x-action: destroy
 components:
   schemas:
     AccountBuild:
@@ -5627,9 +5506,9 @@ components:
       properties:
         id:
           type: string
-        unpublished_rules:
+        unpublished:
           $ref: "#/components/schemas/FirewallRuleSet"
-        published_rules:
+        published:
           $ref: "#/components/schemas/FirewallRuleSet"
         site_overrides:
           items:
@@ -5646,9 +5525,9 @@ components:
       required:
       - created_at
       - id
-      - published_rules
+      - published
       - site_overrides
-      - unpublished_rules
+      - unpublished
       - updated_at
     CreateAccountFirewallConfig:
       example:
@@ -5701,19 +5580,6 @@ components:
       type: object
     AccountType:
       description: AccountType model definition
-      example:
-        yearly_dollar_price: yearly_dollar_price
-        capabilities: "{}"
-        yearly_seats_addon_dollar_price: yearly_seats_addon_dollar_price
-        monthly_concurrent_builds_addon_dollar_price: monthly_concurrent_builds_addon_dollar_price
-        zuora_products: "{}"
-        name: name
-        description: description
-        skip_payment: true
-        id: id
-        monthly_dollar_price: monthly_dollar_price
-        slug: slug
-        monthly_seats_addon_dollar_price: monthly_seats_addon_dollar_price
       properties:
         id:
           type: string
@@ -5725,22 +5591,21 @@ components:
           type: string
         capabilities:
           type: object
+        available:
+          description: "when requested for an account indicates it's available for\
+            \ the account subscribe to, without an account, indicates if it's available\
+            \ for the user to use for a new team"
+          type: boolean
         monthly_dollar_price:
           type: string
-        yearly_dollar_price:
-          type: string
         monthly_seats_addon_dollar_price:
-          type: string
-        yearly_seats_addon_dollar_price:
           type: string
         monthly_concurrent_builds_addon_dollar_price:
           type: string
         skip_payment:
           type: boolean
-        zuora_products:
-          description: The Zuora products and their attributes given the Zuora environment
-          type: object
       required:
+      - available
       - capabilities
       - description
       - id
@@ -5749,37 +5614,67 @@ components:
       - monthly_seats_addon_dollar_price
       - name
       - slug
-      - yearly_dollar_price
-      - yearly_seats_addon_dollar_price
+    AccountUsageNotification:
+      description: AccountUsageNotification model definition
+      properties:
+        id:
+          type: string
+        site_id:
+          type: string
+        account_id:
+          type: string
+        active:
+          type: boolean
+        usage_type:
+          type: integer
+        included_usage:
+          type: integer
+        usage_amount:
+          type: integer
+        usage_percentage:
+          type: integer
+      required:
+      - active
+      - id
     Account:
       description: Account model definition
       example:
         billing_period: billing_period
-        support_administration_enabled: true
         type_name: type_name
-        capabilities: "{}"
         role: role
-        type_slug: type_slug
-        type_id: type_id
-        deploy_diagnostics_setting: deploy_diagnostics_setting
-        vat: vat
+        configurable_limits_exceeded:
+        - configurable_limits_exceeded
+        - configurable_limits_exceeded
+        plan_auto_topup_per_unit_cost: plan_auto_topup_per_unit_cost
         created_at: 2000-01-23T04:56:07.000+00:00
-        billing_name: billing_name
+        plan_credits: 1
+        ai_usage_limit_enforced: true
+        credit_alert_percentage: 6
         member_roles:
         - {}
         - {}
-        payment_method_id: payment_method_id
         updated_at: 2000-01-23T04:56:07.000+00:00
+        billing_email: billing_email
+        id: id
+        slug: slug
+        support_administration_enabled: true
+        capabilities: "{}"
+        type_slug: type_slug
+        auto_topup_enabled: true
+        type_id: type_id
+        deploy_diagnostics_setting: deploy_diagnostics_setting
+        ai_usage_enabled_setting: ai_usage_enabled_setting
+        billing_name: billing_name
+        ai_usage_limit_credits: 0
+        plan_auto_topup_amount: plan_auto_topup_amount
+        payment_method_id: payment_method_id
         roles_allowed:
         - roles_allowed
         - roles_allowed
-        billing_email: billing_email
         name: name
-        id: id
         owner_ids:
         - owner_ids
         - owner_ids
-        slug: slug
       properties:
         billing_email:
           type: string
@@ -5823,18 +5718,45 @@ components:
         updated_at:
           format: date-time
           type: string
-        vat:
-          type: string
         support_administration_enabled:
           type: boolean
         deploy_diagnostics_setting:
           type: string
+        ai_usage_enabled_setting:
+          type: string
+        ai_usage_limit_enforced:
+          type: boolean
+        ai_usage_limit_credits:
+          type: integer
+        configurable_limits_exceeded:
+          items:
+            type: string
+          type: array
+        auto_topup_enabled:
+          type: boolean
+        credit_alert_percentage:
+          description: Usage percentage when credit alert is active
+          type: integer
+        plan_credits:
+          description: Version-specific credit allotment
+          type: integer
+        plan_auto_topup_amount:
+          description: Version-specific auto top-up amount
+          type: string
+        plan_auto_topup_per_unit_cost:
+          description: Version-specific auto top-up per unit cost
+          type: string
       required:
+      - ai_usage_enabled_setting
+      - ai_usage_limit_enforced
+      - auto_topup_enabled
       - billing_email
       - billing_name
       - billing_period
       - capabilities
+      - configurable_limits_exceeded
       - created_at
+      - credit_alert_percentage
       - deploy_diagnostics_setting
       - id
       - member_roles
@@ -5849,7 +5771,6 @@ components:
       - type_name
       - type_slug
       - updated_at
-      - vat
     AccountUpdateParams:
       example:
         payment_method_id: payment_method_id
@@ -5898,7 +5819,13 @@ components:
             $ref: "#/components/schemas/AdminSite_allOf_site_functions_config"
           edge_functions_manifest:
             $ref: "#/components/schemas/AdminSite_allOf_site_functions_config"
+          paid_addons:
+            description: Array of paid add-ons for this site
+            items:
+              type: string
+            type: array
         required:
+        - paid_addons
         - site_build_pre_process_timeout
         - site_build_timelimit
         - site_functions_config
@@ -5944,6 +5871,205 @@ components:
       - role
       - scopes
       - user_id
+    AgentRunner:
+      properties:
+        id:
+          description: The id of the runner
+          type: string
+        site_id:
+          description: The id of the site
+          type: string
+        parent_agent_runner_id:
+          description: The id of the parent agent runner
+          type: string
+        state:
+          description: The state of the runner
+          type: string
+        created_at:
+          description: The time the runner was created
+          type: string
+        updated_at:
+          description: The time the runner was updated
+          type: string
+        done_at:
+          description: The time the runner was done
+          type: string
+        title:
+          description: The title of the runner
+          type: string
+        branch:
+          description: The branch of the runner
+          type: string
+        result_branch:
+          description: The result branch of the runner
+          type: string
+        pr_url:
+          description: The URL of the created pull request
+          type: string
+        pr_branch:
+          description: The branch of the pull request
+          type: string
+        pr_state:
+          description: The state of the pull request
+          type: string
+        pr_number:
+          description: The number of the pull request
+          type: integer
+        pr_is_being_created:
+          description: Whether PR creation is currently in progress
+          type: boolean
+        pr_error:
+          description: Error message if PR creation failed
+          type: string
+        current_task:
+          description: The current task of the active running session
+          type: string
+        sha:
+          description: The start commit SHA
+          type: string
+        merge_commit_is_being_created:
+          description: Whether branch commit is currently in progress
+          type: boolean
+        merge_commit_sha:
+          description: The commit SHA when directly committing to branch
+          type: string
+        merge_commit_error:
+          description: Error message if branch commit failed
+          type: string
+        attached_file_keys:
+          description: S3 keys of files attached to this agent runner session
+          items:
+            type: string
+          type: array
+        active_session_created_at:
+          description: The creation time of the current active session
+          type: string
+        base_deploy_id:
+          description: The ID of the deploy this runner starts from
+          type: string
+        latest_session_deploy_id:
+          description: The ID of the deploy from the latest session (if it has one)
+          type: string
+        latest_session_deploy_url:
+          description: The URL of the deploy preview from the latest session (if it
+            has one)
+          type: string
+        last_session_created_at:
+          description: Date of creation of the newest session
+          type: string
+        user:
+          $ref: "#/components/schemas/AgentRunnerUser"
+        contributors:
+          description: All users who contributed to this agent runner
+          items:
+            $ref: "#/components/schemas/AgentRunnerUser"
+          type: array
+        has_result_diff:
+          description: Whether result diff exists
+          type: boolean
+    AgentRunnerSession:
+      properties:
+        id:
+          description: The id of the runner
+          type: string
+        agent_runner_id:
+          description: The id of the site
+          type: string
+        dev_server_id:
+          description: The id of the dev server
+          type: string
+        state:
+          description: The state of the runner session
+          type: string
+        created_at:
+          description: The time the runner session was created
+          type: string
+        updated_at:
+          description: The time the runner session was updated
+          type: string
+        done_at:
+          description: The time the runner session was done
+          type: string
+        title:
+          description: The title of the runner session
+          type: string
+        prompt:
+          description: The prompt of the runner session
+          type: string
+        dev_server:
+          description: The dev server of the runner session
+          type: string
+        agent_config:
+          $ref: "#/components/schemas/AgentRunnerSessionConfig"
+        result:
+          description: The result of the runner session
+          type: string
+        commit_sha:
+          description: The SHA of the branch/pr commit that includes this session's
+            changes
+          type: string
+        deploy_id:
+          description: The deploy id for the runner session
+          type: string
+        deploy_url:
+          description: The URL of the deploy preview (if deploy_id is present)
+          type: string
+        duration:
+          description: The duration of the runner session
+          type: number
+        steps:
+          description: The steps which agent runner session did
+          items:
+            $ref: "#/components/schemas/AgentRunnerSessionStep"
+          type: array
+        user:
+          $ref: "#/components/schemas/User"
+        attached_file_keys:
+          description: S3 keys of files attached to this agent runner session
+          items:
+            type: string
+          type: array
+        is_discarded:
+          description: Whether the session has been discarded
+          type: boolean
+        has_result_diff:
+          description: Whether result diff exists
+          type: boolean
+        has_cumulative_diff:
+          description: Whether cumulative diff exists
+          type: boolean
+        mode:
+          description: "The mode of the session (normal, redeploy, rebase)"
+          type: string
+        source_session_id:
+          description: The ID of the source session (for redeploy mode)
+          type: string
+    AgentRunnerSessionStep:
+      properties:
+        title:
+          type: string
+        message:
+          type: string
+    AgentRunnerSessionConfig:
+      properties:
+        agent:
+          type: string
+        model:
+          type: string
+    AgentRunnerUser:
+      properties:
+        id:
+          description: The ID of the user
+          type: string
+        full_name:
+          description: The full name of the user
+          type: string
+        avatar_url:
+          description: The URL for the avatar
+          type: string
+        email:
+          description: The email of the user
+          type: string
     Asset:
       description: Asset model definition
       example:
@@ -6082,13 +6208,6 @@ components:
       - id
       - payload
     BandwidthUsage:
-      example:
-        last_updated_at: 2000-01-23T04:56:07.000+00:00
-        period_end_date: 2000-01-23T04:56:07.000+00:00
-        additional: 1
-        period_start_date: 2000-01-23T04:56:07.000+00:00
-        used: 0
-        included: 6
       properties:
         used:
           type: integer
@@ -6112,191 +6231,30 @@ components:
       - period_end_date
       - period_start_date
       - used
-    Billing_ZuoraInvoiceItem:
-      description: ZuoraInvoiceItem model definition
-      example:
-        end_date: 2000-01-23
-        tax_amount: 2
-        amount: 7
-        quantity: 9
-        service_end_date: service_end_date
-        service_start_date: service_start_date
-        site_domain: site_domain
-        recurring: true
-        display_amount: display_amount
-        title: title
-        site_name: site_name
-        domain_name: domain_name
-        expires_at: expires_at
-        site_id: 3
-        id: id
-        start_date: 2000-01-23
+    BillingAddress:
+      description: BillingAddress model definition
       properties:
-        id:
-          description: The Zuora id of the invoice item
+        name:
+          description: Full name for the billing address
           type: string
-        title:
-          description: The title of the Zuora invoice item
+        line1:
+          description: First line of the street address
           type: string
-        amount:
-          description: The amount of the Zuora invoice item
-          type: integer
-        display_amount:
-          description: The formatted amount with currency
+        line2:
+          description: Second line of the street address (optional)
           type: string
-        quantity:
-          description: The quantity of the Zuora invoice item
-          type: integer
-        start_date:
-          description: The start date of the Zuora invoice item
-          format: date
+        city:
+          description: City name
           type: string
-        end_date:
-          description: The end date of the Zuora invoice item
-          format: date
+        state:
+          description: State or province
           type: string
-        service_start_date:
-          description: The start date of the Zuora invoice item
+        postal_code:
+          description: Postal or ZIP code
           type: string
-        service_end_date:
-          description: The end date of the Zuora invoice item
+        country:
+          description: "Country code (e.g., \"US\")"
           type: string
-        site_id:
-          description: The Netlify site ID in which this invoice belongs to
-          type: integer
-        domain_name:
-          description: The domain name of the site connected to this Zuora invoice
-            item
-          type: string
-        expires_at:
-          description: The formatted domain expiration date
-          type: string
-        site_name:
-          description: The site name of site connected to this Zuora invoice item
-          type: string
-        site_domain:
-          description: The site domain of the site connected to this Zuora invoice
-            item
-          type: string
-        recurring:
-          description: If this Zuora invoice item is recurring
-          type: boolean
-        tax_amount:
-          description: The tax amount on the Zuora invoice
-          type: integer
-      required:
-      - amount
-      - display_amount
-      - domain_name
-      - end_date
-      - expires_at
-      - id
-      - quantity
-      - recurring
-      - service_end_date
-      - service_start_date
-      - site_domain
-      - site_id
-      - site_name
-      - start_date
-      - tax_amount
-      - title
-    Billing_ZuoraInvoice:
-      description: ZuoraInvoice model definition
-      example:
-        tax_amount: 2
-        amount: 6
-        balance: 0
-        invoice_items:
-        - end_date: 2000-01-23
-          tax_amount: 2
-          amount: 7
-          quantity: 9
-          service_end_date: service_end_date
-          service_start_date: service_start_date
-          site_domain: site_domain
-          recurring: true
-          display_amount: display_amount
-          title: title
-          site_name: site_name
-          domain_name: domain_name
-          expires_at: expires_at
-          site_id: 3
-          id: id
-          start_date: 2000-01-23
-        - end_date: 2000-01-23
-          tax_amount: 2
-          amount: 7
-          quantity: 9
-          service_end_date: service_end_date
-          service_start_date: service_start_date
-          site_domain: site_domain
-          recurring: true
-          display_amount: display_amount
-          title: title
-          site_name: site_name
-          domain_name: domain_name
-          expires_at: expires_at
-          site_id: 3
-          id: id
-          start_date: 2000-01-23
-        due_date: 2000-01-23
-        payment_amount: 1
-        refund_amount: 5
-        id: id
-        credit_balance_adjustment_amount: 5
-        invoice_number: invoice_number
-        invoice_date: 2000-01-23
-      properties:
-        id:
-          description: The Zuora ID of the invoice
-          type: string
-        invoice_number:
-          description: The Zuora invoice number
-          type: string
-        invoice_date:
-          description: The Zuora invoice date
-          format: date
-          type: string
-        due_date:
-          description: The Zuora due_date
-          format: date
-          type: string
-        balance:
-          description: The remaining balance in Zuora
-          type: integer
-        amount:
-          description: The amount due in Zuora
-          type: integer
-        payment_amount:
-          description: The payment amount on the Zuora invoice
-          type: integer
-        refund_amount:
-          description: The refund amount on the Zuora invoice
-          type: integer
-        credit_balance_adjustment_amount:
-          description: The credit balance adjustment amount
-          type: integer
-        tax_amount:
-          description: The tax amount on the Zuora Invoice
-          type: integer
-        invoice_items:
-          description: Zuora invoice items
-          items:
-            $ref: "#/components/schemas/Billing_ZuoraInvoiceItem"
-          type: array
-      required:
-      - amount
-      - balance
-      - credit_balance_adjustment_amount
-      - due_date
-      - id
-      - invoice_date
-      - invoice_items
-      - invoice_number
-      - payment_amount
-      - refund_amount
-      - tax_amount
     BitbucketSelfHostedConfig:
       properties:
         instance_url:
@@ -6311,6 +6269,22 @@ components:
         client_secret:
           description: the client secret of the bitbucket application
           type: string
+    BuildBotAccount:
+      description: BuildBotAccount model definition
+      properties:
+        id:
+          description: The ID of the account
+          type: string
+        name:
+          description: The name of the account
+          type: string
+        team_logo_url:
+          description: The URL of the team logo
+          type: string
+      required:
+      - id
+      - name
+      - team_logo_url
     BuildHook:
       example:
         msg: msg
@@ -6437,18 +6411,6 @@ components:
       - id
       - sha
     BuildStatus:
-      example:
-        enqueued: 2
-        pending_concurrency: 5
-        minutes:
-          current: 7
-          previous: 9
-          period_end_date: 2000-01-23T04:56:07.000+00:00
-          last_updated_at: 2000-01-23T04:56:07.000+00:00
-          included_minutes: 3
-          period_start_date: 2000-01-23T04:56:07.000+00:00
-          included_minutes_with_packs: 2
-        active: 5
       properties:
         active:
           description: Number of active builds
@@ -7322,17 +7284,28 @@ components:
       - period_end_date
       - period_start_date
       - used
+    CreateProject:
+      properties:
+        create_project_id:
+          type: string
+        branch:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      required:
+      - branch
+      - create_project_id
+      - created_at
+      - updated_at
     Deploy_LogAttributes:
       description: Deploy model definition
       properties: {}
       type: object
     Deploy_Simple:
-      example:
-        commit_url: commit_url
-        title: title
-        published_at: 2000-01-23T04:56:07.000+00:00
-        admin_url: admin_url
-        commit_ref: commit_ref
       properties:
         admin_url:
           type: string
@@ -7445,6 +7418,12 @@ components:
           - skipped
           - none
           type: string
+        agent_runner_id:
+          description: The ID of the agent runner associated with the deploy
+          type: string
+        skew_protection_token:
+          description: The skew protection token for this deploy
+          type: string
       required:
       - branch
       - build_id
@@ -7544,7 +7523,9 @@ components:
       description: Deploy model definition
       example:
         review_id: 0
+        agent_runner_id: agent_runner_id
         deploy_url: deploy_url
+        source_zip_filename: source_zip_filename
         review_url: review_url
         created_at: 2000-01-23T04:56:07.000+00:00
         commit_message: commit_message
@@ -7595,6 +7576,7 @@ components:
         build_id: build_id
         deploy_ssl_url: deploy_ssl_url
         user_id: user_id
+        skew_protection_token: skew_protection_token
         site_id: site_id
         name: name
         plugin_state: success
@@ -7767,6 +7749,15 @@ components:
           description: The date at which the deploy will be soft-deleted
           format: date-time
           type: string
+        agent_runner_id:
+          description: The ID of the agent runner associated with the deploy
+          type: string
+        source_zip_filename:
+          description: The filename of the uploaded source zip in S3
+          type: string
+        skew_protection_token:
+          description: The skew protection token for this deploy
+          type: string
       required:
       - admin_url
       - available_functions
@@ -7842,6 +7833,31 @@ components:
           - info
           - warning
           type: string
+    DeployValidationsReport_SecretScanResult:
+      properties:
+        scannedFilesCount:
+          description: The number of files scanned
+          type: integer
+        secretsScanMatches:
+          description: The list of secrets scan matches
+          items:
+            type: string
+          type: array
+        enhancedSecretsScanMatches:
+          description: The list of enhanced secrets scan matches
+          items:
+            type: string
+          type: array
+    DeployValidationsReport:
+      properties:
+        id:
+          description: The id of the deploy validations report
+          type: string
+        deploy_id:
+          description: The id of the deploy
+          type: string
+        secret_scan_result:
+          $ref: "#/components/schemas/DeployValidationsReport_SecretScanResult"
     DeployedBranch:
       description: DeployedBranch model definition
       properties:
@@ -7983,6 +7999,9 @@ components:
         updated_at:
           description: The time the dev server was updated
           type: string
+        last_activity_at:
+          description: The time the dev server was last active
+          type: string
         url:
           description: The url of the dev server
           type: string
@@ -8001,8 +8020,14 @@ components:
         branch:
           description: The branch of the dev server
           type: string
+        environment:
+          description: The environment of the dev server
+          type: string
         title:
           description: The title of the dev server
+          type: string
+        stop_reason:
+          description: The reason the dev server was stopped
           type: string
     DevServerEnvironment:
       properties:
@@ -8024,6 +8049,16 @@ components:
         repo_url:
           description: The repo url
           type: string
+    DevServersSummary:
+      description: DevServersSummary model definition
+      properties:
+        account_id:
+          type: string
+        active_dev_servers_count:
+          type: integer
+      required:
+      - account_id
+      - active_dev_servers_count
     DirectorySyncEntity:
       example: {}
       properties: {}
@@ -8080,7 +8115,7 @@ components:
           description: The priority of the DNS record
           type: integer
         weight:
-          description: The weight of the DNS record (for SRV type record)
+          description: The weight of the DNS record (for SRV and HTTPS type record)
           type: integer
         port:
           description: The port of the DNS record (for SRV type record)
@@ -8119,6 +8154,7 @@ components:
         priority: 6
         value: value
         ttl: 0
+        target: target
       properties:
         site_id:
           description: The site ID
@@ -8142,20 +8178,35 @@ components:
           description: The priority of the DNS record
           type: integer
         weight:
-          description: The weight of the DNS record (for SRV type record)
+          description: The weight of the DNS record (for SRV and HTTPS type record)
           type: integer
         port:
           description: The port of the DNS record (for SRV type record)
           type: integer
+        target:
+          description: The target of the DNS record (for HTTPS type record)
+          type: string
         flag:
           description: The flag of the DNS record (for CAA type record)
           type: integer
         tag:
           description: The tag of the DNS record (for CAA type record)
           type: string
+    DnsRecordVerifyParams:
+      properties:
+        value:
+          description: The value of the DNS record
+          type: string
+        host:
+          description: The host of the DNS record
+          type: string
+        type:
+          description: The type of the DNS record
+          type: string
     DnsZone:
       example:
         dedicated: true
+        uses_netlify_registrar: true
         records:
         - flag: 5
           dns_zone_id: dns_zone_id
@@ -8202,18 +8253,19 @@ components:
         user_id: user_id
         account_name: account_name
         domain:
-          expires_at: 2000-01-23T04:56:07.000+00:00
           registered_at: 2000-01-23T04:56:07.000+00:00
+          created_at: 2000-01-23T04:56:07.000+00:00
+          renewal_price: renewal_price
+          auth_code: auth_code
+          expires_at: 2000-01-23T04:56:07.000+00:00
           auto_renew: true
           updated_at: 2000-01-23T04:56:07.000+00:00
           user_id: user_id
           name: name
-          created_at: 2000-01-23T04:56:07.000+00:00
           id: id
-          renewal_price: renewal_price
           transferred_at: 2000-01-23T04:56:07.000+00:00
           auto_renew_at: 2000-01-23T04:56:07.000+00:00
-          auth_code: auth_code
+          status: status
         name: name
         site_id: site_id
         ipv6_enabled: true
@@ -8279,6 +8331,9 @@ components:
           description: When the DNS zone was updated
           format: date-time
           type: string
+        uses_netlify_registrar:
+          description: Whether the domain was registered with Netlify
+          type: boolean
       required:
       - account_id
       - account_name
@@ -8295,11 +8350,13 @@ components:
       - supported_record_types
       - updated_at
       - user_id
+      - uses_netlify_registrar
     DnsZoneCreateParams:
       example:
         account_slug: account_slug
         site_id: site_id
         name: name
+        record_txt_value: record_txt_value
       properties:
         site_id:
           description: The ID of the site
@@ -8310,6 +8367,9 @@ components:
           type: string
         name:
           description: The name of the DNS zone
+          type: string
+        record_txt_value:
+          description: The TXT value for the DNS subdomain ownership verification
           type: string
     DnsZoneTransferParams:
       example:
@@ -8326,20 +8386,55 @@ components:
         transfer_user_id:
           description: The userID to transfer the DNS zone to
           type: string
+    DomainOwner:
+      properties:
+        id:
+          description: The ID of the domain owner record
+          type: string
+        root_domain:
+          description: "The root domain (e.g., example.com)"
+          type: string
+        account_id:
+          description: The ID of the owning account
+          type: string
+        locked:
+          description: Whether the domain owner is locked
+          type: boolean
+        account_ids:
+          description: IDs of accounts the domain is shared with
+          items:
+            type: string
+          type: array
+        created_at:
+          description: When the record was created
+          format: date-time
+          type: string
+        updated_at:
+          description: When the record was last updated
+          format: date-time
+          type: string
+      required:
+      - account_id
+      - created_at
+      - id
+      - locked
+      - root_domain
+      - updated_at
     Domain:
       example:
-        expires_at: 2000-01-23T04:56:07.000+00:00
         registered_at: 2000-01-23T04:56:07.000+00:00
+        created_at: 2000-01-23T04:56:07.000+00:00
+        renewal_price: renewal_price
+        auth_code: auth_code
+        expires_at: 2000-01-23T04:56:07.000+00:00
         auto_renew: true
         updated_at: 2000-01-23T04:56:07.000+00:00
         user_id: user_id
         name: name
-        created_at: 2000-01-23T04:56:07.000+00:00
         id: id
-        renewal_price: renewal_price
         transferred_at: 2000-01-23T04:56:07.000+00:00
         auto_renew_at: 2000-01-23T04:56:07.000+00:00
-        auth_code: auth_code
+        status: status
       properties:
         id:
           description: The ID of the domain
@@ -8382,6 +8477,9 @@ components:
         updated_at:
           description: When the domain was updated
           format: date-time
+          type: string
+        status:
+          description: Status of the most recent domain transaction
           type: string
       required:
       - auth_code
@@ -8502,13 +8600,6 @@ components:
       required:
       - function
     EdgeFunctionsUsage:
-      example:
-        last_updated_at: 2000-01-23T04:56:07.000+00:00
-        period_end_date: 2000-01-23T04:56:07.000+00:00
-        additional: 1
-        period_start_date: 2000-01-23T04:56:07.000+00:00
-        used: 0
-        included: 6
       properties:
         used:
           type: integer
@@ -9129,7 +9220,9 @@ components:
           type: integer
         functions_config:
           type: object
-        zuora_url:
+        :build_ids:
+          type: string
+        orb_url:
           type: string
         sites_count:
           type: integer
@@ -9137,6 +9230,18 @@ components:
           type: boolean
         enterprise_features:
           $ref: "#/components/schemas/EnterpriseFeatures"
+        prerender:
+          type: string
+        dev_server_settings:
+          description: The dev server settings for the account
+          type: object
+        is_credit_based:
+          description: Whether the account is a credit-based plan
+          type: boolean
+        auto_topup_enabled:
+          description: Whether automatic top-up is currently enabled (only for credit-based
+            plans)
+          type: boolean
       required:
       - admin_url
       - build_node_pool
@@ -9145,11 +9250,12 @@ components:
       - build_timelimit
       - concurrent_upload_limit
       - dev_server_resources
+      - dev_server_settings
       - dunning
       - enterprise_features
       - functions_config
+      - prerender
       - sites_count
-      - zuora_url
     EnterpriseFeatures:
       description: EnterpriseFeatures model definition.
       properties:
@@ -9263,6 +9369,108 @@ components:
           $ref: "#/components/schemas/EnterpriseFeatureAdditional"
         additional_committers:
           $ref: "#/components/schemas/EnterpriseFeatureAdditional"
+    HeroAccountSimple:
+      description: Simple HeroAccount model definition for basic identification
+      properties:
+        id:
+          description: The identifier for the account
+          type: string
+        name:
+          description: The name of the account
+          type: string
+        slug:
+          description: The slug of the account
+          type: string
+        billing_email:
+          description: The billing email of the account
+          type: string
+        admin_url:
+          description: The admin URL for the account
+          type: string
+        is_credit_based:
+          description: Whether the account is a credit-based plan
+          type: boolean
+        auto_topup_enabled:
+          description: Whether automatic top-up is currently enabled (only for credit-based
+            plans)
+          type: boolean
+      required:
+      - admin_url
+      - billing_email
+      - id
+      - name
+      - slug
+    HeroDomainTransaction:
+      description: "HeroDomainTransaction model definition, see DomainTransactionSerializer\
+        \ for other fields"
+      properties:
+        id:
+          description: The ID of the DomainTransaction
+          type: string
+        name:
+          description: The name of the DomainTransaction
+          type: string
+        price:
+          description: The price of the DomainTransaction
+          type: number
+        status:
+          description: The status of the DomainTransaction
+          type: string
+        type:
+          description: The type of the DomainTransaction
+          type: string
+        orb_invoice_id:
+          description: The Orb invoice ID of the DomainTransaction
+          type: string
+        created_at:
+          description: The created at timestamp of the DomainTransaction
+          type: string
+        updated_at:
+          description: The updated at timestamp of the DomainTransaction
+          type: string
+      required:
+      - created_at
+      - id
+      - name
+      - orb_invoice_id
+      - price
+      - status
+      - type
+      - updated_at
+    HeroOrganizationAccountSerializer:
+      description: |-
+        Simple serializer for organization accounts that only returns basic identifiers.
+        Used when full account details are not needed to avoid timeouts with large datasets.
+      properties:
+        id:
+          description: The identifier for the account (account ID)
+          type: string
+        slug:
+          description: The slug for the account
+          type: string
+        name:
+          description: The name for the account
+          type: string
+        logo_url:
+          description: The URL for the account's logo
+          type: string
+        billing_email:
+          description: The billing email for the account
+          type: string
+        billing_name:
+          description: The billing name for the account
+          type: string
+        support_level:
+          description: The support level of the account
+          type: string
+      required:
+      - billing_email
+      - billing_name
+      - id
+      - logo_url
+      - name
+      - slug
+      - support_level
     HeroOrganization:
       description: "HeroOrganization model definition, see OrganizationSerializer\
         \ for other fields"
@@ -9270,15 +9478,42 @@ components:
         admin_url:
           description: The URL of the organization in the Netlify UI
           type: string
-        zuora_url:
-          description: The URL of the zuora account
-          type: string
         capabilities:
           type: object
+        is_ax_partner:
+          description: Whether the organization is an AX partner - will be deprecated
+            for property ax_partner
+          type: boolean
+        ax_partner:
+          description: Whether the organization is an AX partner
+          type: boolean
+        owners:
+          description: The list of organization owners
+          items:
+            type: object
+          type: array
       required:
       - admin_url
+      - ax_partner
       - capabilities
-      - zuora_url
+      - is_ax_partner
+      - owners
+    HeroSiteSimple:
+      description: Simple HeroSite model definition for basic identification
+      properties:
+        id:
+          description: The identifier for the site
+          type: string
+        name:
+          description: The name of the site
+          type: string
+        subdomain:
+          description: The subdomain of the site
+          type: string
+      required:
+      - id
+      - name
+      - subdomain
     HeroSitesSummary:
       description: HeroSitesSummary model definition
       properties:
@@ -9304,6 +9539,61 @@ components:
       - use_forms_count
       - use_functions_count
       - use_lm_count
+    HeroUserAccount:
+      description: |-
+        HeroUserAccount model definition for accounts under user search. Also used for account details in Zendesk.
+        Changes to this serializer is also reflected in the Zendesk and in Support API (n8n)
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        admin_url:
+          type: string
+        support_priority:
+          type: integer
+        billing_email:
+          type: string
+        role:
+          type: string
+        lifecycle_state:
+          type: string
+        build_timelimit:
+          type: integer
+        concurrent_upload_limit:
+          type: integer
+        capabilities:
+          items:
+            type: string
+          type: array
+        saml_enabled:
+          type: boolean
+        orb_url:
+          type: string
+        type_name:
+          type: string
+        type_slug:
+          type: string
+        organization_id:
+          type: string
+      required:
+      - admin_url
+      - billing_email
+      - build_timelimit
+      - capabilities
+      - concurrent_upload_limit
+      - id
+      - lifecycle_state
+      - name
+      - orb_url
+      - role
+      - saml_enabled
+      - slug
+      - support_priority
+      - type_name
+      - type_slug
     HeroUser:
       description: "HeroUser model definition, see UserSerializer for other fields"
       properties:
@@ -9327,8 +9617,6 @@ components:
           type: integer
         support_priority:
           type: integer
-        zuora_url:
-          type: string
         all_accounts:
           items:
             type: string
@@ -9341,6 +9629,8 @@ components:
           type: number
         safe_to_spam:
           type: boolean
+        mfa_enabled:
+          type: boolean
       required:
       - all_accounts
       - all_organizations
@@ -9350,13 +9640,41 @@ components:
       - disabled
       - disabled_reason
       - github_slug
+      - mfa_enabled
       - payments_gateway_name
       - safe_to_spam
       - sift_spam_score
       - spam
       - spam_score
       - support_priority
-      - zuora_url
+    HeroUserSimple:
+      description: Simple HeroUser model definition for basic identification
+      properties:
+        id:
+          description: The identifier for the user
+          type: string
+        email:
+          description: The email of the user
+          type: string
+        full_name:
+          description: The full name of the user
+          type: string
+        avatar:
+          description: The URL for the avatar
+          type: string
+        slug:
+          description: The slug of the user
+          type: string
+        tracking_id:
+          description: The tracking ID of the user
+          type: string
+      required:
+      - avatar
+      - email
+      - full_name
+      - id
+      - slug
+      - tracking_id
     OutgoingHook:
       description: Outgoing hook model definition
       example:
@@ -9370,6 +9688,7 @@ components:
         user_id: user_id
         success: true
         restricted: true
+        organization_id: organization_id
         site_id: site_id
         disabled: true
         id: id
@@ -9384,6 +9703,9 @@ components:
           type: string
         form_id:
           description: The form ID associated with this hook
+          type: string
+        organization_id:
+          description: The organization ID associated with this hook
           type: string
         form_name:
           description: The form name of this hook
@@ -9526,33 +9848,32 @@ components:
           items:
             $ref: "#/components/schemas/OutgoingHookType_fields_inner"
           type: array
-    IdentityVerification:
+    Invite:
+      description: Invite model definition
       properties:
-        provider:
-          description: The provider of the IdentityVerification (stripe)
+        id:
+          description: The identifier for the user
+          type: string
+        account_name:
+          description: The name of the team the invite is for
+          type: string
+        organization_name:
+          description: The name of the organization the invite is for
+          type: string
+        role_name:
+          description: The name of the role the user is invited to
           type: string
         code:
-          description: The UUID for IdentityVerification lookups
-          type: string
-        session_id:
-          description: The session_id for IdentityVerification session
-          type: string
-        report:
-          description: The report from the identity verification service
-          type: object
-        user:
-          $ref: "#/components/schemas/User"
-        state:
-          description: The current state of the verification
+          description: The invite code for acceptance
           type: string
         created_at:
-          description: When the Event IdentityVerification was created
-          format: date-time
+          description: When the invite was created
           type: string
-        updated_at:
-          description: When the Event IdentityVerification was updated
-          format: date-time
-          type: string
+      required:
+      - code
+      - created_at
+      - id
+      - role_name
     LogDrain:
       description: Log Drain model definition
       example:
@@ -9619,6 +9940,7 @@ components:
           key: tags
       properties:
         url:
+          description: The URL for the log drain
           type: string
         tags:
           additionalProperties:
@@ -9648,6 +9970,7 @@ components:
         connected_accounts:
           github: github
           gitlab: gitlab
+          google: google
           bitbucket: bitbucket
         site_ids:
         - site_ids
@@ -9660,12 +9983,16 @@ components:
         site_access: site_access
         full_name: full_name
         updated_at: 2000-01-23T04:56:07.000+00:00
+        user_id: user_id
         mfa_enabled: true
         id: id
         email: email
       properties:
         id:
-          description: the identifier for the member (user ID)
+          description: the identifier for the member
+          type: string
+        user_id:
+          description: the user id of the member
           type: string
         full_name:
           description: the full name of the member
@@ -9732,6 +10059,7 @@ components:
       - site_access
       - site_ids
       - updated_at
+      - user_id
     OAuth_Ticket:
       example:
         authorized: true
@@ -9759,43 +10087,6 @@ components:
       - id
     OrganizationAccount:
       description: "Account model definition, with more details relating to organizations."
-      example:
-        high_performance_edge_enabled: true
-        bandwidth_usage:
-          last_updated_at: 2000-01-23T04:56:07.000+00:00
-          period_end_date: 2000-01-23T04:56:07.000+00:00
-          additional: 1
-          period_start_date: 2000-01-23T04:56:07.000+00:00
-          used: 0
-          included: 6
-        high_performance_builds_enabled: true
-        support_level: support_level
-        billing_name: billing_name
-        member_roles:
-        - {}
-        - {}
-        included_concurrent_builds: 4
-        billing_email: billing_email
-        name: name
-        used_seats: 1
-        build_status:
-          enqueued: 2
-          pending_concurrency: 5
-          minutes:
-            current: 7
-            previous: 9
-            period_end_date: 2000-01-23T04:56:07.000+00:00
-            last_updated_at: 2000-01-23T04:56:07.000+00:00
-            included_minutes: 3
-            period_start_date: 2000-01-23T04:56:07.000+00:00
-            included_minutes_with_packs: 2
-          active: 5
-        id: id
-        total_seats: 7
-        owner_ids:
-        - owner_ids
-        - owner_ids
-        slug: slug
       properties:
         bandwidth_usage:
           $ref: "#/components/schemas/BandwidthUsage"
@@ -9893,6 +10184,7 @@ components:
         payment_method_id: payment_method_id
         directory_sync_activated_at: 2000-01-23T04:56:07.000+00:00
         auto_renew: true
+        ax_partner: true
         purchase_order: purchase_order
         company_name: company_name
         name: name
@@ -10005,8 +10297,8 @@ components:
           description: Determines type of mfa enforcement
           enum:
           - not_enforced
+          - encouraged
           - enforced
-          - dry-run_strict
           nullable: true
           type: string
           nullable: true
@@ -10049,10 +10341,14 @@ components:
         total_member_count:
           description: The number of team members in the organization
           type: integer
+        ax_partner:
+          description: Whether the organization is an AX partner
+          type: boolean
       required:
       - address1
       - address2
       - auto_renew
+      - ax_partner
       - bill_cycle_day
       - billing_email
       - billing_period
@@ -10499,10 +10795,11 @@ components:
         provider: provider
         public_repo: true
         repo_owner_type: repo_owner_type
+        installation_coding_id: 6
         repo_url: repo_url
         stop_builds: true
-        package_path: package_path
         skip_automatic_builds: true
+        package_path: package_path
         deploy_key_id: deploy_key_id
         env: "{}"
         repo_path: repo_path
@@ -10536,16 +10833,14 @@ components:
           type: string
         installation_id:
           type: integer
-        package_path:
-          type: string
+        installation_coding_id:
+          type: integer
         private_logs:
           type: boolean
         provider:
           type: string
         public_repo:
           type: boolean
-        branch:
-          type: string
         repo_branch:
           type: string
         repo_owner_type:
@@ -10567,6 +10862,10 @@ components:
           type: string
         updated_at:
           format: date-time
+          type: string
+        branch:
+          type: string
+        package_path:
           type: string
     Reviewer:
       description: Reviewer model definition
@@ -10821,9 +11120,6 @@ components:
       - name
       - team_logo_url
     Site_Simple:
-      example:
-        pending_create_changes: 0.8008281904610115
-        primary_create_project: primary_create_project
       properties:
         primary_create_project:
           type: string
@@ -10866,16 +11162,15 @@ components:
         - cdp_enabled_contexts
         - cdp_enabled_contexts
         created_at: 2000-01-23T04:56:07.000+00:00
+        record_txt_value: record_txt_value
         sso_login_context: sso_login_context
         functions_region: functions_region
         domain_aliases:
         - domain_aliases
         - domain_aliases
-        password: password
         updated_at: 2000-01-23T04:56:07.000+00:00
-        password_hash: password_hash
         account_name: account_name
-        deploy_retention_in_days: 1.4658129805029452
+        deploy_retention_in_days: 5.962133916683182
         id: id
         state: state
         plan: plan
@@ -10887,8 +11182,8 @@ components:
         notification_email: notification_email
         capabilities: "{}"
         rum_enabled: true
-        prevent_non_git_prod_deploys: true
         hud_enabled: true
+        prevent_non_git_prod_deploys: true
         admin_url: admin_url
         build_settings:
           repo_type: repo_type
@@ -10908,10 +11203,11 @@ components:
           provider: provider
           public_repo: true
           repo_owner_type: repo_owner_type
+          installation_coding_id: 6
           repo_url: repo_url
           stop_builds: true
-          package_path: package_path
           skip_automatic_builds: true
+          package_path: package_path
           deploy_key_id: deploy_key_id
           env: "{}"
           repo_path: repo_path
@@ -10944,7 +11240,7 @@ components:
         build_image: build_image
         branch_deploy_custom_domain: branch_deploy_custom_domain
         screenshot_url: screenshot_url
-        build_timelimit: 6.027456183070403
+        build_timelimit: 1.4658129805029452
       properties:
         id:
           type: string
@@ -10956,6 +11252,8 @@ components:
           type: string
         custom_domain:
           type: string
+        record_txt_value:
+          type: string
         branch_deploy_custom_domain:
           type: string
         deploy_preview_custom_domain:
@@ -10964,11 +11262,7 @@ components:
           items:
             type: string
           type: array
-        password:
-          type: string
         password_context:
-          type: string
-        password_hash:
           type: string
         sso_login:
           type: boolean
@@ -10996,12 +11290,6 @@ components:
           type: string
         force_ssl:
           type: boolean
-        rum_enabled:
-          type: boolean
-        prevent_non_git_prod_deploys:
-          type: boolean
-        analytics_instance_id:
-          type: string
         build_settings:
           $ref: "#/components/schemas/Repo"
         processing_settings:
@@ -11030,13 +11318,19 @@ components:
           items:
             $ref: "#/components/schemas/SiteLabel"
           type: array
-        functions_region:
+        analytics_instance_id:
           type: string
         cdp_enabled_contexts:
           items:
             type: string
           type: array
+        functions_region:
+          type: string
         hud_enabled:
+          type: boolean
+        rum_enabled:
+          type: boolean
+        prevent_non_git_prod_deploys:
           type: boolean
       required:
       - account_id
@@ -11072,205 +11366,31 @@ components:
       - state
       - updated_at
       - url
-    PartialSite:
-      description: Site model definition
-      example:
-        sso_login: true
-        id_domain: id_domain
-        deploy_url: deploy_url
-        deploy_hook: deploy_hook
-        cdp_enabled_contexts:
-        - cdp_enabled_contexts
-        - cdp_enabled_contexts
-        created_at: 2000-01-23T04:56:07.000+00:00
-        sso_login_context: sso_login_context
-        functions_region: functions_region
-        domain_aliases:
-        - domain_aliases
-        - domain_aliases
-        password: password
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        password_hash: password_hash
-        account_name: account_name
-        deploy_retention_in_days: 6.027456183070403
-        id: id
-        state: state
-        plan: plan
-        default_domain: default_domain
-        custom_domain: custom_domain
-        deploy_preview_custom_domain: deploy_preview_custom_domain
-        managed_dns: true
-        force_ssl: true
-        notification_email: notification_email
-        capabilities: "{}"
-        rum_enabled: true
-        prevent_non_git_prod_deploys: true
-        hud_enabled: true
-        admin_url: admin_url
-        build_settings:
-          repo_type: repo_type
-          created_at: 2000-01-23T04:56:07.000+00:00
-          installation_id: 0
-          dir: dir
-          repo_branch: repo_branch
-          base_rel_dir: true
-          private_logs: true
-          branch: branch
-          allowed_branches:
-          - allowed_branches
-          - allowed_branches
-          functions_dir: functions_dir
-          skip_prs: true
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          provider: provider
-          public_repo: true
-          repo_owner_type: repo_owner_type
-          repo_url: repo_url
-          stop_builds: true
-          package_path: package_path
-          skip_automatic_builds: true
-          deploy_key_id: deploy_key_id
-          env: "{}"
-          repo_path: repo_path
-          untrusted_flow: untrusted_flow
-          cmd: cmd
-          base: base
-          configuration_file_path: configuration_file_path
-        password_context: password_context
-        url: url
-        labels:
-        - account_id: account_id
-          color: color
-          name: name
-          description: description
-          id: id
-        - account_id: account_id
-          color: color
-          name: name
-          description: description
-          id: id
-        account_slug: account_slug
-        account_id: account_id
-        ssl_url: ssl_url
-        name: name
-        processing_settings:
-          html:
-            pretty_urls: true
-          ignore_html_forms: true
-        build_image: build_image
-        branch_deploy_custom_domain: branch_deploy_custom_domain
-        screenshot_url: screenshot_url
-        build_timelimit: 0.8008281904610115
-      properties:
-        id:
-          type: string
-        plan:
-          type: string
-        name:
-          type: string
-        default_domain:
-          type: string
-        custom_domain:
-          type: string
-        branch_deploy_custom_domain:
-          type: string
-        deploy_preview_custom_domain:
-          type: string
-        domain_aliases:
-          items:
-            type: string
-          type: array
-        password:
-          type: string
-        password_context:
-          type: string
-        password_hash:
-          type: string
-        sso_login:
-          type: boolean
-        sso_login_context:
-          type: string
-        notification_email:
-          type: string
-        url:
-          type: string
-        admin_url:
-          type: string
-        deploy_url:
-          type: string
-        state:
-          type: string
-        screenshot_url:
-          type: string
-        created_at:
-          format: date-time
-          type: string
-        updated_at:
-          format: date-time
-          type: string
-        ssl_url:
-          type: string
-        force_ssl:
-          type: boolean
-        rum_enabled:
-          type: boolean
-        prevent_non_git_prod_deploys:
-          type: boolean
-        build_settings:
-          $ref: "#/components/schemas/Repo"
-        processing_settings:
-          $ref: "#/components/schemas/Site_processing_settings"
-        deploy_hook:
-          type: string
-        managed_dns:
-          type: boolean
-        account_id:
-          type: string
-        account_slug:
-          type: string
-        account_name:
-          type: string
-        capabilities:
-          type: object
-        id_domain:
-          type: string
-        build_image:
-          type: string
-        build_timelimit:
-          type: number
-        deploy_retention_in_days:
-          type: number
-        labels:
-          items:
-            $ref: "#/components/schemas/SiteLabel"
-          type: array
-        functions_region:
-          type: string
-        cdp_enabled_contexts:
-          items:
-            type: string
-          type: array
-        hud_enabled:
-          type: boolean
     SitesSummary:
       description: SitesSummary model definition
       properties:
         account_id:
           type: string
-        total_sites:
+        concurrent_builds_count:
+          type: integer
+        extra_concurrent_builds:
+          type: integer
+        dev_servers_count:
+          type: integer
+        extra_dev_servers:
           type: integer
         included_sites:
           type: integer
         sites_with_custom_domains_count:
           type: integer
-        concurrent_builds_count:
-          type: integer
-        extra_concurrent_builds:
+        total_sites:
           type: integer
       required:
       - account_id
       - concurrent_builds_count
+      - dev_servers_count
       - extra_concurrent_builds
+      - extra_dev_servers
       - included_sites
       - sites_with_custom_domains_count
       - total_sites
@@ -11284,7 +11404,7 @@ components:
           type: string
         data:
           description: The data for the Notification
-          type: hash
+          type: object
     Slack_SniCertificate:
       description: "@property(x-internal:true) other_sites [array<object>] A list\
         \ of sites also using this certificate. Included only in `show` responses."
@@ -11364,10 +11484,12 @@ components:
           type: string
         created_at:
           description: When the TeamWorkspace was created
-          type: datetime
+          format: date-time
+          type: string
         updated_at:
           description: When the TeamWorkspace was updated
-          type: datetime
+          format: date-time
+          type: string
         workspace:
           $ref: "#/components/schemas/Slack_Workspace"
       required:
@@ -11402,10 +11524,12 @@ components:
           type: array
         created_at:
           description: When the subscription was created
-          type: datetime
+          format: date-time
+          type: string
         updated_at:
           description: When the subscription was updated
-          type: datetime
+          format: date-time
+          type: string
         account_id:
           description: The account ID for the subscription
           type: string
@@ -11449,7 +11573,8 @@ components:
           type: string
         cooldown_until:
           description: The cooldown datetime for the Workspace
-          type: datetime
+          format: date-time
+          type: string
         plan:
           description: The billing tier of the Workspace
           type: string
@@ -11580,6 +11705,78 @@ components:
           - head
           - footer
           type: string
+    StripePaymentMethod:
+      description: StripePaymentMethod model definition
+      properties:
+        id:
+          description: The StripePaymentMethod ID
+          type: string
+        type:
+          description: The name for the organization
+          type: string
+        data:
+          $ref: "#/components/schemas/StripePaymentMethod_data"
+        state:
+          description: The state of the payment method
+          enum:
+          - success
+          - error
+          type: string
+        created_at:
+          description: When the payment method was created
+          format: date-time
+          type: string
+        updated_at:
+          description: When the payment method was updated
+          format: date-time
+          type: string
+        account_id:
+          description: The ID of the Account the payment method belongs to
+          type: string
+        orb_customer_id:
+          description: The ID of the OrbCustomer the payment method belongs to
+          type: string
+        organization_id:
+          description: The ID of the organization the payment method belongs to
+          type: string
+      required:
+      - account_id
+      - created_at
+      - data
+      - id
+      - orb_customer_id
+      - organization_id
+      - state
+      - type
+      - updated_at
+    SupportBot:
+      description: SupportBot model definition
+      properties:
+        id:
+          description: The identifier for the support bot
+          type: string
+        name:
+          description: The name of the support bot
+          type: string
+        service_type:
+          description: The service type identifier
+          type: string
+        active:
+          description: Whether the bot is active
+          type: boolean
+        metadata:
+          description: Additional metadata for the bot
+          type: object
+        capabilities:
+          description: The capabilities/permissions of the bot
+          type: object
+      required:
+      - active
+      - capabilities
+      - id
+      - metadata
+      - name
+      - service_type
     TrafficRule:
       properties:
         action:
@@ -11821,12 +12018,35 @@ components:
       - site_id
       - unpublished_at
       - updated_at
+    UserRegistrationScore:
+      properties:
+        display_name:
+          description: The display name of the user.
+          type: string
+        guess_score:
+          description: The score of the user's guess.
+          type: number
+        guessed_index:
+          description: The index guessed by the user.
+          type: number
+        top_scorers:
+          description: The top scorers in the user registration scoring.
+          items:
+            type: object
+          type: array
+        user_id:
+          description: The user's ID.
+          type: string
+        current_index:
+          description: The current index of the user.
+          type: number
     User:
       description: User model definition
       example:
         connected_accounts:
           github: github
           gitlab: gitlab
+          google: google
           bitbucket: bitbucket
         last_login: 2000-01-23T04:56:07.000+00:00
         site_count: 0
@@ -11838,6 +12058,7 @@ components:
         access_token: access_token
         uid: uid
         refresh_token: refresh_token
+        account_id: account_id
         full_name: full_name
         avatar_url: avatar_url
         mfa_enabled: true
@@ -11857,6 +12078,9 @@ components:
           type: string
         uid:
           description: The uid for multipass
+          type: string
+        account_id:
+          description: The identifier for the user's personal account
           type: string
         full_name:
           description: The full name of the user
@@ -11920,6 +12144,7 @@ components:
           type: array
       required:
       - access_token
+      - account_id
       - avatar_url
       - command_bar_user_id
       - connected_accounts
@@ -12018,6 +12243,85 @@ components:
           type: string
         use_case_something_else:
           type: string
+    VisualEditorSite:
+      description: VisualEditorSite model definition
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        default_domain:
+          type: string
+        custom_domain:
+          type: string
+        branch_deploy_custom_domain:
+          type: string
+        deploy_preview_custom_domain:
+          type: string
+        domain_aliases:
+          items:
+            type: string
+          type: array
+        url:
+          type: string
+        admin_url:
+          type: string
+        deploy_url:
+          type: string
+        state:
+          type: string
+        screenshot_url:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        ssl_url:
+          type: string
+        force_ssl:
+          type: boolean
+        build_settings:
+          $ref: "#/components/schemas/Repo"
+        deploy_hook:
+          type: string
+        account_id:
+          type: string
+        account_slug:
+          type: string
+        capabilities:
+          type: object
+        id_domain:
+          type: string
+        labels:
+          items:
+            $ref: "#/components/schemas/SiteLabel"
+          type: array
+      required:
+      - account_id
+      - account_slug
+      - admin_url
+      - branch_deploy_custom_domain
+      - build_settings
+      - capabilities
+      - created_at
+      - custom_domain
+      - default_domain
+      - deploy_hook
+      - deploy_preview_custom_domain
+      - deploy_url
+      - domain_aliases
+      - force_ssl
+      - id
+      - id_domain
+      - labels
+      - name
+      - screenshot_url
+      - ssl_url
+      - state
+      - updated_at
+      - url
     WafPolicy:
       example:
         name: name
@@ -12124,6 +12428,270 @@ components:
           items:
             $ref: "#/components/schemas/ManagedWafRuleSet_rules_inner"
           type: array
+    WafPolicy_rule_sets_inner:
+      example:
+        excluded_patterns:
+        - excluded_patterns
+        - excluded_patterns
+        category_thresholds:
+          key: 6
+        overall_threshold: 0
+        passive_mode: true
+        managed_id: managed_id
+        rule_overrides:
+          key:
+            action: action
+      properties:
+        managed_id:
+          type: string
+        excluded_patterns:
+          items:
+            type: string
+          type: array
+        passive_mode:
+          type: boolean
+        overall_threshold:
+          type: integer
+        category_thresholds:
+          additionalProperties: {}
+        rule_overrides:
+          additionalProperties:
+            $ref: "#/components/schemas/WafPolicyRuleOverride"
+      required:
+      - overall_threshold
+    ManagedWafRuleSet_definition:
+      example:
+        id: id
+        type: type
+        version: version
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        version:
+          type: string
+    ManagedWafRuleSet_rules_inner:
+      example:
+        phase: phase
+        severity: severity
+        description: description
+        id: id
+        category: category
+      properties:
+        id:
+          type: string
+        description:
+          type: string
+        phase:
+          type: string
+        category:
+          type: string
+        severity:
+          type: string
+    PartialSite:
+      description: Site model definition
+      example:
+        sso_login: true
+        id_domain: id_domain
+        deploy_url: deploy_url
+        deploy_hook: deploy_hook
+        cdp_enabled_contexts:
+        - cdp_enabled_contexts
+        - cdp_enabled_contexts
+        created_at: 2000-01-23T04:56:07.000+00:00
+        record_txt_value: record_txt_value
+        sso_login_context: sso_login_context
+        functions_region: functions_region
+        domain_aliases:
+        - domain_aliases
+        - domain_aliases
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        account_name: account_name
+        deploy_retention_in_days: 6.027456183070403
+        id: id
+        state: state
+        plan: plan
+        default_domain: default_domain
+        custom_domain: custom_domain
+        deploy_preview_custom_domain: deploy_preview_custom_domain
+        managed_dns: true
+        force_ssl: true
+        notification_email: notification_email
+        capabilities: "{}"
+        rum_enabled: true
+        hud_enabled: true
+        prevent_non_git_prod_deploys: true
+        admin_url: admin_url
+        build_settings:
+          repo_type: repo_type
+          created_at: 2000-01-23T04:56:07.000+00:00
+          installation_id: 0
+          dir: dir
+          repo_branch: repo_branch
+          base_rel_dir: true
+          private_logs: true
+          branch: branch
+          allowed_branches:
+          - allowed_branches
+          - allowed_branches
+          functions_dir: functions_dir
+          skip_prs: true
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          provider: provider
+          public_repo: true
+          repo_owner_type: repo_owner_type
+          installation_coding_id: 6
+          repo_url: repo_url
+          stop_builds: true
+          skip_automatic_builds: true
+          package_path: package_path
+          deploy_key_id: deploy_key_id
+          env: "{}"
+          repo_path: repo_path
+          untrusted_flow: untrusted_flow
+          cmd: cmd
+          base: base
+          configuration_file_path: configuration_file_path
+        password_context: password_context
+        url: url
+        labels:
+        - account_id: account_id
+          color: color
+          name: name
+          description: description
+          id: id
+        - account_id: account_id
+          color: color
+          name: name
+          description: description
+          id: id
+        account_slug: account_slug
+        analytics_instance_id: analytics_instance_id
+        account_id: account_id
+        ssl_url: ssl_url
+        name: name
+        processing_settings:
+          html:
+            pretty_urls: true
+          ignore_html_forms: true
+        build_image: build_image
+        branch_deploy_custom_domain: branch_deploy_custom_domain
+        screenshot_url: screenshot_url
+        build_timelimit: 0.8008281904610115
+      properties:
+        id:
+          type: string
+        plan:
+          type: string
+        name:
+          type: string
+        default_domain:
+          type: string
+        custom_domain:
+          type: string
+        record_txt_value:
+          type: string
+        branch_deploy_custom_domain:
+          type: string
+        deploy_preview_custom_domain:
+          type: string
+        domain_aliases:
+          items:
+            type: string
+          type: array
+        password_context:
+          type: string
+        sso_login:
+          type: boolean
+        sso_login_context:
+          type: string
+        notification_email:
+          type: string
+        url:
+          type: string
+        admin_url:
+          type: string
+        deploy_url:
+          type: string
+        state:
+          type: string
+        screenshot_url:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        ssl_url:
+          type: string
+        force_ssl:
+          type: boolean
+        build_settings:
+          $ref: "#/components/schemas/Repo"
+        processing_settings:
+          $ref: "#/components/schemas/Site_processing_settings"
+        deploy_hook:
+          type: string
+        managed_dns:
+          type: boolean
+        account_id:
+          type: string
+        account_slug:
+          type: string
+        account_name:
+          type: string
+        capabilities:
+          type: object
+        id_domain:
+          type: string
+        build_image:
+          type: string
+        build_timelimit:
+          type: number
+        deploy_retention_in_days:
+          type: number
+        labels:
+          items:
+            $ref: "#/components/schemas/SiteLabel"
+          type: array
+        analytics_instance_id:
+          type: string
+        cdp_enabled_contexts:
+          items:
+            type: string
+          type: array
+        functions_region:
+          type: string
+        hud_enabled:
+          type: boolean
+        rum_enabled:
+          type: boolean
+        prevent_non_git_prod_deploys:
+          type: boolean
+    updateAccountMember_request:
+      properties:
+        role:
+          enum:
+          - array
+          type: string
+        site_access:
+          enum:
+          - all
+          - none
+          - selected
+          type: string
+        site_ids:
+          items:
+            type: string
+          type: array
+        self_invite_state:
+          enum:
+          - pending
+          - approved
+          - blocked
+          type: string
     createAccount_request:
       properties:
         name:
@@ -12131,6 +12699,8 @@ components:
         type_id:
           type: string
         payment_method_id:
+          type: string
+        stripe_customer_id:
           type: string
         period:
           enum:
@@ -12181,6 +12751,12 @@ components:
           items:
             type: string
           type: array
+    createSiteDeploy_request_functions_config_name_excluded_routes_inner:
+      properties:
+        pattern:
+          type: string
+        expression:
+          type: string
     createSiteDeploy_request_functions_config_name:
       properties:
         priority:
@@ -12195,10 +12771,26 @@ components:
           items:
             $ref: "#/components/schemas/createSiteDeploy_request_functions_config_name_routes_inner"
           type: array
+        excluded_routes:
+          items:
+            $ref: "#/components/schemas/createSiteDeploy_request_functions_config_name_excluded_routes_inner"
+          type: array
     createSiteDeploy_request_functions_config:
       properties:
         name:
           $ref: "#/components/schemas/createSiteDeploy_request_functions_config_name"
+    createSiteDeploy_request_environment_inner:
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+        is_secret:
+          type: boolean
+        scopes:
+          items:
+            type: string
+          type: array
     createSiteDeploy_request:
       properties:
         files:
@@ -12219,6 +12811,12 @@ components:
           type: string
         framework:
           type: string
+        include_upload_url:
+          type: boolean
+        environment:
+          items:
+            $ref: "#/components/schemas/createSiteDeploy_request_environment_inner"
+          type: array
     updateSiteDeploy_request_functions_config_name:
       properties:
         display_name:
@@ -12291,48 +12889,10 @@ components:
           type: string
         message:
           type: string
-    getOrganizationClientToken_200_response:
-      example:
-        signature: signature
-        uri: uri
-        payment_gateway_id: payment_gateway_id
-        token: token
-      properties:
-        token:
-          type: string
-        signature:
-          type: string
-        uri:
-          type: string
-        payment_gateway_id:
-          type: string
-    createOrganizationPayment_data_parameter:
-      properties:
-        name:
-          type: string
-        last4:
-          type: string
-        card_type:
-          type: string
     createSplitTest_request:
       properties:
         branch_tests:
           type: object
-    getDirectory_200_response:
-      example:
-        name: name
-        directory_type: directory_type
-        scim_configured: true
-        status: status
-      properties:
-        name:
-          type: string
-        directory_type:
-          type: string
-        scim_configured:
-          type: boolean
-        status:
-          type: string
     Log_Drains_verify_request:
       properties:
         token:
@@ -12375,14 +12935,6 @@ components:
           type: string
     BuildStatus_minutes:
       description: Build minutes information
-      example:
-        current: 7
-        previous: 9
-        period_end_date: 2000-01-23T04:56:07.000+00:00
-        last_updated_at: 2000-01-23T04:56:07.000+00:00
-        included_minutes: 3
-        period_start_date: 2000-01-23T04:56:07.000+00:00
-        included_minutes_with_packs: 2
       properties:
         current:
           type: integer
@@ -12402,10 +12954,11 @@ components:
         included_minutes_with_packs:
           type: integer
     CDP_User_connected_accounts:
-      description: information of the connected providers' slug if any
+      description: information of the connected providers' slug/email if any
       example:
         github: github
         gitlab: gitlab
+        google: google
         bitbucket: bitbucket
       properties:
         github:
@@ -12413,6 +12966,8 @@ components:
         gitlab:
           type: string
         bitbucket:
+          type: string
+        google:
           type: string
     Deploy_summary_messages_inner:
       example:
@@ -12501,6 +13056,17 @@ components:
           $ref: "#/components/schemas/Site_processing_settings_html"
         ignore_html_forms:
           type: boolean
+    StripePaymentMethod_data:
+      description: The payment method data
+      properties:
+        name:
+          type: string
+        last4:
+          type: string
+        card_type:
+          type: string
+        country:
+          type: string
     TrafficRule_Action_config:
       oneOf:
       - $ref: "#/components/schemas/ResponseConfig"
@@ -12513,10 +13079,11 @@ components:
       - $ref: "#/components/schemas/ValueTargetConfig"
       - $ref: "#/components/schemas/IPTargetConfig"
     User_connected_accounts:
-      description: Information of the connected providers' slug if any
+      description: Information of the connected providers' slug/email if any
       example:
         github: github
         gitlab: gitlab
+        google: google
         bitbucket: bitbucket
       properties:
         github:
@@ -12525,67 +13092,7 @@ components:
           type: string
         bitbucket:
           type: string
-    WafPolicy_rule_sets_inner:
-      example:
-        excluded_patterns:
-        - excluded_patterns
-        - excluded_patterns
-        category_thresholds:
-          key: 6
-        overall_threshold: 0
-        passive_mode: true
-        managed_id: managed_id
-        rule_overrides:
-          key:
-            action: action
-      properties:
-        managed_id:
-          type: string
-        excluded_patterns:
-          items:
-            type: string
-          type: array
-        passive_mode:
-          type: boolean
-        overall_threshold:
-          type: integer
-        category_thresholds:
-          additionalProperties:
-            type: integer
-        rule_overrides:
-          additionalProperties:
-            $ref: "#/components/schemas/WafPolicyRuleOverride"
-      required:
-      - overall_threshold
-    ManagedWafRuleSet_definition:
-      example:
-        id: id
-        type: type
-        version: version
-      properties:
-        id:
-          type: string
-        type:
-          type: string
-        version:
-          type: string
-    ManagedWafRuleSet_rules_inner:
-      example:
-        phase: phase
-        severity: severity
-        description: description
-        id: id
-        category: category
-      properties:
-        id:
-          type: string
-        description:
-          type: string
-        phase:
-          type: string
-        category:
-          type: string
-        severity:
+        google:
           type: string
   securitySchemes:
     netlifyAuth:
@@ -12604,10 +13111,6 @@ components:
       scheme: bearer
       type: http
 x-tagGroups:
-- name: OAuth
-  tags:
-  - Access tokens
-  - OAuth tickets
 - name: Builds
   tags:
   - Builds
@@ -12620,7 +13123,6 @@ x-tagGroups:
 - name: Sites
   tags:
   - Sites
-  - Analytics
   - Files
   - Metadata
   - Snippets
@@ -12650,6 +13152,9 @@ x-tagGroups:
 - name: Functions
   tags:
   - Functions
+- name: OAuth
+  tags:
+  - OAuth tickets
 - name: Organizations
   tags:
   - Organization receipts
@@ -12661,6 +13166,3 @@ x-tagGroups:
 - name: Split Tests
   tags:
   - Split tests
-- name: SCIM
-  tags:
-  - WorkOSScim

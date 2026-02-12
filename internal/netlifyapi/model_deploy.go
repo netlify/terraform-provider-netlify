@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -102,6 +102,12 @@ type Deploy struct {
 	EdgeFunctionsPresent *bool `json:"edge_functions_present,omitempty"`
 	// The date at which the deploy will be soft-deleted
 	ExpiresAt *time.Time `json:"expires_at,omitempty"`
+	// The ID of the agent runner associated with the deploy
+	AgentRunnerId *string `json:"agent_runner_id,omitempty"`
+	// The filename of the uploaded source zip in S3
+	SourceZipFilename *string `json:"source_zip_filename,omitempty"`
+	// The skew protection token for this deploy
+	SkewProtectionToken *string `json:"skew_protection_token,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -1163,6 +1169,102 @@ func (o *Deploy) SetExpiresAt(v time.Time) {
 	o.ExpiresAt = &v
 }
 
+// GetAgentRunnerId returns the AgentRunnerId field value if set, zero value otherwise.
+func (o *Deploy) GetAgentRunnerId() string {
+	if o == nil || IsNil(o.AgentRunnerId) {
+		var ret string
+		return ret
+	}
+	return *o.AgentRunnerId
+}
+
+// GetAgentRunnerIdOk returns a tuple with the AgentRunnerId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Deploy) GetAgentRunnerIdOk() (*string, bool) {
+	if o == nil || IsNil(o.AgentRunnerId) {
+		return nil, false
+	}
+	return o.AgentRunnerId, true
+}
+
+// HasAgentRunnerId returns a boolean if a field has been set.
+func (o *Deploy) HasAgentRunnerId() bool {
+	if o != nil && !IsNil(o.AgentRunnerId) {
+		return true
+	}
+
+	return false
+}
+
+// SetAgentRunnerId gets a reference to the given string and assigns it to the AgentRunnerId field.
+func (o *Deploy) SetAgentRunnerId(v string) {
+	o.AgentRunnerId = &v
+}
+
+// GetSourceZipFilename returns the SourceZipFilename field value if set, zero value otherwise.
+func (o *Deploy) GetSourceZipFilename() string {
+	if o == nil || IsNil(o.SourceZipFilename) {
+		var ret string
+		return ret
+	}
+	return *o.SourceZipFilename
+}
+
+// GetSourceZipFilenameOk returns a tuple with the SourceZipFilename field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Deploy) GetSourceZipFilenameOk() (*string, bool) {
+	if o == nil || IsNil(o.SourceZipFilename) {
+		return nil, false
+	}
+	return o.SourceZipFilename, true
+}
+
+// HasSourceZipFilename returns a boolean if a field has been set.
+func (o *Deploy) HasSourceZipFilename() bool {
+	if o != nil && !IsNil(o.SourceZipFilename) {
+		return true
+	}
+
+	return false
+}
+
+// SetSourceZipFilename gets a reference to the given string and assigns it to the SourceZipFilename field.
+func (o *Deploy) SetSourceZipFilename(v string) {
+	o.SourceZipFilename = &v
+}
+
+// GetSkewProtectionToken returns the SkewProtectionToken field value if set, zero value otherwise.
+func (o *Deploy) GetSkewProtectionToken() string {
+	if o == nil || IsNil(o.SkewProtectionToken) {
+		var ret string
+		return ret
+	}
+	return *o.SkewProtectionToken
+}
+
+// GetSkewProtectionTokenOk returns a tuple with the SkewProtectionToken field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Deploy) GetSkewProtectionTokenOk() (*string, bool) {
+	if o == nil || IsNil(o.SkewProtectionToken) {
+		return nil, false
+	}
+	return o.SkewProtectionToken, true
+}
+
+// HasSkewProtectionToken returns a boolean if a field has been set.
+func (o *Deploy) HasSkewProtectionToken() bool {
+	if o != nil && !IsNil(o.SkewProtectionToken) {
+		return true
+	}
+
+	return false
+}
+
+// SetSkewProtectionToken gets a reference to the given string and assigns it to the SkewProtectionToken field.
+func (o *Deploy) SetSkewProtectionToken(v string) {
+	o.SkewProtectionToken = &v
+}
+
 func (o Deploy) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -1217,6 +1319,15 @@ func (o Deploy) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ExpiresAt) {
 		toSerialize["expires_at"] = o.ExpiresAt
+	}
+	if !IsNil(o.AgentRunnerId) {
+		toSerialize["agent_runner_id"] = o.AgentRunnerId
+	}
+	if !IsNil(o.SourceZipFilename) {
+		toSerialize["source_zip_filename"] = o.SourceZipFilename
+	}
+	if !IsNil(o.SkewProtectionToken) {
+		toSerialize["skew_protection_token"] = o.SkewProtectionToken
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -1340,6 +1451,9 @@ func (o *Deploy) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "function_schedules")
 		delete(additionalProperties, "edge_functions_present")
 		delete(additionalProperties, "expires_at")
+		delete(additionalProperties, "agent_runner_id")
+		delete(additionalProperties, "source_zip_filename")
+		delete(additionalProperties, "skew_protection_token")
 		o.AdditionalProperties = additionalProperties
 	}
 

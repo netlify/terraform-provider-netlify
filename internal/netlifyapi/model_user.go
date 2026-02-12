@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -25,6 +25,8 @@ type User struct {
 	Id string `json:"id"`
 	// The uid for multipass
 	Uid string `json:"uid"`
+	// The identifier for the user's personal account
+	AccountId string `json:"account_id"`
 	// The full name of the user
 	FullName string `json:"full_name"`
 	// The URL for the avatar
@@ -69,10 +71,11 @@ type _User User
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewUser(id string, uid string, fullName string, avatarUrl string, email string, siteCount int64, createdAt time.Time, lastLogin time.Time, loginProviders []string, slug string, connectedAccounts UserConnectedAccounts, trackingId string, mfaEnabled bool, samlAccountId string, samlSlug string, accessToken string, refreshToken string, preferredAccountId string, commandBarUserId string, favoriteSites []string) *User {
+func NewUser(id string, uid string, accountId string, fullName string, avatarUrl string, email string, siteCount int64, createdAt time.Time, lastLogin time.Time, loginProviders []string, slug string, connectedAccounts UserConnectedAccounts, trackingId string, mfaEnabled bool, samlAccountId string, samlSlug string, accessToken string, refreshToken string, preferredAccountId string, commandBarUserId string, favoriteSites []string) *User {
 	this := User{}
 	this.Id = id
 	this.Uid = uid
+	this.AccountId = accountId
 	this.FullName = fullName
 	this.AvatarUrl = avatarUrl
 	this.Email = email
@@ -148,6 +151,30 @@ func (o *User) GetUidOk() (*string, bool) {
 // SetUid sets field value
 func (o *User) SetUid(v string) {
 	o.Uid = v
+}
+
+// GetAccountId returns the AccountId field value
+func (o *User) GetAccountId() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.AccountId
+}
+
+// GetAccountIdOk returns a tuple with the AccountId field value
+// and a boolean to check if the value has been set.
+func (o *User) GetAccountIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.AccountId, true
+}
+
+// SetAccountId sets field value
+func (o *User) SetAccountId(v string) {
+	o.AccountId = v
 }
 
 // GetFullName returns the FullName field value
@@ -594,6 +621,7 @@ func (o User) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id
 	toSerialize["uid"] = o.Uid
+	toSerialize["account_id"] = o.AccountId
 	toSerialize["full_name"] = o.FullName
 	toSerialize["avatar_url"] = o.AvatarUrl
 	toSerialize["email"] = o.Email
@@ -627,6 +655,7 @@ func (o *User) UnmarshalJSON(data []byte) (err error) {
 	requiredProperties := []string{
 		"id",
 		"uid",
+		"account_id",
 		"full_name",
 		"avatar_url",
 		"email",
@@ -676,6 +705,7 @@ func (o *User) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "uid")
+		delete(additionalProperties, "account_id")
 		delete(additionalProperties, "full_name")
 		delete(additionalProperties, "avatar_url")
 		delete(additionalProperties, "email")

@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -17,11 +17,12 @@ import (
 // checks if the CDPUserConnectedAccounts type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &CDPUserConnectedAccounts{}
 
-// CDPUserConnectedAccounts information of the connected providers' slug if any
+// CDPUserConnectedAccounts information of the connected providers' slug/email if any
 type CDPUserConnectedAccounts struct {
 	Github *string `json:"github,omitempty"`
 	Gitlab *string `json:"gitlab,omitempty"`
 	Bitbucket *string `json:"bitbucket,omitempty"`
+	Google *string `json:"google,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -140,6 +141,38 @@ func (o *CDPUserConnectedAccounts) SetBitbucket(v string) {
 	o.Bitbucket = &v
 }
 
+// GetGoogle returns the Google field value if set, zero value otherwise.
+func (o *CDPUserConnectedAccounts) GetGoogle() string {
+	if o == nil || IsNil(o.Google) {
+		var ret string
+		return ret
+	}
+	return *o.Google
+}
+
+// GetGoogleOk returns a tuple with the Google field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CDPUserConnectedAccounts) GetGoogleOk() (*string, bool) {
+	if o == nil || IsNil(o.Google) {
+		return nil, false
+	}
+	return o.Google, true
+}
+
+// HasGoogle returns a boolean if a field has been set.
+func (o *CDPUserConnectedAccounts) HasGoogle() bool {
+	if o != nil && !IsNil(o.Google) {
+		return true
+	}
+
+	return false
+}
+
+// SetGoogle gets a reference to the given string and assigns it to the Google field.
+func (o *CDPUserConnectedAccounts) SetGoogle(v string) {
+	o.Google = &v
+}
+
 func (o CDPUserConnectedAccounts) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -158,6 +191,9 @@ func (o CDPUserConnectedAccounts) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Bitbucket) {
 		toSerialize["bitbucket"] = o.Bitbucket
+	}
+	if !IsNil(o.Google) {
+		toSerialize["google"] = o.Google
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -184,6 +220,7 @@ func (o *CDPUserConnectedAccounts) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "github")
 		delete(additionalProperties, "gitlab")
 		delete(additionalProperties, "bitbucket")
+		delete(additionalProperties, "google")
 		o.AdditionalProperties = additionalProperties
 	}
 

@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -38,9 +38,21 @@ type Account struct {
 	TypeName string `json:"type_name"`
 	TypeSlug string `json:"type_slug"`
 	UpdatedAt time.Time `json:"updated_at"`
-	Vat string `json:"vat"`
 	SupportAdministrationEnabled bool `json:"support_administration_enabled"`
 	DeployDiagnosticsSetting string `json:"deploy_diagnostics_setting"`
+	AiUsageEnabledSetting string `json:"ai_usage_enabled_setting"`
+	AiUsageLimitEnforced bool `json:"ai_usage_limit_enforced"`
+	AiUsageLimitCredits *int64 `json:"ai_usage_limit_credits,omitempty"`
+	ConfigurableLimitsExceeded []string `json:"configurable_limits_exceeded"`
+	AutoTopupEnabled bool `json:"auto_topup_enabled"`
+	// Usage percentage when credit alert is active
+	CreditAlertPercentage int64 `json:"credit_alert_percentage"`
+	// Version-specific credit allotment
+	PlanCredits *int64 `json:"plan_credits,omitempty"`
+	// Version-specific auto top-up amount
+	PlanAutoTopupAmount *string `json:"plan_auto_topup_amount,omitempty"`
+	// Version-specific auto top-up per unit cost
+	PlanAutoTopupPerUnitCost *string `json:"plan_auto_topup_per_unit_cost,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -50,7 +62,7 @@ type _Account Account
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAccount(billingEmail string, billingName string, billingPeriod string, capabilities map[string]interface{}, createdAt time.Time, id string, memberRoles []map[string]interface{}, name string, ownerIds []string, paymentMethodId string, role string, rolesAllowed []string, slug string, typeId string, typeName string, typeSlug string, updatedAt time.Time, vat string, supportAdministrationEnabled bool, deployDiagnosticsSetting string) *Account {
+func NewAccount(billingEmail string, billingName string, billingPeriod string, capabilities map[string]interface{}, createdAt time.Time, id string, memberRoles []map[string]interface{}, name string, ownerIds []string, paymentMethodId string, role string, rolesAllowed []string, slug string, typeId string, typeName string, typeSlug string, updatedAt time.Time, supportAdministrationEnabled bool, deployDiagnosticsSetting string, aiUsageEnabledSetting string, aiUsageLimitEnforced bool, configurableLimitsExceeded []string, autoTopupEnabled bool, creditAlertPercentage int64) *Account {
 	this := Account{}
 	this.BillingEmail = billingEmail
 	this.BillingName = billingName
@@ -69,9 +81,13 @@ func NewAccount(billingEmail string, billingName string, billingPeriod string, c
 	this.TypeName = typeName
 	this.TypeSlug = typeSlug
 	this.UpdatedAt = updatedAt
-	this.Vat = vat
 	this.SupportAdministrationEnabled = supportAdministrationEnabled
 	this.DeployDiagnosticsSetting = deployDiagnosticsSetting
+	this.AiUsageEnabledSetting = aiUsageEnabledSetting
+	this.AiUsageLimitEnforced = aiUsageLimitEnforced
+	this.ConfigurableLimitsExceeded = configurableLimitsExceeded
+	this.AutoTopupEnabled = autoTopupEnabled
+	this.CreditAlertPercentage = creditAlertPercentage
 	return &this
 }
 
@@ -491,30 +507,6 @@ func (o *Account) SetUpdatedAt(v time.Time) {
 	o.UpdatedAt = v
 }
 
-// GetVat returns the Vat field value
-func (o *Account) GetVat() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.Vat
-}
-
-// GetVatOk returns a tuple with the Vat field value
-// and a boolean to check if the value has been set.
-func (o *Account) GetVatOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.Vat, true
-}
-
-// SetVat sets field value
-func (o *Account) SetVat(v string) {
-	o.Vat = v
-}
-
 // GetSupportAdministrationEnabled returns the SupportAdministrationEnabled field value
 func (o *Account) GetSupportAdministrationEnabled() bool {
 	if o == nil {
@@ -563,6 +555,254 @@ func (o *Account) SetDeployDiagnosticsSetting(v string) {
 	o.DeployDiagnosticsSetting = v
 }
 
+// GetAiUsageEnabledSetting returns the AiUsageEnabledSetting field value
+func (o *Account) GetAiUsageEnabledSetting() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.AiUsageEnabledSetting
+}
+
+// GetAiUsageEnabledSettingOk returns a tuple with the AiUsageEnabledSetting field value
+// and a boolean to check if the value has been set.
+func (o *Account) GetAiUsageEnabledSettingOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.AiUsageEnabledSetting, true
+}
+
+// SetAiUsageEnabledSetting sets field value
+func (o *Account) SetAiUsageEnabledSetting(v string) {
+	o.AiUsageEnabledSetting = v
+}
+
+// GetAiUsageLimitEnforced returns the AiUsageLimitEnforced field value
+func (o *Account) GetAiUsageLimitEnforced() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.AiUsageLimitEnforced
+}
+
+// GetAiUsageLimitEnforcedOk returns a tuple with the AiUsageLimitEnforced field value
+// and a boolean to check if the value has been set.
+func (o *Account) GetAiUsageLimitEnforcedOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.AiUsageLimitEnforced, true
+}
+
+// SetAiUsageLimitEnforced sets field value
+func (o *Account) SetAiUsageLimitEnforced(v bool) {
+	o.AiUsageLimitEnforced = v
+}
+
+// GetAiUsageLimitCredits returns the AiUsageLimitCredits field value if set, zero value otherwise.
+func (o *Account) GetAiUsageLimitCredits() int64 {
+	if o == nil || IsNil(o.AiUsageLimitCredits) {
+		var ret int64
+		return ret
+	}
+	return *o.AiUsageLimitCredits
+}
+
+// GetAiUsageLimitCreditsOk returns a tuple with the AiUsageLimitCredits field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Account) GetAiUsageLimitCreditsOk() (*int64, bool) {
+	if o == nil || IsNil(o.AiUsageLimitCredits) {
+		return nil, false
+	}
+	return o.AiUsageLimitCredits, true
+}
+
+// HasAiUsageLimitCredits returns a boolean if a field has been set.
+func (o *Account) HasAiUsageLimitCredits() bool {
+	if o != nil && !IsNil(o.AiUsageLimitCredits) {
+		return true
+	}
+
+	return false
+}
+
+// SetAiUsageLimitCredits gets a reference to the given int64 and assigns it to the AiUsageLimitCredits field.
+func (o *Account) SetAiUsageLimitCredits(v int64) {
+	o.AiUsageLimitCredits = &v
+}
+
+// GetConfigurableLimitsExceeded returns the ConfigurableLimitsExceeded field value
+func (o *Account) GetConfigurableLimitsExceeded() []string {
+	if o == nil {
+		var ret []string
+		return ret
+	}
+
+	return o.ConfigurableLimitsExceeded
+}
+
+// GetConfigurableLimitsExceededOk returns a tuple with the ConfigurableLimitsExceeded field value
+// and a boolean to check if the value has been set.
+func (o *Account) GetConfigurableLimitsExceededOk() ([]string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.ConfigurableLimitsExceeded, true
+}
+
+// SetConfigurableLimitsExceeded sets field value
+func (o *Account) SetConfigurableLimitsExceeded(v []string) {
+	o.ConfigurableLimitsExceeded = v
+}
+
+// GetAutoTopupEnabled returns the AutoTopupEnabled field value
+func (o *Account) GetAutoTopupEnabled() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.AutoTopupEnabled
+}
+
+// GetAutoTopupEnabledOk returns a tuple with the AutoTopupEnabled field value
+// and a boolean to check if the value has been set.
+func (o *Account) GetAutoTopupEnabledOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.AutoTopupEnabled, true
+}
+
+// SetAutoTopupEnabled sets field value
+func (o *Account) SetAutoTopupEnabled(v bool) {
+	o.AutoTopupEnabled = v
+}
+
+// GetCreditAlertPercentage returns the CreditAlertPercentage field value
+func (o *Account) GetCreditAlertPercentage() int64 {
+	if o == nil {
+		var ret int64
+		return ret
+	}
+
+	return o.CreditAlertPercentage
+}
+
+// GetCreditAlertPercentageOk returns a tuple with the CreditAlertPercentage field value
+// and a boolean to check if the value has been set.
+func (o *Account) GetCreditAlertPercentageOk() (*int64, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.CreditAlertPercentage, true
+}
+
+// SetCreditAlertPercentage sets field value
+func (o *Account) SetCreditAlertPercentage(v int64) {
+	o.CreditAlertPercentage = v
+}
+
+// GetPlanCredits returns the PlanCredits field value if set, zero value otherwise.
+func (o *Account) GetPlanCredits() int64 {
+	if o == nil || IsNil(o.PlanCredits) {
+		var ret int64
+		return ret
+	}
+	return *o.PlanCredits
+}
+
+// GetPlanCreditsOk returns a tuple with the PlanCredits field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Account) GetPlanCreditsOk() (*int64, bool) {
+	if o == nil || IsNil(o.PlanCredits) {
+		return nil, false
+	}
+	return o.PlanCredits, true
+}
+
+// HasPlanCredits returns a boolean if a field has been set.
+func (o *Account) HasPlanCredits() bool {
+	if o != nil && !IsNil(o.PlanCredits) {
+		return true
+	}
+
+	return false
+}
+
+// SetPlanCredits gets a reference to the given int64 and assigns it to the PlanCredits field.
+func (o *Account) SetPlanCredits(v int64) {
+	o.PlanCredits = &v
+}
+
+// GetPlanAutoTopupAmount returns the PlanAutoTopupAmount field value if set, zero value otherwise.
+func (o *Account) GetPlanAutoTopupAmount() string {
+	if o == nil || IsNil(o.PlanAutoTopupAmount) {
+		var ret string
+		return ret
+	}
+	return *o.PlanAutoTopupAmount
+}
+
+// GetPlanAutoTopupAmountOk returns a tuple with the PlanAutoTopupAmount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Account) GetPlanAutoTopupAmountOk() (*string, bool) {
+	if o == nil || IsNil(o.PlanAutoTopupAmount) {
+		return nil, false
+	}
+	return o.PlanAutoTopupAmount, true
+}
+
+// HasPlanAutoTopupAmount returns a boolean if a field has been set.
+func (o *Account) HasPlanAutoTopupAmount() bool {
+	if o != nil && !IsNil(o.PlanAutoTopupAmount) {
+		return true
+	}
+
+	return false
+}
+
+// SetPlanAutoTopupAmount gets a reference to the given string and assigns it to the PlanAutoTopupAmount field.
+func (o *Account) SetPlanAutoTopupAmount(v string) {
+	o.PlanAutoTopupAmount = &v
+}
+
+// GetPlanAutoTopupPerUnitCost returns the PlanAutoTopupPerUnitCost field value if set, zero value otherwise.
+func (o *Account) GetPlanAutoTopupPerUnitCost() string {
+	if o == nil || IsNil(o.PlanAutoTopupPerUnitCost) {
+		var ret string
+		return ret
+	}
+	return *o.PlanAutoTopupPerUnitCost
+}
+
+// GetPlanAutoTopupPerUnitCostOk returns a tuple with the PlanAutoTopupPerUnitCost field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Account) GetPlanAutoTopupPerUnitCostOk() (*string, bool) {
+	if o == nil || IsNil(o.PlanAutoTopupPerUnitCost) {
+		return nil, false
+	}
+	return o.PlanAutoTopupPerUnitCost, true
+}
+
+// HasPlanAutoTopupPerUnitCost returns a boolean if a field has been set.
+func (o *Account) HasPlanAutoTopupPerUnitCost() bool {
+	if o != nil && !IsNil(o.PlanAutoTopupPerUnitCost) {
+		return true
+	}
+
+	return false
+}
+
+// SetPlanAutoTopupPerUnitCost gets a reference to the given string and assigns it to the PlanAutoTopupPerUnitCost field.
+func (o *Account) SetPlanAutoTopupPerUnitCost(v string) {
+	o.PlanAutoTopupPerUnitCost = &v
+}
+
 func (o Account) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -590,9 +830,25 @@ func (o Account) ToMap() (map[string]interface{}, error) {
 	toSerialize["type_name"] = o.TypeName
 	toSerialize["type_slug"] = o.TypeSlug
 	toSerialize["updated_at"] = o.UpdatedAt
-	toSerialize["vat"] = o.Vat
 	toSerialize["support_administration_enabled"] = o.SupportAdministrationEnabled
 	toSerialize["deploy_diagnostics_setting"] = o.DeployDiagnosticsSetting
+	toSerialize["ai_usage_enabled_setting"] = o.AiUsageEnabledSetting
+	toSerialize["ai_usage_limit_enforced"] = o.AiUsageLimitEnforced
+	if !IsNil(o.AiUsageLimitCredits) {
+		toSerialize["ai_usage_limit_credits"] = o.AiUsageLimitCredits
+	}
+	toSerialize["configurable_limits_exceeded"] = o.ConfigurableLimitsExceeded
+	toSerialize["auto_topup_enabled"] = o.AutoTopupEnabled
+	toSerialize["credit_alert_percentage"] = o.CreditAlertPercentage
+	if !IsNil(o.PlanCredits) {
+		toSerialize["plan_credits"] = o.PlanCredits
+	}
+	if !IsNil(o.PlanAutoTopupAmount) {
+		toSerialize["plan_auto_topup_amount"] = o.PlanAutoTopupAmount
+	}
+	if !IsNil(o.PlanAutoTopupPerUnitCost) {
+		toSerialize["plan_auto_topup_per_unit_cost"] = o.PlanAutoTopupPerUnitCost
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -623,9 +879,13 @@ func (o *Account) UnmarshalJSON(data []byte) (err error) {
 		"type_name",
 		"type_slug",
 		"updated_at",
-		"vat",
 		"support_administration_enabled",
 		"deploy_diagnostics_setting",
+		"ai_usage_enabled_setting",
+		"ai_usage_limit_enforced",
+		"configurable_limits_exceeded",
+		"auto_topup_enabled",
+		"credit_alert_percentage",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -672,9 +932,17 @@ func (o *Account) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "type_name")
 		delete(additionalProperties, "type_slug")
 		delete(additionalProperties, "updated_at")
-		delete(additionalProperties, "vat")
 		delete(additionalProperties, "support_administration_enabled")
 		delete(additionalProperties, "deploy_diagnostics_setting")
+		delete(additionalProperties, "ai_usage_enabled_setting")
+		delete(additionalProperties, "ai_usage_limit_enforced")
+		delete(additionalProperties, "ai_usage_limit_credits")
+		delete(additionalProperties, "configurable_limits_exceeded")
+		delete(additionalProperties, "auto_topup_enabled")
+		delete(additionalProperties, "credit_alert_percentage")
+		delete(additionalProperties, "plan_credits")
+		delete(additionalProperties, "plan_auto_topup_amount")
+		delete(additionalProperties, "plan_auto_topup_per_unit_cost")
 		o.AdditionalProperties = additionalProperties
 	}
 

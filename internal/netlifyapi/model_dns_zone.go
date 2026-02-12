@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -52,6 +52,8 @@ type DnsZone struct {
 	CreatedAt time.Time `json:"created_at"`
 	// When the DNS zone was updated
 	UpdatedAt time.Time `json:"updated_at"`
+	// Whether the domain was registered with Netlify
+	UsesNetlifyRegistrar bool `json:"uses_netlify_registrar"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -61,7 +63,7 @@ type _DnsZone DnsZone
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDnsZone(id string, name string, errors []string, supportedRecordTypes []string, userId string, records []DnsRecord, dnsServers []string, accountId string, siteId string, accountSlug string, accountName string, ipv6Enabled bool, dedicated bool, createdAt time.Time, updatedAt time.Time) *DnsZone {
+func NewDnsZone(id string, name string, errors []string, supportedRecordTypes []string, userId string, records []DnsRecord, dnsServers []string, accountId string, siteId string, accountSlug string, accountName string, ipv6Enabled bool, dedicated bool, createdAt time.Time, updatedAt time.Time, usesNetlifyRegistrar bool) *DnsZone {
 	this := DnsZone{}
 	this.Id = id
 	this.Name = name
@@ -78,6 +80,7 @@ func NewDnsZone(id string, name string, errors []string, supportedRecordTypes []
 	this.Dedicated = dedicated
 	this.CreatedAt = createdAt
 	this.UpdatedAt = updatedAt
+	this.UsesNetlifyRegistrar = usesNetlifyRegistrar
 	return &this
 }
 
@@ -481,6 +484,30 @@ func (o *DnsZone) SetUpdatedAt(v time.Time) {
 	o.UpdatedAt = v
 }
 
+// GetUsesNetlifyRegistrar returns the UsesNetlifyRegistrar field value
+func (o *DnsZone) GetUsesNetlifyRegistrar() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.UsesNetlifyRegistrar
+}
+
+// GetUsesNetlifyRegistrarOk returns a tuple with the UsesNetlifyRegistrar field value
+// and a boolean to check if the value has been set.
+func (o *DnsZone) GetUsesNetlifyRegistrarOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.UsesNetlifyRegistrar, true
+}
+
+// SetUsesNetlifyRegistrar sets field value
+func (o *DnsZone) SetUsesNetlifyRegistrar(v bool) {
+	o.UsesNetlifyRegistrar = v
+}
+
 func (o DnsZone) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -509,6 +536,7 @@ func (o DnsZone) ToMap() (map[string]interface{}, error) {
 	toSerialize["dedicated"] = o.Dedicated
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["updated_at"] = o.UpdatedAt
+	toSerialize["uses_netlify_registrar"] = o.UsesNetlifyRegistrar
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -537,6 +565,7 @@ func (o *DnsZone) UnmarshalJSON(data []byte) (err error) {
 		"dedicated",
 		"created_at",
 		"updated_at",
+		"uses_netlify_registrar",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -582,6 +611,7 @@ func (o *DnsZone) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "dedicated")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "uses_netlify_registrar")
 		o.AdditionalProperties = additionalProperties
 	}
 

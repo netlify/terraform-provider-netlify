@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -465,27 +465,34 @@ func (a *SitesAPIService) DeleteSiteFirewallRuleSetExecute(r ApiDeleteSiteFirewa
 	return localVarHTTPResponse, nil
 }
 
-type ApiGetSimplePublicSiteRequest struct {
+type ApiDisableSiteRequest struct {
 	ctx context.Context
 	ApiService *SitesAPIService
+	reason *string
 	siteId string
 }
 
-func (r ApiGetSimplePublicSiteRequest) Execute() (*SiteSimple, *http.Response, error) {
-	return r.ApiService.GetSimplePublicSiteExecute(r)
+// Reason for disabling the site
+func (r ApiDisableSiteRequest) Reason(reason string) ApiDisableSiteRequest {
+	r.reason = &reason
+	return r
+}
+
+func (r ApiDisableSiteRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DisableSiteExecute(r)
 }
 
 /*
-GetSimplePublicSite Method for GetSimplePublicSite
+DisableSite Method for DisableSite
 
-Returns public information about a site.
+Disable a site.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param siteId The ID of the site
- @return ApiGetSimplePublicSiteRequest
+ @return ApiDisableSiteRequest
 */
-func (a *SitesAPIService) GetSimplePublicSite(ctx context.Context, siteId string) ApiGetSimplePublicSiteRequest {
-	return ApiGetSimplePublicSiteRequest{
+func (a *SitesAPIService) DisableSite(ctx context.Context, siteId string) ApiDisableSiteRequest {
+	return ApiDisableSiteRequest{
 		ApiService: a,
 		ctx: ctx,
 		siteId: siteId,
@@ -493,21 +500,115 @@ func (a *SitesAPIService) GetSimplePublicSite(ctx context.Context, siteId string
 }
 
 // Execute executes the request
-//  @return SiteSimple
-func (a *SitesAPIService) GetSimplePublicSiteExecute(r ApiGetSimplePublicSiteRequest) (*SiteSimple, *http.Response, error) {
+func (a *SitesAPIService) DisableSiteExecute(r ApiDisableSiteRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
+		localVarHTTPMethod   = http.MethodPut
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *SiteSimple
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SitesAPIService.GetSimplePublicSite")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SitesAPIService.DisableSite")
 	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/api/v1/sites/{site_id}/simple"
+	localVarPath := localBasePath + "/api/v1/sites/{site_id}/disable"
+	localVarPath = strings.Replace(localVarPath, "{"+"site_id"+"}", url.PathEscape(parameterValueToString(r.siteId, "siteId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.reason == nil {
+		return nil, reportError("reason is required and must be specified")
+	}
+
+	parameterAddToHeaderOrQuery(localVarQueryParams, "reason", r.reason, "form", "")
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+type ApiEnableSiteRequest struct {
+	ctx context.Context
+	ApiService *SitesAPIService
+	siteId string
+}
+
+func (r ApiEnableSiteRequest) Execute() (*http.Response, error) {
+	return r.ApiService.EnableSiteExecute(r)
+}
+
+/*
+EnableSite Method for EnableSite
+
+Enable a site.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param siteId The ID of the site
+ @return ApiEnableSiteRequest
+*/
+func (a *SitesAPIService) EnableSite(ctx context.Context, siteId string) ApiEnableSiteRequest {
+	return ApiEnableSiteRequest{
+		ApiService: a,
+		ctx: ctx,
+		siteId: siteId,
+	}
+}
+
+// Execute executes the request
+func (a *SitesAPIService) EnableSiteExecute(r ApiEnableSiteRequest) (*http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPut
+		localVarPostBody     interface{}
+		formFiles            []formFile
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SitesAPIService.EnableSite")
+	if err != nil {
+		return nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/sites/{site_id}/enable"
 	localVarPath = strings.Replace(localVarPath, "{"+"site_id"+"}", url.PathEscape(parameterValueToString(r.siteId, "siteId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
@@ -524,7 +625,7 @@ func (a *SitesAPIService) GetSimplePublicSiteExecute(r ApiGetSimplePublicSiteReq
 	}
 
 	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
+	localVarHTTPHeaderAccepts := []string{}
 
 	// set Accept header
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
@@ -533,19 +634,19 @@ func (a *SitesAPIService) GetSimplePublicSiteExecute(r ApiGetSimplePublicSiteReq
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
-		return localVarReturnValue, nil, err
+		return nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
+		return localVarHTTPResponse, err
 	}
 
 	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
+		return localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -553,19 +654,10 @@ func (a *SitesAPIService) GetSimplePublicSiteExecute(r ApiGetSimplePublicSiteReq
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
+		return localVarHTTPResponse, newErr
 	}
 
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
+	return localVarHTTPResponse, nil
 }
 
 type ApiGetSiteRequest struct {
@@ -1080,6 +1172,7 @@ type ApiListSitesForAccountRequest struct {
 	ApiService *SitesAPIService
 	accountSlug string
 	filter *string
+	includeFavorites *bool
 	name *string
 	page *int64
 	perPage *int64
@@ -1090,6 +1183,12 @@ type ApiListSitesForAccountRequest struct {
 // filter
 func (r ApiListSitesForAccountRequest) Filter(filter string) ApiListSitesForAccountRequest {
 	r.filter = &filter
+	return r
+}
+
+// include_favorites
+func (r ApiListSitesForAccountRequest) IncludeFavorites(includeFavorites bool) ApiListSitesForAccountRequest {
+	r.includeFavorites = &includeFavorites
 	return r
 }
 
@@ -1168,6 +1267,9 @@ func (a *SitesAPIService) ListSitesForAccountExecute(r ApiListSitesForAccountReq
 
 	if r.filter != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "filter", r.filter, "form", "")
+	}
+	if r.includeFavorites != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "include_favorites", r.includeFavorites, "form", "")
 	}
 	if r.name != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "form", "")
@@ -1333,6 +1435,109 @@ func (a *SitesAPIService) RollbackSiteDeployExecute(r ApiRollbackSiteDeployReque
 	return localVarHTTPResponse, nil
 }
 
+type ApiSearchSiteFunctionsRequest struct {
+	ctx context.Context
+	ApiService *SitesAPIService
+	id string
+}
+
+func (r ApiSearchSiteFunctionsRequest) Execute() (map[string]interface{}, *http.Response, error) {
+	return r.ApiService.SearchSiteFunctionsExecute(r)
+}
+
+/*
+SearchSiteFunctions Method for SearchSiteFunctions
+
+Searches the site for matching functions.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param id The site ID
+ @return ApiSearchSiteFunctionsRequest
+*/
+func (a *SitesAPIService) SearchSiteFunctions(ctx context.Context, id string) ApiSearchSiteFunctionsRequest {
+	return ApiSearchSiteFunctionsRequest{
+		ApiService: a,
+		ctx: ctx,
+		id: id,
+	}
+}
+
+// Execute executes the request
+//  @return map[string]interface{}
+func (a *SitesAPIService) SearchSiteFunctionsExecute(r ApiSearchSiteFunctionsRequest) (map[string]interface{}, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  map[string]interface{}
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SitesAPIService.SearchSiteFunctions")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/sites/{id}/functions"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", url.PathEscape(parameterValueToString(r.id, "id")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiUnlinkSiteRepoRequest struct {
 	ctx context.Context
 	ApiService *SitesAPIService
@@ -1351,6 +1556,7 @@ This will:
 * Delete associated deploy keys
 * Delete outgoing webhooks for the repo
 * Delete the site's build hooks
+* Delete associated visual editing project
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param id The ID of the site

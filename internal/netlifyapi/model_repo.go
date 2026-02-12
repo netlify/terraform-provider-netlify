@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -31,11 +31,10 @@ type Repo struct {
 	Env map[string]interface{} `json:"env,omitempty"`
 	FunctionsDir *string `json:"functions_dir,omitempty"`
 	InstallationId *int64 `json:"installation_id,omitempty"`
-	PackagePath *string `json:"package_path,omitempty"`
+	InstallationCodingId *int64 `json:"installation_coding_id,omitempty"`
 	PrivateLogs *bool `json:"private_logs,omitempty"`
 	Provider *string `json:"provider,omitempty"`
 	PublicRepo *bool `json:"public_repo,omitempty"`
-	Branch *string `json:"branch,omitempty"`
 	RepoBranch *string `json:"repo_branch,omitempty"`
 	RepoOwnerType *string `json:"repo_owner_type,omitempty"`
 	RepoPath *string `json:"repo_path,omitempty"`
@@ -47,6 +46,8 @@ type Repo struct {
 	StopBuilds *bool `json:"stop_builds,omitempty"`
 	UntrustedFlow *string `json:"untrusted_flow,omitempty"`
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	Branch *string `json:"branch,omitempty"`
+	PackagePath *string `json:"package_path,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -421,36 +422,36 @@ func (o *Repo) SetInstallationId(v int64) {
 	o.InstallationId = &v
 }
 
-// GetPackagePath returns the PackagePath field value if set, zero value otherwise.
-func (o *Repo) GetPackagePath() string {
-	if o == nil || IsNil(o.PackagePath) {
-		var ret string
+// GetInstallationCodingId returns the InstallationCodingId field value if set, zero value otherwise.
+func (o *Repo) GetInstallationCodingId() int64 {
+	if o == nil || IsNil(o.InstallationCodingId) {
+		var ret int64
 		return ret
 	}
-	return *o.PackagePath
+	return *o.InstallationCodingId
 }
 
-// GetPackagePathOk returns a tuple with the PackagePath field value if set, nil otherwise
+// GetInstallationCodingIdOk returns a tuple with the InstallationCodingId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Repo) GetPackagePathOk() (*string, bool) {
-	if o == nil || IsNil(o.PackagePath) {
+func (o *Repo) GetInstallationCodingIdOk() (*int64, bool) {
+	if o == nil || IsNil(o.InstallationCodingId) {
 		return nil, false
 	}
-	return o.PackagePath, true
+	return o.InstallationCodingId, true
 }
 
-// HasPackagePath returns a boolean if a field has been set.
-func (o *Repo) HasPackagePath() bool {
-	if o != nil && !IsNil(o.PackagePath) {
+// HasInstallationCodingId returns a boolean if a field has been set.
+func (o *Repo) HasInstallationCodingId() bool {
+	if o != nil && !IsNil(o.InstallationCodingId) {
 		return true
 	}
 
 	return false
 }
 
-// SetPackagePath gets a reference to the given string and assigns it to the PackagePath field.
-func (o *Repo) SetPackagePath(v string) {
-	o.PackagePath = &v
+// SetInstallationCodingId gets a reference to the given int64 and assigns it to the InstallationCodingId field.
+func (o *Repo) SetInstallationCodingId(v int64) {
+	o.InstallationCodingId = &v
 }
 
 // GetPrivateLogs returns the PrivateLogs field value if set, zero value otherwise.
@@ -547,38 +548,6 @@ func (o *Repo) HasPublicRepo() bool {
 // SetPublicRepo gets a reference to the given bool and assigns it to the PublicRepo field.
 func (o *Repo) SetPublicRepo(v bool) {
 	o.PublicRepo = &v
-}
-
-// GetBranch returns the Branch field value if set, zero value otherwise.
-func (o *Repo) GetBranch() string {
-	if o == nil || IsNil(o.Branch) {
-		var ret string
-		return ret
-	}
-	return *o.Branch
-}
-
-// GetBranchOk returns a tuple with the Branch field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Repo) GetBranchOk() (*string, bool) {
-	if o == nil || IsNil(o.Branch) {
-		return nil, false
-	}
-	return o.Branch, true
-}
-
-// HasBranch returns a boolean if a field has been set.
-func (o *Repo) HasBranch() bool {
-	if o != nil && !IsNil(o.Branch) {
-		return true
-	}
-
-	return false
-}
-
-// SetBranch gets a reference to the given string and assigns it to the Branch field.
-func (o *Repo) SetBranch(v string) {
-	o.Branch = &v
 }
 
 // GetRepoBranch returns the RepoBranch field value if set, zero value otherwise.
@@ -901,6 +870,70 @@ func (o *Repo) SetUpdatedAt(v time.Time) {
 	o.UpdatedAt = &v
 }
 
+// GetBranch returns the Branch field value if set, zero value otherwise.
+func (o *Repo) GetBranch() string {
+	if o == nil || IsNil(o.Branch) {
+		var ret string
+		return ret
+	}
+	return *o.Branch
+}
+
+// GetBranchOk returns a tuple with the Branch field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Repo) GetBranchOk() (*string, bool) {
+	if o == nil || IsNil(o.Branch) {
+		return nil, false
+	}
+	return o.Branch, true
+}
+
+// HasBranch returns a boolean if a field has been set.
+func (o *Repo) HasBranch() bool {
+	if o != nil && !IsNil(o.Branch) {
+		return true
+	}
+
+	return false
+}
+
+// SetBranch gets a reference to the given string and assigns it to the Branch field.
+func (o *Repo) SetBranch(v string) {
+	o.Branch = &v
+}
+
+// GetPackagePath returns the PackagePath field value if set, zero value otherwise.
+func (o *Repo) GetPackagePath() string {
+	if o == nil || IsNil(o.PackagePath) {
+		var ret string
+		return ret
+	}
+	return *o.PackagePath
+}
+
+// GetPackagePathOk returns a tuple with the PackagePath field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Repo) GetPackagePathOk() (*string, bool) {
+	if o == nil || IsNil(o.PackagePath) {
+		return nil, false
+	}
+	return o.PackagePath, true
+}
+
+// HasPackagePath returns a boolean if a field has been set.
+func (o *Repo) HasPackagePath() bool {
+	if o != nil && !IsNil(o.PackagePath) {
+		return true
+	}
+
+	return false
+}
+
+// SetPackagePath gets a reference to the given string and assigns it to the PackagePath field.
+func (o *Repo) SetPackagePath(v string) {
+	o.PackagePath = &v
+}
+
 func (o Repo) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -944,8 +977,8 @@ func (o Repo) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.InstallationId) {
 		toSerialize["installation_id"] = o.InstallationId
 	}
-	if !IsNil(o.PackagePath) {
-		toSerialize["package_path"] = o.PackagePath
+	if !IsNil(o.InstallationCodingId) {
+		toSerialize["installation_coding_id"] = o.InstallationCodingId
 	}
 	if !IsNil(o.PrivateLogs) {
 		toSerialize["private_logs"] = o.PrivateLogs
@@ -955,9 +988,6 @@ func (o Repo) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.PublicRepo) {
 		toSerialize["public_repo"] = o.PublicRepo
-	}
-	if !IsNil(o.Branch) {
-		toSerialize["branch"] = o.Branch
 	}
 	if !IsNil(o.RepoBranch) {
 		toSerialize["repo_branch"] = o.RepoBranch
@@ -988,6 +1018,12 @@ func (o Repo) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.UpdatedAt) {
 		toSerialize["updated_at"] = o.UpdatedAt
+	}
+	if !IsNil(o.Branch) {
+		toSerialize["branch"] = o.Branch
+	}
+	if !IsNil(o.PackagePath) {
+		toSerialize["package_path"] = o.PackagePath
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -1022,11 +1058,10 @@ func (o *Repo) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "env")
 		delete(additionalProperties, "functions_dir")
 		delete(additionalProperties, "installation_id")
-		delete(additionalProperties, "package_path")
+		delete(additionalProperties, "installation_coding_id")
 		delete(additionalProperties, "private_logs")
 		delete(additionalProperties, "provider")
 		delete(additionalProperties, "public_repo")
-		delete(additionalProperties, "branch")
 		delete(additionalProperties, "repo_branch")
 		delete(additionalProperties, "repo_owner_type")
 		delete(additionalProperties, "repo_path")
@@ -1037,6 +1072,8 @@ func (o *Repo) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "stop_builds")
 		delete(additionalProperties, "untrusted_flow")
 		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "branch")
+		delete(additionalProperties, "package_path")
 		o.AdditionalProperties = additionalProperties
 	}
 

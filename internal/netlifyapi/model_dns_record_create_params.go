@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -33,10 +33,12 @@ type DnsRecordCreateParams struct {
 	Ttl *int64 `json:"ttl,omitempty"`
 	// The priority of the DNS record
 	Priority *int64 `json:"priority,omitempty"`
-	// The weight of the DNS record (for SRV type record)
+	// The weight of the DNS record (for SRV and HTTPS type record)
 	Weight *int64 `json:"weight,omitempty"`
 	// The port of the DNS record (for SRV type record)
 	Port *int64 `json:"port,omitempty"`
+	// The target of the DNS record (for HTTPS type record)
+	Target *string `json:"target,omitempty"`
 	// The flag of the DNS record (for CAA type record)
 	Flag *int64 `json:"flag,omitempty"`
 	// The tag of the DNS record (for CAA type record)
@@ -351,6 +353,38 @@ func (o *DnsRecordCreateParams) SetPort(v int64) {
 	o.Port = &v
 }
 
+// GetTarget returns the Target field value if set, zero value otherwise.
+func (o *DnsRecordCreateParams) GetTarget() string {
+	if o == nil || IsNil(o.Target) {
+		var ret string
+		return ret
+	}
+	return *o.Target
+}
+
+// GetTargetOk returns a tuple with the Target field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DnsRecordCreateParams) GetTargetOk() (*string, bool) {
+	if o == nil || IsNil(o.Target) {
+		return nil, false
+	}
+	return o.Target, true
+}
+
+// HasTarget returns a boolean if a field has been set.
+func (o *DnsRecordCreateParams) HasTarget() bool {
+	if o != nil && !IsNil(o.Target) {
+		return true
+	}
+
+	return false
+}
+
+// SetTarget gets a reference to the given string and assigns it to the Target field.
+func (o *DnsRecordCreateParams) SetTarget(v string) {
+	o.Target = &v
+}
+
 // GetFlag returns the Flag field value if set, zero value otherwise.
 func (o *DnsRecordCreateParams) GetFlag() int64 {
 	if o == nil || IsNil(o.Flag) {
@@ -452,6 +486,9 @@ func (o DnsRecordCreateParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Port) {
 		toSerialize["port"] = o.Port
 	}
+	if !IsNil(o.Target) {
+		toSerialize["target"] = o.Target
+	}
 	if !IsNil(o.Flag) {
 		toSerialize["flag"] = o.Flag
 	}
@@ -489,6 +526,7 @@ func (o *DnsRecordCreateParams) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "priority")
 		delete(additionalProperties, "weight")
 		delete(additionalProperties, "port")
+		delete(additionalProperties, "target")
 		delete(additionalProperties, "flag")
 		delete(additionalProperties, "tag")
 		o.AdditionalProperties = additionalProperties

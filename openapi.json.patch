@@ -1,0 +1,1233 @@
+{
+  "components": {
+    "schemas": {
+      "Site": {
+        "properties": {
+          "analytics_instance_id": {
+            "type": "string"
+          },
+          "cdp_enabled_contexts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "functions_region": {
+            "type": "string"
+          },
+          "hud_enabled": {
+            "type": "boolean"
+          },
+          "rum_enabled": {
+            "type": "boolean"
+          },
+          "prevent_non_git_prod_deploys": {
+            "type": "boolean"
+          }
+        }
+      },
+      "LogDrainServiceConfig": {
+        "properties": {
+          "tags": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "integration_name": {
+            "type": "string"
+          },
+          "authorization_header": {
+            "type": "string"
+          },
+          "bucket_name": {
+            "type": "string"
+          },
+          "bucket_region": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "verification_filename": {
+            "type": "string"
+          }
+        }
+      },
+      "Repo": {
+        "properties": {
+          "branch": {
+            "type": "string"
+          },
+          "package_path": {
+            "type": "string"
+          }
+        }
+      },
+      "WafPolicy": {
+        "example": {
+          "name": "name",
+          "description": "description",
+          "rule_sets": [
+            {
+              "excluded_patterns": ["excluded_patterns", "excluded_patterns"],
+              "category_thresholds": {
+                "key": 6
+              },
+              "overall_threshold": 0,
+              "passive_mode": true,
+              "managed_id": "managed_id",
+              "rule_overrides": {
+                "key": {
+                  "action": "action"
+                }
+              }
+            },
+            {
+              "excluded_patterns": ["excluded_patterns", "excluded_patterns"],
+              "category_thresholds": {
+                "key": 6
+              },
+              "overall_threshold": 0,
+              "passive_mode": true,
+              "managed_id": "managed_id",
+              "rule_overrides": {
+                "key": {
+                  "action": "action"
+                }
+              }
+            }
+          ],
+          "id": "id"
+        },
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "rule_sets": {
+            "items": {
+              "$ref": "#/components/schemas/WafPolicy_rule_sets_inner"
+            },
+            "type": "array"
+          }
+        },
+        "required": ["description", "name", "rule_sets"]
+      },
+      "WafPolicyRuleOverride": {
+        "example": {
+          "action": "action"
+        },
+        "properties": {
+          "action": {
+            "type": "string"
+          }
+        },
+        "required": ["action"]
+      },
+      "WafPolicyUpdate": {
+        "example": {
+          "policy_id": "policy_id"
+        },
+        "properties": {
+          "policy_id": {
+            "type": "string"
+          }
+        },
+        "required": ["policy_id"]
+      },
+      "ManagedWafRules": {
+        "example": {
+          "rule_sets": {
+            "key": {
+              "definition": {
+                "id": "id",
+                "type": "type",
+                "version": "version"
+              },
+              "rules": [
+                {
+                  "phase": "phase",
+                  "severity": "severity",
+                  "description": "description",
+                  "id": "id",
+                  "category": "category"
+                },
+                {
+                  "phase": "phase",
+                  "severity": "severity",
+                  "description": "description",
+                  "id": "id",
+                  "category": "category"
+                }
+              ]
+            }
+          }
+        },
+        "properties": {
+          "rule_sets": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ManagedWafRuleSet"
+            }
+          }
+        }
+      },
+      "ManagedWafRuleSet": {
+        "example": {
+          "definition": {
+            "id": "id",
+            "type": "type",
+            "version": "version"
+          },
+          "rules": [
+            {
+              "phase": "phase",
+              "severity": "severity",
+              "description": "description",
+              "id": "id",
+              "category": "category"
+            },
+            {
+              "phase": "phase",
+              "severity": "severity",
+              "description": "description",
+              "id": "id",
+              "category": "category"
+            }
+          ]
+        },
+        "properties": {
+          "definition": {
+            "$ref": "#/components/schemas/ManagedWafRuleSet_definition"
+          },
+          "rules": {
+            "items": {
+              "$ref": "#/components/schemas/ManagedWafRuleSet_rules_inner"
+            },
+            "type": "array"
+          }
+        }
+      },
+      "WafPolicy_rule_sets_inner": {
+        "example": {
+          "excluded_patterns": ["excluded_patterns", "excluded_patterns"],
+          "category_thresholds": {
+            "key": 6
+          },
+          "overall_threshold": 0,
+          "passive_mode": true,
+          "managed_id": "managed_id",
+          "rule_overrides": {
+            "key": {
+              "action": "action"
+            }
+          }
+        },
+        "properties": {
+          "managed_id": {
+            "type": "string"
+          },
+          "excluded_patterns": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "passive_mode": {
+            "type": "boolean"
+          },
+          "overall_threshold": {
+            "type": "integer"
+          },
+          "category_thresholds": {
+            "additionalProperties": {
+              "type": "integer"
+            }
+          },
+          "rule_overrides": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/WafPolicyRuleOverride"
+            }
+          }
+        },
+        "required": ["overall_threshold"]
+      },
+      "ManagedWafRuleSet_definition": {
+        "example": {
+          "id": "id",
+          "type": "type",
+          "version": "version"
+        },
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          }
+        }
+      },
+      "ManagedWafRuleSet_rules_inner": {
+        "example": {
+          "phase": "phase",
+          "severity": "severity",
+          "description": "description",
+          "id": "id",
+          "category": "category"
+        },
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "phase": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/v1/accounts/{account_id}/waf/policies": {
+      "post": {
+        "description": "Creates a new WAF policy for the account.",
+        "operationId": "createWafPolicy",
+        "parameters": [
+          {
+            "description": "The ID of the account",
+            "explode": false,
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "schema": { "type": "string" },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/WafPolicy" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WafPolicyUpdate"
+                }
+              }
+            },
+            "description": "WAF Policy created"
+          }
+        },
+        "tags": ["WAF Policies"]
+      }
+    },
+    "/api/v1/sites/{site_id}/waf/policy": {
+      "get": {
+        "description": "Retrieves the WAF policy for the site.",
+        "operationId": "getSiteWafPolicy",
+        "parameters": [
+          {
+            "description": "The ID of the site",
+            "explode": false,
+            "in": "path",
+            "name": "site_id",
+            "required": true,
+            "schema": { "type": "string" },
+            "style": "simple"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/WafPolicy" }
+              }
+            },
+            "description": "WAF Policy retrieved"
+          },
+          "404": { "description": "WAF Policy not found" }
+        },
+        "tags": ["WAF Policies"]
+      },
+      "put": {
+        "description": "Updates the WAF policy for the site.",
+        "operationId": "updateSiteWafPolicy",
+        "parameters": [
+          {
+            "description": "The ID of the site",
+            "explode": false,
+            "in": "path",
+            "name": "site_id",
+            "required": true,
+            "schema": { "type": "string" },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/WafPolicyUpdate" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": { "application/json": {} },
+            "description": "WAF Policy updated"
+          }
+        },
+        "tags": ["WAF Policies"]
+      }
+    },
+    "/api/v1/accounts/{account_id}/waf/policies/{policy_id}": {
+      "delete": {
+        "description": "Deletes the WAF policy for the account.",
+        "operationId": "deleteWafPolicy",
+        "parameters": [
+          {
+            "description": "The ID of the account",
+            "explode": false,
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "schema": { "type": "string" },
+            "style": "simple"
+          },
+          {
+            "description": "The ID of the WAF policy",
+            "explode": false,
+            "in": "path",
+            "name": "policy_id",
+            "required": true,
+            "schema": { "type": "string" },
+            "style": "simple"
+          }
+        ],
+        "responses": {
+          "202": {
+            "content": { "application/json": {} },
+            "description": "WAF Policy deleted"
+          }
+        },
+        "tags": ["WAF Policies"]
+      },
+      "get": {
+        "description": "Retrieves the WAF policy for the account.",
+        "operationId": "getWafPolicy",
+        "parameters": [
+          {
+            "description": "The ID of the account",
+            "explode": false,
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "schema": { "type": "string" },
+            "style": "simple"
+          },
+          {
+            "description": "The ID of the WAF policy",
+            "explode": false,
+            "in": "path",
+            "name": "policy_id",
+            "required": true,
+            "schema": { "type": "string" },
+            "style": "simple"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/WafPolicy" }
+              }
+            },
+            "description": "WAF Policy retrieved"
+          }
+        },
+        "tags": ["WAF Policies"]
+      },
+      "put": {
+        "description": "Updates the WAF policy for the account.",
+        "operationId": "updateWafPolicy",
+        "parameters": [
+          {
+            "description": "The ID of the account",
+            "explode": false,
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "schema": { "type": "string" },
+            "style": "simple"
+          },
+          {
+            "description": "The ID of the WAF policy",
+            "explode": false,
+            "in": "path",
+            "name": "policy_id",
+            "required": true,
+            "schema": { "type": "string" },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/WafPolicy" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": { "application/json": {} },
+            "description": "WAF Policy updated"
+          }
+        },
+        "tags": ["WAF Policies"]
+      }
+    },
+    "/api/v1/accounts/{account_id}/waf/managed": {
+      "get": {
+        "description": "Retrieves the managed WAF rules for the account.",
+        "operationId": "getManagedWafRules",
+        "parameters": [
+          {
+            "description": "The ID of the account",
+            "explode": false,
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "schema": { "type": "string" },
+            "style": "simple"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedWafRules"
+                }
+              }
+            },
+            "description": "Managed WAF rules retrieved"
+          }
+        },
+        "tags": ["WAF Managed Rules"]
+      }
+    },
+    "/api/v1/accounts/{account_id}/env/{env_key}": {
+      "put": {
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/EnvVarValue"
+                    }
+                  },
+                  "scopes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "builds",
+                        "functions",
+                        "runtime",
+                        "post_processing"
+                      ]
+                    }
+                  },
+                  "is_secret": {
+                    "type": "boolean"
+                  }
+                },
+                "requiredProperties": ["values", "is_secret"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sites/{site_id}": {
+      "patch": {
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PartialSite"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sites/{site_id}/log_drains": {
+      "get": {
+        "tags": ["Log Drains"],
+        "operationId": "Log Drains-index",
+        "parameters": [
+          {
+            "name": "site_id",
+            "description": "The site ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return log drains",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogDrain"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "description": "Returns a list of log drains for a site.",
+        "summary": "Return log drains",
+        "x-internal": "true",
+        "x-controller": "api/v1/log_drains",
+        "x-action": "index"
+      },
+      "post": {
+        "tags": ["Log Drains"],
+        "operationId": "Log Drains-create",
+        "parameters": [
+          {
+            "name": "site_id",
+            "description": "The site ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Create a log drain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogDrain"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "URL is invalid"
+          }
+        },
+        "description": "Creates a log drain configuration for a site.",
+        "summary": "Create a log drain",
+        "x-internal": "true",
+        "x-controller": "api/v1/log_drains",
+        "x-action": "create",
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogDrain"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sites/{site_id}/log_drains/{id}": {
+      "get": {
+        "tags": ["Log Drains"],
+        "operationId": "Log Drains-show",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The ID of the log drain",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "description": "The site ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a log drain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogDrain"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "description": "Returns a log drain configuration for a site, that matches the log drain ID.",
+        "summary": "Return a log drain",
+        "x-internal": "true",
+        "x-controller": "api/v1/log_drains",
+        "x-action": "show"
+      },
+      "put": {
+        "tags": ["Log Drains"],
+        "operationId": "Log Drains-update",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The ID of the log drain",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "description": "The site ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update log drain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogDrain"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "URL is invalid"
+          }
+        },
+        "description": "Updates the log drain configuration for a site.",
+        "summary": "Update log drain",
+        "x-internal": "true",
+        "x-controller": "api/v1/log_drains",
+        "x-action": "update",
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogDrain"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Log Drains"],
+        "operationId": "Log Drains-destroy",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The ID of the log drain",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "description": "The site ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Delete log drain"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "description": "Deletes a log drain configuration for a site.",
+        "summary": "Delete log drain",
+        "x-internal": "true",
+        "x-controller": "api/v1/log_drains",
+        "x-action": "destroy"
+      }
+    },
+    "/api/v1/sites/{site_id}/log_drains/{id}/verify": {
+      "post": {
+        "tags": ["Log Drains"],
+        "operationId": "Log Drains-verify",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The ID of the log drain",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "description": "The site ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Verify S3 log drain"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "description": "Verifies the token for an S3 log drain. The token is found in a verification file in the connected S3 bucket.",
+        "summary": "Verify S3 log drain",
+        "x-internal": "true",
+        "x-controller": "api/v1/log_drains",
+        "x-action": "verify",
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sites/{site_id}/firewall_rule_set": {
+      "get": {
+        "tags": ["Sites"],
+        "operationId": "getSiteFirewallRuleSet",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The site ID",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "description": "Scope response to site_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteFirewallConfig"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": ""
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "description": "Returns the rule set for the site if it exists",
+        "x-internal": "true",
+        "x-controller": "api/v1/sites",
+        "x-action": "firewall_rule_set"
+      },
+      "delete": {
+        "tags": ["Sites"],
+        "operationId": "deleteSiteFirewallRuleSet",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The site ID",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "description": "Scope response to site_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "409": {
+            "description": ""
+          },
+          "404": {
+            "description": ""
+          },
+          "401": {
+            "description": ""
+          }
+        },
+        "description": "remove the rule set for the site if it exists",
+        "x-internal": "true",
+        "x-controller": "api/v1/sites",
+        "x-action": "destroy_firewall_rule_set"
+      },
+      "put": {
+        "tags": ["Sites"],
+        "operationId": "updateSiteFirewallRuleSet",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The site ID",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "description": "Scope response to site_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "409": {
+            "description": ""
+          },
+          "400": {
+            "description": ""
+          },
+          "404": {
+            "description": ""
+          },
+          "401": {
+            "description": ""
+          }
+        },
+        "description": "Takes a body containing the traffic rule set and completely replaces the full ruleset for the site.",
+        "x-internal": "true",
+        "x-controller": "api/v1/sites",
+        "x-action": "update_firewall_rule_set",
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSiteFirewallConfig"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/accounts/{account_id}/firewall_rule_set": {
+      "get": {
+        "tags": ["Accounts"],
+        "operationId": "getAccountFirewallRuleSet",
+        "parameters": [
+          {
+            "name": "account_id",
+            "description": "The account ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "description": "The account ID",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteFirewallConfig"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": ""
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "description": "Returns the firewall rules for an account.",
+        "x-internal": "true",
+        "x-controller": "api/v1/accounts",
+        "x-action": "firewall_rule_set"
+      },
+      "delete": {
+        "tags": ["Accounts"],
+        "operationId": "deleteAccountFirewallRuleSet",
+        "parameters": [
+          {
+            "name": "account_id",
+            "description": "The account ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "409": {
+            "description": ""
+          },
+          "401": {
+            "description": "Only owners are allowed to destroy the firewall rule set"
+          }
+        },
+        "description": "remove the rule set for the account if it exists",
+        "x-internal": "true",
+        "x-controller": "api/v1/accounts",
+        "x-action": "destroy_firewall_rule_set"
+      },
+      "put": {
+        "tags": ["Accounts"],
+        "operationId": "updateAccountFirewallRuleSet",
+        "parameters": [
+          {
+            "name": "account_id",
+            "description": "The account ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "409": {
+            "description": ""
+          },
+          "401": {
+            "description": "Only owners are allowed to update the firewall rule set"
+          }
+        },
+        "description": "Takes a body containing the traffic rule set and completely replaces the full ruleset for the account/team.",
+        "x-internal": "true",
+        "x-controller": "api/v1/accounts",
+        "x-action": "update_firewall_rule_set",
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSiteFirewallConfig"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sites/{site_id}/analytics": {
+      "post": {
+        "tags": ["Analytics"],
+        "operationId": "enableAnalytics",
+        "parameters": [
+          {
+            "name": "site_id",
+            "description": "The site ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceInstance"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Payment Method not found, Analytics already enabled"
+          }
+        },
+        "description": "Enables Analytics for the site.",
+        "x-controller": "api/v1/analytics",
+        "x-action": "create"
+      }
+    },
+    "/api/v1/sites/{site_id}/analytics/{id}": {
+      "delete": {
+        "tags": ["Analytics"],
+        "operationId": "disableAnalytics",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Scope response to id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "description": "The site ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "422": {
+            "description": "Error during disabling"
+          }
+        },
+        "description": "Disables Analytics for the site.",
+        "x-controller": "api/v1/analytics",
+        "x-action": "destroy"
+      }
+    }
+  }
+}
