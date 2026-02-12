@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -21,8 +21,10 @@ var _ MappedNullable = &Member{}
 
 // Member Member model definition. Similar to the User model, but includes the information of the associated team (account).
 type Member struct {
-	// the identifier for the member (user ID)
+	// the identifier for the member
 	Id string `json:"id"`
+	// the user id of the member
+	UserId string `json:"user_id"`
 	// the full name of the member
 	FullName string `json:"full_name"`
 	// the email of the member
@@ -58,9 +60,10 @@ type _Member Member
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewMember(id string, fullName string, email string, avatar string, role string, mfaEnabled bool, capabilities map[string]interface{}, connectedAccounts CDPUserConnectedAccounts, siteIds []string, siteAccess string, createdAt time.Time, updatedAt time.Time, pending bool, managedByDirectorySync bool) *Member {
+func NewMember(id string, userId string, fullName string, email string, avatar string, role string, mfaEnabled bool, capabilities map[string]interface{}, connectedAccounts CDPUserConnectedAccounts, siteIds []string, siteAccess string, createdAt time.Time, updatedAt time.Time, pending bool, managedByDirectorySync bool) *Member {
 	this := Member{}
 	this.Id = id
+	this.UserId = userId
 	this.FullName = fullName
 	this.Email = email
 	this.Avatar = avatar
@@ -107,6 +110,30 @@ func (o *Member) GetIdOk() (*string, bool) {
 // SetId sets field value
 func (o *Member) SetId(v string) {
 	o.Id = v
+}
+
+// GetUserId returns the UserId field value
+func (o *Member) GetUserId() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.UserId
+}
+
+// GetUserIdOk returns a tuple with the UserId field value
+// and a boolean to check if the value has been set.
+func (o *Member) GetUserIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.UserId, true
+}
+
+// SetUserId sets field value
+func (o *Member) SetUserId(v string) {
+	o.UserId = v
 }
 
 // GetFullName returns the FullName field value
@@ -496,6 +523,7 @@ func (o Member) MarshalJSON() ([]byte, error) {
 func (o Member) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id
+	toSerialize["user_id"] = o.UserId
 	toSerialize["full_name"] = o.FullName
 	toSerialize["email"] = o.Email
 	toSerialize["avatar"] = o.Avatar
@@ -529,6 +557,7 @@ func (o *Member) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"id",
+		"user_id",
 		"full_name",
 		"email",
 		"avatar",
@@ -572,6 +601,7 @@ func (o *Member) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "id")
+		delete(additionalProperties, "user_id")
 		delete(additionalProperties, "full_name")
 		delete(additionalProperties, "email")
 		delete(additionalProperties, "avatar")

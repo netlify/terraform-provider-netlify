@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -25,6 +25,8 @@ type DnsZoneCreateParams struct {
 	AccountSlug *string `json:"account_slug,omitempty"`
 	// The name of the DNS zone
 	Name *string `json:"name,omitempty"`
+	// The TXT value for the DNS subdomain ownership verification
+	RecordTxtValue *string `json:"record_txt_value,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -143,6 +145,38 @@ func (o *DnsZoneCreateParams) SetName(v string) {
 	o.Name = &v
 }
 
+// GetRecordTxtValue returns the RecordTxtValue field value if set, zero value otherwise.
+func (o *DnsZoneCreateParams) GetRecordTxtValue() string {
+	if o == nil || IsNil(o.RecordTxtValue) {
+		var ret string
+		return ret
+	}
+	return *o.RecordTxtValue
+}
+
+// GetRecordTxtValueOk returns a tuple with the RecordTxtValue field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DnsZoneCreateParams) GetRecordTxtValueOk() (*string, bool) {
+	if o == nil || IsNil(o.RecordTxtValue) {
+		return nil, false
+	}
+	return o.RecordTxtValue, true
+}
+
+// HasRecordTxtValue returns a boolean if a field has been set.
+func (o *DnsZoneCreateParams) HasRecordTxtValue() bool {
+	if o != nil && !IsNil(o.RecordTxtValue) {
+		return true
+	}
+
+	return false
+}
+
+// SetRecordTxtValue gets a reference to the given string and assigns it to the RecordTxtValue field.
+func (o *DnsZoneCreateParams) SetRecordTxtValue(v string) {
+	o.RecordTxtValue = &v
+}
+
 func (o DnsZoneCreateParams) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -161,6 +195,9 @@ func (o DnsZoneCreateParams) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Name) {
 		toSerialize["name"] = o.Name
+	}
+	if !IsNil(o.RecordTxtValue) {
+		toSerialize["record_txt_value"] = o.RecordTxtValue
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -187,6 +224,7 @@ func (o *DnsZoneCreateParams) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "site_id")
 		delete(additionalProperties, "account_slug")
 		delete(additionalProperties, "name")
+		delete(additionalProperties, "record_txt_value")
 		o.AdditionalProperties = additionalProperties
 	}
 

@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -45,7 +45,7 @@ func (r ApiAddMemberToAccountRequest) BuildId(buildId string) ApiAddMemberToAcco
 	return r
 }
 
-// Role of the new member
+// Name of the role for the new member (DefaultMemberRole.names)
 func (r ApiAddMemberToAccountRequest) Role(role string) ApiAddMemberToAccountRequest {
 	r.role = &role
 	return r
@@ -104,6 +104,113 @@ func (a *MembersAPIService) AddMemberToAccountExecute(r ApiAddMemberToAccountReq
 	if r.role != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "role", r.role, "form", "")
 	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetAccountMemberRequest struct {
+	ctx context.Context
+	ApiService *MembersAPIService
+	accountId string
+	memberId string
+}
+
+func (r ApiGetAccountMemberRequest) Execute() (*Member, *http.Response, error) {
+	return r.ApiService.GetAccountMemberExecute(r)
+}
+
+/*
+GetAccountMember Method for GetAccountMember
+
+Returns details for a member of an account (team).
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param accountId Account ID or slug
+ @param memberId Member ID
+ @return ApiGetAccountMemberRequest
+*/
+func (a *MembersAPIService) GetAccountMember(ctx context.Context, accountId string, memberId string) ApiGetAccountMemberRequest {
+	return ApiGetAccountMemberRequest{
+		ApiService: a,
+		ctx: ctx,
+		accountId: accountId,
+		memberId: memberId,
+	}
+}
+
+// Execute executes the request
+//  @return Member
+func (a *MembersAPIService) GetAccountMemberExecute(r ApiGetAccountMemberRequest) (*Member, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *Member
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MembersAPIService.GetAccountMember")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/{account_id}/members/{member_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"account_id"+"}", url.PathEscape(parameterValueToString(r.accountId, "accountId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"member_id"+"}", url.PathEscape(parameterValueToString(r.memberId, "memberId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -318,6 +425,221 @@ func (a *MembersAPIService) ListMembersForAccountExecute(r ApiListMembersForAcco
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiRemoveAccountMemberRequest struct {
+	ctx context.Context
+	ApiService *MembersAPIService
+	accountId string
+	memberId string
+}
+
+func (r ApiRemoveAccountMemberRequest) Execute() (*http.Response, error) {
+	return r.ApiService.RemoveAccountMemberExecute(r)
+}
+
+/*
+RemoveAccountMember Method for RemoveAccountMember
+
+Remove a member from an account (team).
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param accountId Account ID or slug
+ @param memberId Member ID
+ @return ApiRemoveAccountMemberRequest
+*/
+func (a *MembersAPIService) RemoveAccountMember(ctx context.Context, accountId string, memberId string) ApiRemoveAccountMemberRequest {
+	return ApiRemoveAccountMemberRequest{
+		ApiService: a,
+		ctx: ctx,
+		accountId: accountId,
+		memberId: memberId,
+	}
+}
+
+// Execute executes the request
+func (a *MembersAPIService) RemoveAccountMemberExecute(r ApiRemoveAccountMemberRequest) (*http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodDelete
+		localVarPostBody     interface{}
+		formFiles            []formFile
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MembersAPIService.RemoveAccountMember")
+	if err != nil {
+		return nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/{account_id}/members/{member_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"account_id"+"}", url.PathEscape(parameterValueToString(r.accountId, "accountId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"member_id"+"}", url.PathEscape(parameterValueToString(r.memberId, "memberId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+type ApiUpdateAccountMemberRequest struct {
+	ctx context.Context
+	ApiService *MembersAPIService
+	accountId string
+	memberId string
+	updateAccountMemberRequest *UpdateAccountMemberRequest
+}
+
+// 
+func (r ApiUpdateAccountMemberRequest) UpdateAccountMemberRequest(updateAccountMemberRequest UpdateAccountMemberRequest) ApiUpdateAccountMemberRequest {
+	r.updateAccountMemberRequest = &updateAccountMemberRequest
+	return r
+}
+
+func (r ApiUpdateAccountMemberRequest) Execute() (*Member, *http.Response, error) {
+	return r.ApiService.UpdateAccountMemberExecute(r)
+}
+
+/*
+UpdateAccountMember Method for UpdateAccountMember
+
+Update the details for an account (team) member.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param accountId Account ID or slug
+ @param memberId Member ID
+ @return ApiUpdateAccountMemberRequest
+*/
+func (a *MembersAPIService) UpdateAccountMember(ctx context.Context, accountId string, memberId string) ApiUpdateAccountMemberRequest {
+	return ApiUpdateAccountMemberRequest{
+		ApiService: a,
+		ctx: ctx,
+		accountId: accountId,
+		memberId: memberId,
+	}
+}
+
+// Execute executes the request
+//  @return Member
+func (a *MembersAPIService) UpdateAccountMemberExecute(r ApiUpdateAccountMemberRequest) (*Member, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPut
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *Member
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MembersAPIService.UpdateAccountMember")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/{account_id}/members/{member_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"account_id"+"}", url.PathEscape(parameterValueToString(r.accountId, "accountId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"member_id"+"}", url.PathEscape(parameterValueToString(r.memberId, "memberId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.updateAccountMemberRequest == nil {
+		return localVarReturnValue, nil, reportError("updateAccountMemberRequest is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.updateAccountMemberRequest
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

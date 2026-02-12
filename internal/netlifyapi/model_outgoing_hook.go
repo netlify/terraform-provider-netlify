@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -27,6 +27,8 @@ type OutgoingHook struct {
 	SiteId string `json:"site_id"`
 	// The form ID associated with this hook
 	FormId string `json:"form_id"`
+	// The organization ID associated with this hook
+	OrganizationId *string `json:"organization_id,omitempty"`
 	// The form name of this hook
 	FormName string `json:"form_name"`
 	// The user ID of the hook creator
@@ -155,6 +157,38 @@ func (o *OutgoingHook) GetFormIdOk() (*string, bool) {
 // SetFormId sets field value
 func (o *OutgoingHook) SetFormId(v string) {
 	o.FormId = v
+}
+
+// GetOrganizationId returns the OrganizationId field value if set, zero value otherwise.
+func (o *OutgoingHook) GetOrganizationId() string {
+	if o == nil || IsNil(o.OrganizationId) {
+		var ret string
+		return ret
+	}
+	return *o.OrganizationId
+}
+
+// GetOrganizationIdOk returns a tuple with the OrganizationId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OutgoingHook) GetOrganizationIdOk() (*string, bool) {
+	if o == nil || IsNil(o.OrganizationId) {
+		return nil, false
+	}
+	return o.OrganizationId, true
+}
+
+// HasOrganizationId returns a boolean if a field has been set.
+func (o *OutgoingHook) HasOrganizationId() bool {
+	if o != nil && !IsNil(o.OrganizationId) {
+		return true
+	}
+
+	return false
+}
+
+// SetOrganizationId gets a reference to the given string and assigns it to the OrganizationId field.
+func (o *OutgoingHook) SetOrganizationId(v string) {
+	o.OrganizationId = &v
 }
 
 // GetFormName returns the FormName field value
@@ -434,6 +468,9 @@ func (o OutgoingHook) ToMap() (map[string]interface{}, error) {
 	toSerialize["id"] = o.Id
 	toSerialize["site_id"] = o.SiteId
 	toSerialize["form_id"] = o.FormId
+	if !IsNil(o.OrganizationId) {
+		toSerialize["organization_id"] = o.OrganizationId
+	}
 	toSerialize["form_name"] = o.FormName
 	toSerialize["user_id"] = o.UserId
 	toSerialize["type"] = o.Type
@@ -504,6 +541,7 @@ func (o *OutgoingHook) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "site_id")
 		delete(additionalProperties, "form_id")
+		delete(additionalProperties, "organization_id")
 		delete(additionalProperties, "form_name")
 		delete(additionalProperties, "user_id")
 		delete(additionalProperties, "type")

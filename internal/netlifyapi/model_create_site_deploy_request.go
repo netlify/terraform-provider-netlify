@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -27,6 +27,8 @@ type CreateSiteDeployRequest struct {
 	FunctionsConfig *CreateSiteDeployRequestFunctionsConfig `json:"functions_config,omitempty"`
 	Branch *string `json:"branch,omitempty"`
 	Framework *string `json:"framework,omitempty"`
+	IncludeUploadUrl *bool `json:"include_upload_url,omitempty"`
+	Environment []CreateSiteDeployRequestEnvironmentInner `json:"environment,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -305,6 +307,70 @@ func (o *CreateSiteDeployRequest) SetFramework(v string) {
 	o.Framework = &v
 }
 
+// GetIncludeUploadUrl returns the IncludeUploadUrl field value if set, zero value otherwise.
+func (o *CreateSiteDeployRequest) GetIncludeUploadUrl() bool {
+	if o == nil || IsNil(o.IncludeUploadUrl) {
+		var ret bool
+		return ret
+	}
+	return *o.IncludeUploadUrl
+}
+
+// GetIncludeUploadUrlOk returns a tuple with the IncludeUploadUrl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSiteDeployRequest) GetIncludeUploadUrlOk() (*bool, bool) {
+	if o == nil || IsNil(o.IncludeUploadUrl) {
+		return nil, false
+	}
+	return o.IncludeUploadUrl, true
+}
+
+// HasIncludeUploadUrl returns a boolean if a field has been set.
+func (o *CreateSiteDeployRequest) HasIncludeUploadUrl() bool {
+	if o != nil && !IsNil(o.IncludeUploadUrl) {
+		return true
+	}
+
+	return false
+}
+
+// SetIncludeUploadUrl gets a reference to the given bool and assigns it to the IncludeUploadUrl field.
+func (o *CreateSiteDeployRequest) SetIncludeUploadUrl(v bool) {
+	o.IncludeUploadUrl = &v
+}
+
+// GetEnvironment returns the Environment field value if set, zero value otherwise.
+func (o *CreateSiteDeployRequest) GetEnvironment() []CreateSiteDeployRequestEnvironmentInner {
+	if o == nil || IsNil(o.Environment) {
+		var ret []CreateSiteDeployRequestEnvironmentInner
+		return ret
+	}
+	return o.Environment
+}
+
+// GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSiteDeployRequest) GetEnvironmentOk() ([]CreateSiteDeployRequestEnvironmentInner, bool) {
+	if o == nil || IsNil(o.Environment) {
+		return nil, false
+	}
+	return o.Environment, true
+}
+
+// HasEnvironment returns a boolean if a field has been set.
+func (o *CreateSiteDeployRequest) HasEnvironment() bool {
+	if o != nil && !IsNil(o.Environment) {
+		return true
+	}
+
+	return false
+}
+
+// SetEnvironment gets a reference to the given []CreateSiteDeployRequestEnvironmentInner and assigns it to the Environment field.
+func (o *CreateSiteDeployRequest) SetEnvironment(v []CreateSiteDeployRequestEnvironmentInner) {
+	o.Environment = v
+}
+
 func (o CreateSiteDeployRequest) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -339,6 +405,12 @@ func (o CreateSiteDeployRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Framework) {
 		toSerialize["framework"] = o.Framework
 	}
+	if !IsNil(o.IncludeUploadUrl) {
+		toSerialize["include_upload_url"] = o.IncludeUploadUrl
+	}
+	if !IsNil(o.Environment) {
+		toSerialize["environment"] = o.Environment
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -369,6 +441,8 @@ func (o *CreateSiteDeployRequest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "functions_config")
 		delete(additionalProperties, "branch")
 		delete(additionalProperties, "framework")
+		delete(additionalProperties, "include_upload_url")
+		delete(additionalProperties, "environment")
 		o.AdditionalProperties = additionalProperties
 	}
 

@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -131,27 +131,34 @@ func (a *FilesAPIService) GetSiteFileByPathNameExecute(r ApiGetSiteFileByPathNam
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiListSiteFilesRequest struct {
+type ApiListSiteFilesOrListDeployFilesRequest struct {
 	ctx context.Context
 	ApiService *FilesAPIService
 	siteId string
+	deployId *string
 }
 
-func (r ApiListSiteFilesRequest) Execute() ([]SiteFile, *http.Response, error) {
-	return r.ApiService.ListSiteFilesExecute(r)
+// The deploy ID
+func (r ApiListSiteFilesOrListDeployFilesRequest) DeployId(deployId string) ApiListSiteFilesOrListDeployFilesRequest {
+	r.deployId = &deployId
+	return r
+}
+
+func (r ApiListSiteFilesOrListDeployFilesRequest) Execute() ([]SiteFile, *http.Response, error) {
+	return r.ApiService.ListSiteFilesOrListDeployFilesExecute(r)
 }
 
 /*
-ListSiteFiles Method for ListSiteFiles
+ListSiteFilesOrListDeployFiles Method for ListSiteFilesOrListDeployFiles
 
 Returns a list of files for a site.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param siteId The site ID
- @return ApiListSiteFilesRequest
+ @return ApiListSiteFilesOrListDeployFilesRequest
 */
-func (a *FilesAPIService) ListSiteFiles(ctx context.Context, siteId string) ApiListSiteFilesRequest {
-	return ApiListSiteFilesRequest{
+func (a *FilesAPIService) ListSiteFilesOrListDeployFiles(ctx context.Context, siteId string) ApiListSiteFilesOrListDeployFilesRequest {
+	return ApiListSiteFilesOrListDeployFilesRequest{
 		ApiService: a,
 		ctx: ctx,
 		siteId: siteId,
@@ -160,7 +167,7 @@ func (a *FilesAPIService) ListSiteFiles(ctx context.Context, siteId string) ApiL
 
 // Execute executes the request
 //  @return []SiteFile
-func (a *FilesAPIService) ListSiteFilesExecute(r ApiListSiteFilesRequest) ([]SiteFile, *http.Response, error) {
+func (a *FilesAPIService) ListSiteFilesOrListDeployFilesExecute(r ApiListSiteFilesOrListDeployFilesRequest) ([]SiteFile, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -168,7 +175,7 @@ func (a *FilesAPIService) ListSiteFilesExecute(r ApiListSiteFilesRequest) ([]Sit
 		localVarReturnValue  []SiteFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FilesAPIService.ListSiteFiles")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "FilesAPIService.ListSiteFilesOrListDeployFiles")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -180,6 +187,9 @@ func (a *FilesAPIService) ListSiteFilesExecute(r ApiListSiteFilesRequest) ([]Sit
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.deployId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "deploy_id", r.deployId, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 

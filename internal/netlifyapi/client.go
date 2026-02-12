@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -49,8 +49,6 @@ type APIClient struct {
 	common service // Reuse a single struct instead of allocating one for each service on the heap.
 
 	// API Services
-
-	AccessTokensAPI *AccessTokensAPIService
 
 	AccountsAPI *AccountsAPIService
 
@@ -113,8 +111,6 @@ type APIClient struct {
 	WAFManagedRulesAPI *WAFManagedRulesAPIService
 
 	WAFPoliciesAPI *WAFPoliciesAPIService
-
-	WorkOSScimAPI *WorkOSScimAPIService
 }
 
 type service struct {
@@ -133,7 +129,6 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.common.client = c
 
 	// API Services
-	c.AccessTokensAPI = (*AccessTokensAPIService)(&c.common)
 	c.AccountsAPI = (*AccountsAPIService)(&c.common)
 	c.AnalyticsAPI = (*AnalyticsAPIService)(&c.common)
 	c.BuildHooksAPI = (*BuildHooksAPIService)(&c.common)
@@ -165,7 +160,6 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.UsersAPI = (*UsersAPIService)(&c.common)
 	c.WAFManagedRulesAPI = (*WAFManagedRulesAPIService)(&c.common)
 	c.WAFPoliciesAPI = (*WAFPoliciesAPIService)(&c.common)
-	c.WorkOSScimAPI = (*WorkOSScimAPIService)(&c.common)
 
 	return c
 }
@@ -600,10 +594,7 @@ func addFile(w *multipart.Writer, fieldName, path string) error {
 	if err != nil {
 		return err
 	}
-	err = file.Close()
-	if err != nil {
-		return err
-	}
+	defer file.Close()
 
 	part, err := w.CreateFormFile(fieldName, filepath.Base(path))
 	if err != nil {

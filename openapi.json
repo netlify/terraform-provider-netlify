@@ -2,12 +2,12 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Netlify's API documentation",
-    "description": "Netlify is a hosting service for the programmable web. It understands your\ndocuments and provides an API to handle atomic deploys of websites, manage\nform submissions, inject JavaScript snippets, and much more. This is a\nREST-style API that uses JSON for serialization and OAuth 2 for\nauthentication.\n\n\nThis document is an OpenAPI reference for the Netlify API that you can\nexplore. For more detailed instructions for common uses, please visit the\n[online documentation](https://docs.netlify.com/api/get-started/). Visit our\nCommunity forum to join the conversation about\n[understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).\n\n\nAdditionally, we have two API clients for your convenience:\n- [Go Client](https://github.com/netlify/open-api#go-client)\n- [JS Client](https://github.com/netlify/js-client)\n",
+    "description": "Netlify is a hosting service for the programmable web. It understands your\ndocuments and provides an API to handle atomic deploys of websites, manage\nform submissions, inject JavaScript snippets, and much more. This is a\nREST-style API that uses JSON for serialization and OAuth 2 for\nauthentication.\n\n\nThis document is an OpenAPI reference for the Netlify API that you can\nexplore. For more detailed instructions for common uses, please visit the\n[online documentation](https://www.netlify.com/docs/api/). Visit our\nCommunity forum to join the conversation about\n[understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).\n\n\nAdditionally, we have two API clients for your convenience:\n- [Go Client](https://github.com/netlify/open-api#go-client)\n- [JS Client](https://github.com/netlify/build/tree/main/packages/js-client)\n",
     "version": "1.0",
     "termsOfService": "https://www.netlify.com/legal/terms-of-use/",
     "x-logo": {
       "url": "netlifyapi.png",
-      "href": "https://docs.netlify.com/",
+      "href": "https://www.netlify.com/docs/",
       "altText": "Netlify"
     }
   },
@@ -18,14 +18,10 @@
   ],
   "security": [
     {
-      "netlifyAuth": [
-
-      ]
+      "netlifyAuth": []
     },
     {
-      "bearerAuth": [
-
-      ]
+      "bearerAuth": []
     }
   ],
   "externalDocs": {
@@ -33,25 +29,6 @@
     "url": "https://docs.netlify.com/api/get-started/"
   },
   "paths": {
-    "/api/v1/access_tokens/revoke": {
-      "delete": {
-        "tags": [
-          "Access tokens"
-        ],
-        "operationId": "revokeAccessToken",
-        "parameters": [
-
-        ],
-        "responses": {
-          "204": {
-            "description": "successfully revoked"
-          }
-        },
-        "description": "Revokes the token that the client is currently using to access to the\nAPI.",
-        "x-controller": "api/v1/access_tokens",
-        "x-action": "revoke"
-      }
-    },
     "/api/v1/accounts/{account_id}/builds/status": {
       "get": {
         "tags": [
@@ -265,19 +242,13 @@
           },
           {
             "name": "role",
-            "description": "Role of the new member",
+            "description": "Name of the role for the new member (DefaultMemberRole.names)",
             "required": false,
             "in": "query",
             "schema": {
               "type": "string",
               "enum": [
-                "Reviewer",
-                "Billing Admin",
-                "Content Editor",
-                "Publisher",
-                "Developer Lite",
-                "Developer",
-                "Owner"
+                "array"
               ]
             }
           }
@@ -297,6 +268,165 @@
         "description": "Creates a new member for the account (team).",
         "x-controller": "api/v1/account_members",
         "x-action": "create"
+      }
+    },
+    "/api/v1/{account_id}/members/{member_id}": {
+      "put": {
+        "tags": [
+          "Members"
+        ],
+        "operationId": "updateAccountMember",
+        "parameters": [
+          {
+            "name": "account_id",
+            "description": "Account ID or slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "member_id",
+            "description": "Member ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Member"
+                }
+              }
+            }
+          }
+        },
+        "description": "Update the details for an account (team) member.",
+        "x-controller": "api/v1/account_members",
+        "x-action": "update",
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "array"
+                    ]
+                  },
+                  "site_access": {
+                    "type": "string",
+                    "enum": [
+                      "all",
+                      "none",
+                      "selected"
+                    ]
+                  },
+                  "site_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "self_invite_state": {
+                    "type": "string",
+                    "enum": [
+                      "pending",
+                      "approved",
+                      "blocked"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Members"
+        ],
+        "operationId": "removeAccountMember",
+        "parameters": [
+          {
+            "name": "account_id",
+            "description": "Account ID or slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "member_id",
+            "description": "Member ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "description": "Remove a member from an account (team).",
+        "x-controller": "api/v1/account_members",
+        "x-action": "destroy"
+      },
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "operationId": "getAccountMember",
+        "parameters": [
+          {
+            "name": "account_id",
+            "description": "Account ID or slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "member_id",
+            "description": "Member ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Member"
+                }
+              }
+            }
+          }
+        },
+        "description": "Returns details for a member of an account (team).",
+        "x-controller": "api/v1/account_members",
+        "x-action": "show"
       }
     },
     "/api/v1/{account_slug}/sites": {
@@ -326,6 +456,15 @@
                 "owner",
                 "guest"
               ]
+            }
+          },
+          {
+            "name": "include_favorites",
+            "description": "include_favorites",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
             }
           },
           {
@@ -443,7 +582,8 @@
         "description": "Creates a site for an account (team).",
         "x-controller": "api/v1/account_sites",
         "x-action": "create",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -461,9 +601,7 @@
           "Accounts"
         ],
         "operationId": "listAccountsForUser",
-        "parameters": [
-
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "",
@@ -488,9 +626,7 @@
           "Accounts"
         ],
         "operationId": "createAccount",
-        "parameters": [
-
-        ],
+        "parameters": [],
         "responses": {
           "201": {
             "description": "",
@@ -506,7 +642,8 @@
         "description": "Creates an account (team).",
         "x-controller": "api/v1/accounts",
         "x-action": "create",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -520,6 +657,9 @@
                     "type": "string"
                   },
                   "payment_method_id": {
+                    "type": "string"
+                  },
+                  "stripe_customer_id": {
                     "type": "string"
                   },
                   "period": {
@@ -606,7 +746,8 @@
         "description": "Updates an account (team).",
         "x-controller": "api/v1/accounts",
         "x-action": "update",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -641,32 +782,6 @@
         "description": "Cancels an account (team).",
         "x-controller": "api/v1/accounts",
         "x-action": "destroy"
-      }
-    },
-    "/api/v1/accounts/types": {
-      "get": {
-        "tags": [
-          "Accounts"
-        ],
-        "operationId": "listAccountTypesForUser",
-        "parameters": [
-
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AccountType"
-                }
-              }
-            }
-          }
-        },
-        "description": "Returns a list of account types.",
-        "x-controller": "api/v1/accounts",
-        "x-action": "types"
       }
     },
     "/api/v1/accounts/{account_id}/audit": {
@@ -721,82 +836,6 @@
         "description": "Return an account's audit logs.",
         "x-controller": "api/v1/accounts",
         "x-action": "audit"
-      }
-    },
-    "/api/v1/sites/{site_id}/analytics": {
-      "post": {
-        "tags": [
-          "Analytics"
-        ],
-        "operationId": "enableAnalytics",
-        "parameters": [
-          {
-            "name": "site_id",
-            "description": "The site ID",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ServiceInstance"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Payment Method not found, Analytics already enabled"
-          }
-        },
-        "description": "Enables Analytics for the site.",
-        "x-controller": "api/v1/analytics",
-        "x-action": "create"
-      }
-    },
-    "/api/v1/sites/{site_id}/analytics/{id}": {
-      "delete": {
-        "tags": [
-          "Analytics"
-        ],
-        "operationId": "disableAnalytics",
-        "parameters": [
-          {
-            "name": "id",
-            "description": "Scope response to id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "site_id",
-            "description": "The site ID",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "422": {
-            "description": "Error during disabling"
-          }
-        },
-        "description": "Disables Analytics for the site.",
-        "x-controller": "api/v1/analytics",
-        "x-action": "destroy"
       }
     },
     "/api/v1/sites/{site_id}/assets": {
@@ -884,7 +923,8 @@
         "description": "Creates an asset for the site.\n_This endpoint is only available to certain sites._",
         "x-controller": "api/v1/assets",
         "x-action": "create",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -1179,7 +1219,8 @@
         "description": "Creates a build hook for a site.",
         "x-controller": "api/v1/build_hooks",
         "x-action": "create",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -1266,7 +1307,8 @@
         "description": "Updates a build hook for a site.",
         "x-controller": "api/v1/build_hooks",
         "x-action": "update",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -1432,6 +1474,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "title",
+            "description": "The title of the build",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1448,11 +1499,14 @@
           "404": {
             "description": "Not Found"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "422": {
             "description": "Unprocessable Entity"
           }
         },
-        "description": "Runs a build for a site. The build will be scheduled to run at the first opportunity, but it might not start immediately if insufficient account build capacity is available.",
+        "description": "Runs a build for a site. The build will be scheduled to run at the first opportunity, but it might not start immediately if insufficient account build capacity is available.\nFiles for build could be also uploaded as a zipped site.",
         "x-controller": "api/v1/builds",
         "x-action": "create"
       }
@@ -1500,7 +1554,8 @@
         "description": "Add a message to the build log.",
         "x-controller": "api/v1/builds",
         "x-action": "log",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -1556,6 +1611,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "task_id",
+            "description": "task_id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1566,6 +1630,48 @@
         "description": "Mark that the build has started.",
         "x-controller": "api/v1/builds",
         "x-action": "start"
+      }
+    },
+    "/api/v1/builds/{build_id}/download": {
+      "get": {
+        "tags": [
+          "Builds"
+        ],
+        "operationId": "getBuildZipDownloadUrl",
+        "parameters": [
+          {
+            "name": "build_id",
+            "description": "build_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Build zip file not found"
+          }
+        },
+        "description": "Get a presigned download URL for the build zip file.",
+        "x-controller": "api/v1/builds",
+        "x-action": "download"
       }
     },
     "/api/v1/deploy_keys": {
@@ -1618,9 +1724,7 @@
           "Deploy keys"
         ],
         "operationId": "createDeployKey",
-        "parameters": [
-
-        ],
+        "parameters": [],
         "responses": {
           "201": {
             "description": "",
@@ -1870,7 +1974,8 @@
         "description": "Creates a deploy for a site.",
         "x-controller": "api/v1/deploys",
         "x-action": "create",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -1943,6 +2048,20 @@
                                 }
                               }
                             }
+                          },
+                          "excluded_routes": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "pattern": {
+                                  "type": "string"
+                                },
+                                "expression": {
+                                  "type": "string"
+                                }
+                              }
+                            }
                           }
                         }
                       }
@@ -1953,6 +2072,32 @@
                   },
                   "framework": {
                     "type": "string"
+                  },
+                  "include_upload_url": {
+                    "type": "boolean"
+                  },
+                  "environment": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        },
+                        "is_secret": {
+                          "type": "boolean"
+                        },
+                        "scopes": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -2150,7 +2295,8 @@
         "description": "Updates a deploy for a site.",
         "x-controller": "api/v1/deploys",
         "x-action": "update",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": ", await_ready_signal: boolean]",
           "content": {
             "application/json": {
@@ -2354,16 +2500,16 @@
         "x-action": "cancel"
       }
     },
-    "/api/v1/deploys/{deploy_id}/simple": {
+    "/api/v1/deploys/{deploy_id}/download": {
       "get": {
         "tags": [
           "Deploys"
         ],
-        "operationId": "getSimplePublicDeploy",
+        "operationId": "getDeploySourceDownloadUrl",
         "parameters": [
           {
             "name": "deploy_id",
-            "description": "The ID of the deploy",
+            "description": "deploy_id",
             "required": true,
             "in": "path",
             "schema": {
@@ -2377,15 +2523,23 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Deploy_Simple"
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
+          },
+          "404": {
+            "description": "Not Found - Deploy source zip file not found"
           }
         },
-        "description": "Returns public information about a deploy.",
+        "description": "Get a presigned download URL for the deploy source zip file.",
         "x-controller": "api/v1/deploys",
-        "x-action": "/api/v1/deploys/{deploy_id}/simple_GET"
+        "x-action": "download"
       }
     },
     "/api/v1/sites/{site_id}/dev_server_hooks": {
@@ -2455,7 +2609,8 @@
         "description": "Creates a dev server hook for a site.",
         "x-controller": "api/v1/dev_server_hooks",
         "x-action": "create",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -2542,7 +2697,8 @@
         "description": "Updates a dev server hook for a site.",
         "x-controller": "api/v1/dev_server_hooks",
         "x-action": "update",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -2655,7 +2811,8 @@
         "description": "Creates a DNS record.",
         "x-controller": "api/v1/dns_records",
         "x-action": "create",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -2803,9 +2960,7 @@
           "DNS zones"
         ],
         "operationId": "createDnsZone",
-        "parameters": [
-
-        ],
+        "parameters": [],
         "responses": {
           "201": {
             "description": "",
@@ -2821,7 +2976,8 @@
         "description": "Creates a DNS zone.",
         "x-controller": "api/v1/dns_zones",
         "x-action": "create",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -2966,7 +3122,8 @@
         "description": "Transfers a DNS zone to the different account.",
         "x-controller": "api/v1/dns_zones",
         "x-action": "transfer",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -3200,7 +3357,8 @@
         "description": "Creates new environment variables. Granular scopes are available on Pro plans and above.",
         "x-controller": "api/v1/environment_variables",
         "x-action": "create",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "The array of environment variables to create",
           "content": {
             "application/json": {
@@ -3411,7 +3569,8 @@
         "description": "Updates an existing environment variable and all of its values. Existing values will be replaced by values provided.",
         "x-controller": "api/v1/environment_variables",
         "x-action": "update",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -3504,7 +3663,8 @@
         "description": "(SET) Updates or creates a value on an environment variable.",
         "x-controller": "api/v1/environment_variables",
         "x-action": "set_value",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -3630,8 +3790,17 @@
         "tags": [
           "Files"
         ],
-        "operationId": "listSiteFiles",
+        "operationId": "listSiteFiles or listDeployFiles",
         "parameters": [
+          {
+            "name": "deploy_id",
+            "description": "The deploy ID",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "site_id",
             "description": "The site ID",
@@ -3750,6 +3919,53 @@
       }
     },
     "/api/v1/sites/{site_id}/forms/{form_id}": {
+      "get": {
+        "tags": [
+          "Forms"
+        ],
+        "operationId": "getSiteForm",
+        "parameters": [
+          {
+            "name": "form_id",
+            "description": "The ID or name of the form",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "description": "The ID or subdomain of the site",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Form"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "description": "Returns the details of a form.",
+        "x-controller": "api/v1/forms",
+        "x-action": "show"
+      },
       "delete": {
         "tags": [
           "Forms"
@@ -3855,7 +4071,8 @@
         "description": "Uploads a function of the deploy.",
         "x-controller": "api/v1/functions",
         "x-action": "update",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "file",
           "content": {
             "application/json": {
@@ -3927,9 +4144,7 @@
           "Hooks"
         ],
         "operationId": "createHookBySiteId",
-        "parameters": [
-
-        ],
+        "parameters": [],
         "responses": {
           "201": {
             "description": "",
@@ -3951,7 +4166,8 @@
         "description": "Creates a new outgoing hook.",
         "x-controller": "api/v1/hooks",
         "x-action": "create",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -4033,7 +4249,8 @@
         "description": "Updates an outgoing hook.",
         "x-controller": "api/v1/hooks",
         "x-action": "update",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -4205,7 +4422,8 @@
         "description": "Updates metadata for a site.",
         "x-controller": "api/v1/metadata",
         "x-action": "update",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -4289,45 +4507,6 @@
         "description": "Creates an OAuth ticket with the OAuth application.",
         "x-controller": "api/v1/oauth/tickets",
         "x-action": "create"
-      }
-    },
-    "/api/v1/oauth/tickets/{ticket_id}/authorize": {
-      "post": {
-        "tags": [
-          "OAuth tickets"
-        ],
-        "operationId": "authorizeWithTicket",
-        "parameters": [
-          {
-            "name": "grant_saml",
-            "description": "Whether token should allow API access to currently authenticated SAML protected account",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "ticket_id",
-            "description": "The ticket ID",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Authorized"
-          },
-          "404": {
-            "description": "OAuth ticket not found"
-          }
-        },
-        "description": "Authorizes a current user with the OAuth ticket.",
-        "x-controller": "api/v1/oauth/tickets",
-        "x-action": "authorize"
       }
     },
     "/api/v1/oauth/tickets/{ticket_id}/exchange": {
@@ -4503,68 +4682,7 @@
         "x-action": "show"
       }
     },
-    "/api/v1/organizations": {
-      "get": {
-        "tags": [
-          "Organizations"
-        ],
-        "operationId": "listOrganizationsForUser",
-        "parameters": [
-
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Organization"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "description": "Returns a list of all organizations that the current user is an owner of.",
-        "x-controller": "api/v1/organizations",
-        "x-action": "index"
-      }
-    },
     "/api/v1/organizations/:id": {
-      "get": {
-        "tags": [
-          "Organizations"
-        ],
-        "operationId": "getOrganization",
-        "parameters": [
-          {
-            "name": "id",
-            "description": "The organization ID",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Organization"
-                }
-              }
-            }
-          }
-        },
-        "description": "Returns an organization.",
-        "x-controller": "api/v1/organizations",
-        "x-action": "show"
-      },
       "put": {
         "tags": [
           "Organizations"
@@ -4617,355 +4735,6 @@
         "description": "Updates an organization.",
         "x-controller": "api/v1/organizations",
         "x-action": "update"
-      }
-    },
-    "/api/v1/organizations/{id}/logo": {
-      "post": {
-        "tags": [
-          "Organizations"
-        ],
-        "operationId": "createOrganizationLogo",
-        "parameters": [
-          {
-            "name": "id",
-            "description": "The organization ID",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "url": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "string"
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Only owners are allowed to upload logo"
-          }
-        },
-        "description": "Uploads an organization logo as multipart/form-data. Maximum file size is 1 MB. Accepts JPEG, PNG, GIF image formats.",
-        "x-controller": "api/v1/organizations",
-        "x-action": "logo",
-        "requestBody": { "required": true,
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string",
-                "format": "binary"
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Organizations"
-        ],
-        "operationId": "deleteOrganizationLogo",
-        "parameters": [
-          {
-            "name": "id",
-            "description": "The organization ID",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "401": {
-            "description": "Only owners are allowed to remove the logo"
-          }
-        },
-        "description": "Removes an organizations logo.",
-        "x-controller": "api/v1/organizations",
-        "x-action": "destroy_logo"
-      }
-    },
-    "/api/v1/organizations/{id}/accounts": {
-      "get": {
-        "tags": [
-          "Organizations"
-        ],
-        "operationId": "getOrganizationAccounts",
-        "parameters": [
-          {
-            "name": "id",
-            "description": "The organization ID",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/OrganizationAccount"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "description": "Get all accounts associated to an organization.",
-        "x-controller": "api/v1/organizations",
-        "x-action": "accounts"
-      }
-    },
-    "/api/v1/organizations/{id}/invoices": {
-      "get": {
-        "tags": [
-          "Organizations"
-        ],
-        "operationId": "getOrganizationInvoices",
-        "parameters": [
-          {
-            "name": "id",
-            "description": "The organization ID",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Billing_ZuoraInvoice"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "description": "Lists all the invoices for an organization.",
-        "x-controller": "api/v1/organizations",
-        "x-action": "invoices"
-      }
-    },
-    "/api/v1/organizations/{id}/invoices/{invoice_id}": {
-      "get": {
-        "tags": [
-          "Organizations"
-        ],
-        "operationId": "getOrganizationInvoice",
-        "parameters": [
-          {
-            "name": "id",
-            "description": "The organization ID",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "invoice_id",
-            "description": "The invoice ID",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        },
-        "description": "Returns the invoice PDF for an organization.",
-        "x-controller": "api/v1/organizations",
-        "x-action": "invoice_pdf"
-      }
-    },
-    "/api/v1/organizations/{id}/client_token": {
-      "get": {
-        "tags": [
-          "Organizations"
-        ],
-        "operationId": "getOrganizationClientToken",
-        "parameters": [
-          {
-            "name": "id",
-            "description": "The organization ID",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "token": {
-                      "type": "string"
-                    },
-                    "signature": {
-                      "type": "string"
-                    },
-                    "uri": {
-                      "type": "string"
-                    },
-                    "payment_gateway_id": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "description": "Returns a client token for an organization to use with credit card payments.",
-        "x-controller": "api/v1/organizations",
-        "x-action": "client_token"
-      }
-    },
-    "/api/v1/organizations/{id}/payments": {
-      "post": {
-        "tags": [
-          "Organizations"
-        ],
-        "operationId": "createOrganizationPayment",
-        "parameters": [
-          {
-            "name": "data",
-            "description": "The payment method data",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "last4": {
-                  "type": "string"
-                },
-                "card_type": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          {
-            "name": "enterprise_exception",
-            "description": "Boolean to allow enterprise accounts to change payment type from ACH",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "id",
-            "description": "The organization ID",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "type",
-            "description": "The type of payment method",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "card"
-              ]
-            }
-          },
-          {
-            "name": "zuora_id",
-            "description": "The Zuora payment method ID",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaymentMethod"
-                }
-              }
-            }
-          }
-        },
-        "description": "Sets the payment method for an organization.",
-        "x-controller": "api/v1/organizations",
-        "x-action": "payments"
       }
     },
     "/api/v1/sites/{site_id}/services/{addon}/instances": {
@@ -5477,7 +5246,8 @@
         "description": "Creates a site.",
         "x-controller": "api/v1/sites",
         "x-action": "create",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -5553,7 +5323,8 @@
         "description": "Updates a site.",
         "x-controller": "api/v1/sites",
         "x-action": "update",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -5588,6 +5359,69 @@
         "description": "Deletes a site.",
         "x-controller": "api/v1/sites",
         "x-action": "destroy"
+      }
+    },
+    "/api/v1/sites/{site_id}/enable": {
+      "put": {
+        "tags": [
+          "Sites"
+        ],
+        "operationId": "enableSite",
+        "parameters": [
+          {
+            "name": "site_id",
+            "description": "The ID of the site",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "description": "Enable a site.",
+        "x-controller": "api/v1/sites",
+        "x-action": "enable"
+      }
+    },
+    "/api/v1/sites/{site_id}/disable": {
+      "put": {
+        "tags": [
+          "Sites"
+        ],
+        "operationId": "disableSite",
+        "parameters": [
+          {
+            "name": "reason",
+            "description": "Reason for disabling the site",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "description": "The ID of the site",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "description": "Disable a site.",
+        "x-controller": "api/v1/sites",
+        "x-action": "disable"
       }
     },
     "/api/v1/sites/{site_id}/deployed-branches": {
@@ -5625,6 +5459,40 @@
         "description": "Returns the deployed branches for a site.",
         "x-controller": "api/v1/sites",
         "x-action": "list_deployed_branches"
+      }
+    },
+    "/api/v1/sites/{id}/functions": {
+      "get": {
+        "tags": [
+          "Sites"
+        ],
+        "operationId": "searchSiteFunctions",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The site ID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "description": "Searches the site for matching functions.",
+        "x-controller": "api/v1/sites",
+        "x-action": "search_functions"
       }
     },
     "/api/v1/sites/{site_id}/rollback": {
@@ -5689,43 +5557,9 @@
             "description": "Site not found"
           }
         },
-        "description": "Unlinks the repo from the site.\nThis will:\n* Delete associated deploy keys\n* Delete outgoing webhooks for the repo\n* Delete the site's build hooks",
+        "description": "Unlinks the repo from the site.\nThis will:\n* Delete associated deploy keys\n* Delete outgoing webhooks for the repo\n* Delete the site's build hooks\n* Delete associated visual editing project",
         "x-controller": "api/v1/sites",
         "x-action": "unlink_repo"
-      }
-    },
-    "/api/v1/sites/{site_id}/simple": {
-      "get": {
-        "tags": [
-          "Sites"
-        ],
-        "operationId": "getSimplePublicSite",
-        "parameters": [
-          {
-            "name": "site_id",
-            "description": "The ID of the site",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Site_Simple"
-                }
-              }
-            }
-          }
-        },
-        "description": "Returns public information about a site.",
-        "x-controller": "api/v1/sites",
-        "x-action": "/api/v1/sites/{site_id}/simple_GET"
       }
     },
     "/api/v1/sites/{site_id}/snippets": {
@@ -5795,7 +5629,8 @@
         "description": "Creates a snippet for a site.",
         "x-controller": "api/v1/snippets",
         "x-action": "create",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -5923,7 +5758,8 @@
         "description": "Creates a snippet for a site.",
         "x-controller": "api/v1/snippets",
         "x-action": "update",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -5994,13 +5830,17 @@
                 }
               }
             }
+          },
+          "422": {
+            "description": "Unprocessable Entity"
           }
         },
-        "description": "Creates a certificate with the site. If the certificate param is passed,\ncreate a custom certificate with it. Otherwise, initiate the Let's\nEncrypt certificate provisioning.\nIf there is already associated certificate with the site, update it.",
+        "description": "Provisions or updates a TLS certificate for the site.\n\n**Creating a certificate (site has no certificate):**\n- Omit certificate params to initiate Let's Encrypt provisioning\n- Provide certificate, key, and ca_certificates to upload a custom certificate\n\n**Updating a certificate (site already has a certificate):**\n- REQUIRES certificate, key, and ca_certificates to replace with a new custom certificate\n- Use POST /api/v1/sites/{site_id}/ssl/renew to renew an existing Let's Encrypt certificate",
         "x-controller": "api/v1/ssl",
         "x-action": "create",
-        "requestBody": { "required": true,
-          "description": "",
+        "requestBody": {
+          "required": true,
+          "description": "Certificate data. Optional for initial provisioning, required for updates.",
           "content": {
             "application/json": {
               "schema": {
@@ -6009,6 +5849,58 @@
             }
           }
         }
+      }
+    },
+    "/api/v1/sites/{site_id}/ssl/certificates": {
+      "get": {
+        "tags": [
+          "SNI certificates"
+        ],
+        "operationId": "getAllCertificates",
+        "parameters": [
+          {
+            "name": "domain",
+            "description": "Domain that certificates are being requested for.",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_id",
+            "description": "The ID of the site",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SniCertificate"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          }
+        },
+        "description": "Returns details about certificates associated with a domain. The site must be using the domain.",
+        "x-controller": "api/v1/ssl",
+        "x-action": "get_all_certificates"
       }
     },
     "/api/v1/form/{form_id}/submissions": {
@@ -6313,7 +6205,8 @@
         },
         "x-controller": "api/v1/traffic_splits",
         "x-action": "create",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -6422,7 +6315,8 @@
         },
         "x-controller": "api/v1/traffic_splits",
         "x-action": "update",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -6527,9 +6421,7 @@
           "Users"
         ],
         "operationId": "getCurrentUser",
-        "parameters": [
-
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "",
@@ -6547,107 +6439,290 @@
         "x-action": "show"
       }
     },
-    "/api/v1/organizations/{organization_id}/workos_scim": {
-      "get": {
-        "tags": [
-          "WorkOSScim"
-        ],
-        "operationId": "getDirectory",
+    "/api/v1/accounts/{account_id}/waf/policies": {
+      "post": {
+        "description": "Creates a new WAF policy for the account.",
+        "operationId": "createWafPolicy",
         "parameters": [
           {
-            "name": "organization_id",
-            "description": "The ID of the organization",
-            "required": true,
+            "description": "The ID of the account",
+            "explode": false,
             "in": "path",
+            "name": "account_id",
+            "required": true,
             "schema": {
               "type": "string"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WafPolicy"
+              }
             }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WafPolicyUpdate"
+                }
+              }
+            },
+            "description": "WAF Policy created"
+          }
+        },
+        "tags": [
+          "WAF Policies"
+        ]
+      }
+    },
+    "/api/v1/sites/{site_id}/waf/policy": {
+      "get": {
+        "description": "Retrieves the WAF policy for the site.",
+        "operationId": "getSiteWafPolicy",
+        "parameters": [
+          {
+            "description": "The ID of the site",
+            "explode": false,
+            "in": "path",
+            "name": "site_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "simple"
           }
         ],
         "responses": {
           "200": {
-            "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "directory_type": {
-                      "type": "string"
-                    },
-                    "scim_configured": {
-                      "type": "boolean"
-                    },
-                    "status": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/WafPolicy"
                 }
+              }
+            },
+            "description": "WAF Policy retrieved"
+          },
+          "404": {
+            "description": "WAF Policy not found"
+          }
+        },
+        "tags": [
+          "WAF Policies"
+        ]
+      },
+      "put": {
+        "description": "Updates the WAF policy for the site.",
+        "operationId": "updateSiteWafPolicy",
+        "parameters": [
+          {
+            "description": "The ID of the site",
+            "explode": false,
+            "in": "path",
+            "name": "site_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WafPolicyUpdate"
               }
             }
           },
-          "404": {
-            "description": "Not Found"
-          }
+          "required": true
         },
-        "description": "Returns the details of an existing directory.",
-        "x-controller": "api/v1/workos_scim",
-        "x-action": "show"
-      },
-      "delete": {
-        "tags": [
-          "WorkOSScim"
-        ],
-        "operationId": "deleteDirectory",
-        "parameters": [
-          {
-            "name": "organization_id",
-            "description": "The ID of the organization",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
-          "204": {
-            "description": ""
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "WAF Policy updated"
           }
         },
-        "description": "Deletes the WorkOS directory",
-        "x-controller": "api/v1/workos_scim",
-        "x-action": "destroy"
+        "tags": [
+          "WAF Policies"
+        ]
       }
     },
-    "/api/v1/organizations/{organization_id}/workos_scim/delete_directory_sync": {
+    "/api/v1/accounts/{account_id}/waf/policies/{policy_id}": {
       "delete": {
-        "tags": [
-          "WorkOSScim"
-        ],
-        "operationId": "deleteDirectorySync",
+        "description": "Deletes the WAF policy for the account.",
+        "operationId": "deleteWafPolicy",
         "parameters": [
           {
-            "name": "organization_id",
-            "description": "The ID of the organization",
-            "required": true,
+            "description": "The ID of the account",
+            "explode": false,
             "in": "path",
+            "name": "account_id",
+            "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "style": "simple"
+          },
+          {
+            "description": "The ID of the WAF policy",
+            "explode": false,
+            "in": "path",
+            "name": "policy_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "simple"
           }
         ],
         "responses": {
-          "204": {
-            "description": ""
+          "202": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "WAF Policy deleted"
           }
         },
-        "description": "Deletes the WorkOS directory keeping users in their teams.",
-        "x-controller": "api/v1/workos_scim",
-        "x-action": "delete_directory_sync"
+        "tags": [
+          "WAF Policies"
+        ]
+      },
+      "get": {
+        "description": "Retrieves the WAF policy for the account.",
+        "operationId": "getWafPolicy",
+        "parameters": [
+          {
+            "description": "The ID of the account",
+            "explode": false,
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "simple"
+          },
+          {
+            "description": "The ID of the WAF policy",
+            "explode": false,
+            "in": "path",
+            "name": "policy_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "simple"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WafPolicy"
+                }
+              }
+            },
+            "description": "WAF Policy retrieved"
+          }
+        },
+        "tags": [
+          "WAF Policies"
+        ]
+      },
+      "put": {
+        "description": "Updates the WAF policy for the account.",
+        "operationId": "updateWafPolicy",
+        "parameters": [
+          {
+            "description": "The ID of the account",
+            "explode": false,
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "simple"
+          },
+          {
+            "description": "The ID of the WAF policy",
+            "explode": false,
+            "in": "path",
+            "name": "policy_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WafPolicy"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "WAF Policy updated"
+          }
+        },
+        "tags": [
+          "WAF Policies"
+        ]
+      }
+    },
+    "/api/v1/accounts/{account_id}/waf/managed": {
+      "get": {
+        "description": "Retrieves the managed WAF rules for the account.",
+        "operationId": "getManagedWafRules",
+        "parameters": [
+          {
+            "description": "The ID of the account",
+            "explode": false,
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "simple"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedWafRules"
+                }
+              }
+            },
+            "description": "Managed WAF rules retrieved"
+          }
+        },
+        "tags": [
+          "WAF Managed Rules"
+        ]
       }
     },
     "/api/v1/sites/{site_id}/log_drains": {
@@ -6733,7 +6808,8 @@
         "x-internal": "true",
         "x-controller": "api/v1/log_drains",
         "x-action": "create",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -6846,7 +6922,8 @@
         "x-internal": "true",
         "x-controller": "api/v1/log_drains",
         "x-action": "update",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -6942,7 +7019,8 @@
         "x-internal": "true",
         "x-controller": "api/v1/log_drains",
         "x-action": "verify",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -7098,7 +7176,8 @@
         "x-internal": "true",
         "x-controller": "api/v1/sites",
         "x-action": "update_firewall_rule_set",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -7222,7 +7301,8 @@
         "x-internal": "true",
         "x-controller": "api/v1/accounts",
         "x-action": "update_firewall_rule_set",
-        "requestBody": { "required": true,
+        "requestBody": {
+          "required": true,
           "description": "",
           "content": {
             "application/json": {
@@ -7234,94 +7314,16 @@
         }
       }
     },
-    "/api/v1/accounts/{account_id}/waf/policies": {
+    "/api/v1/sites/{site_id}/analytics": {
       "post": {
         "tags": [
-          "WAF Policies"
+          "Analytics"
         ],
-        "operationId": "createWafPolicy",
-        "parameters": [
-          {
-            "name": "account_id",
-            "description": "The ID of the account",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/WafPolicy"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "WAF Policy created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WafPolicyUpdate"
-                }
-              }
-            }
-          }
-        },
-        "description": "Creates a new WAF policy for the account."
-      }
-    },
-    "/api/v1/sites/{site_id}/waf/policy": {
-      "put": {
-        "tags": [
-          "WAF Policies"
-        ],
-        "operationId": "updateSiteWafPolicy",
+        "operationId": "enableAnalytics",
         "parameters": [
           {
             "name": "site_id",
-            "description": "The ID of the site",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/WafPolicyUpdate"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "WAF Policy updated",
-            "content": {
-              "application/json": {}
-            }
-          }
-        },
-        "description": "Updates the WAF policy for the site."
-      },
-      "get": {
-        "tags": [
-          "WAF Policies"
-        ],
-        "operationId": "getSiteWafPolicy",
-        "parameters": [
-          {
-            "name": "site_id",
-            "description": "The ID of the site",
+            "description": "The site ID",
             "required": true,
             "in": "path",
             "schema": {
@@ -7330,72 +7332,35 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "WAF Policy retrieved",
+          "201": {
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WafPolicy"
+                  "$ref": "#/components/schemas/ServiceInstance"
                 }
               }
             }
           },
-          "404": {
-            "description": "WAF Policy not found"
+          "422": {
+            "description": "Payment Method not found, Analytics already enabled"
           }
         },
-        "description": "Retrieves the WAF policy for the site."
+        "description": "Enables Analytics for the site.",
+        "x-controller": "api/v1/analytics",
+        "x-action": "create"
       }
     },
-    "/api/v1/accounts/{account_id}/waf/policies/{policy_id}": {
-      "get": {
-        "tags": [
-          "WAF Policies"
-        ],
-        "operationId": "getWafPolicy",
-        "parameters": [
-          {
-            "name": "account_id",
-            "description": "The ID of the account",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "policy_id",
-            "description": "The ID of the WAF policy",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "WAF Policy retrieved",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WafPolicy"
-                }
-              }
-            }
-          }
-        },
-        "description": "Retrieves the WAF policy for the account."
-      },
+    "/api/v1/sites/{site_id}/analytics/{id}": {
       "delete": {
         "tags": [
-          "WAF Policies"
+          "Analytics"
         ],
-        "operationId": "deleteWafPolicy",
+        "operationId": "disableAnalytics",
         "parameters": [
           {
-            "name": "account_id",
-            "description": "The ID of the account",
+            "name": "id",
+            "description": "Scope response to id",
             "required": true,
             "in": "path",
             "schema": {
@@ -7403,8 +7368,8 @@
             }
           },
           {
-            "name": "policy_id",
-            "description": "The ID of the WAF policy",
+            "name": "site_id",
+            "description": "The site ID",
             "required": true,
             "in": "path",
             "schema": {
@@ -7413,106 +7378,23 @@
           }
         ],
         "responses": {
-          "202": {
-            "description": "WAF Policy deleted",
-            "content": {
-              "application/json": {}
-            }
-          }
-        },
-        "description": "Deletes the WAF policy for the account."
-      },
-      "put": {
-        "tags": [
-          "WAF Policies"
-        ],
-        "operationId": "updateWafPolicy",
-        "parameters": [
-          {
-            "name": "account_id",
-            "description": "The ID of the account",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
+          "204": {
+            "description": ""
           },
-          {
-            "name": "policy_id",
-            "description": "The ID of the WAF policy",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/WafPolicy"
-              }
-            }
+          "422": {
+            "description": "Error during disabling"
           }
         },
-        "responses": {
-          "202": {
-            "description": "WAF Policy updated",
-            "content": {
-              "application/json": {}
-            }
-          }
-        },
-        "description": "Updates the WAF policy for the account."
-      }
-    },
-    "/api/v1/accounts/{account_id}/waf/managed": {
-      "get": {
-        "tags": [
-          "WAF Managed Rules"
-        ],
-        "operationId": "getManagedWafRules",
-        "parameters": [
-          {
-            "name": "account_id",
-            "description": "The ID of the account",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Managed WAF rules retrieved",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ManagedWafRules"
-                }
-              }
-            }
-          }
-        },
-        "description": "Retrieves the managed WAF rules for the account."
+        "description": "Disables Analytics for the site.",
+        "x-controller": "api/v1/analytics",
+        "x-action": "destroy"
       }
     }
   },
   "tags": [
     {
-      "name": "Access tokens",
-      "description": "This document describes the API for revoking access tokens."
-    },
-    {
       "name": "Accounts",
       "description": "Endpoints for managing accounts. In the Netlify UI, accounts are known as teams."
-    },
-    {
-      "name": "Analytics",
-      "description": "Endpoints for managing Analytics."
     },
     {
       "name": "Build Hooks",
@@ -7617,10 +7499,6 @@
     {
       "name": "Users",
       "description": "Endpoints for managing users."
-    },
-    {
-      "name": "WorkOSScim",
-      "description": "Endpoints to manage WorkOS SCIM integration."
     }
   ],
   "components": {
@@ -7788,10 +7666,10 @@
           "id": {
             "type": "string"
           },
-          "unpublished_rules": {
+          "unpublished": {
             "$ref": "#/components/schemas/FirewallRuleSet"
           },
-          "published_rules": {
+          "published": {
             "$ref": "#/components/schemas/FirewallRuleSet"
           },
           "site_overrides": {
@@ -7813,8 +7691,8 @@
         },
         "required": [
           "id",
-          "unpublished_rules",
-          "published_rules",
+          "unpublished",
+          "published",
           "site_overrides",
           "created_at",
           "updated_at"
@@ -7834,8 +7712,7 @@
       },
       "AccountMemberRole": {
         "type": "object",
-        "properties": {
-        }
+        "properties": {}
       },
       "AccountType": {
         "type": "object",
@@ -7855,16 +7732,14 @@
           "capabilities": {
             "type": "object"
           },
+          "available": {
+            "type": "boolean",
+            "description": "when requested for an account indicates it's available for the account subscribe to, without an account, indicates if it's available for the user to use for a new team"
+          },
           "monthly_dollar_price": {
             "type": "string"
           },
-          "yearly_dollar_price": {
-            "type": "string"
-          },
           "monthly_seats_addon_dollar_price": {
-            "type": "string"
-          },
-          "yearly_seats_addon_dollar_price": {
             "type": "string"
           },
           "monthly_concurrent_builds_addon_dollar_price": {
@@ -7872,10 +7747,6 @@
           },
           "skip_payment": {
             "type": "boolean"
-          },
-          "zuora_products": {
-            "type": "object",
-            "description": "The Zuora products and their attributes given the Zuora environment"
           }
         },
         "required": [
@@ -7884,13 +7755,46 @@
           "slug",
           "description",
           "capabilities",
+          "available",
           "monthly_dollar_price",
-          "yearly_dollar_price",
           "monthly_seats_addon_dollar_price",
-          "yearly_seats_addon_dollar_price",
           "monthly_concurrent_builds_addon_dollar_price"
         ],
         "description": "AccountType model definition"
+      },
+      "AccountUsageNotification": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "site_id": {
+            "type": "string"
+          },
+          "account_id": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "usage_type": {
+            "type": "integer"
+          },
+          "included_usage": {
+            "type": "integer"
+          },
+          "usage_amount": {
+            "type": "integer"
+          },
+          "usage_percentage": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "active"
+        ],
+        "description": "AccountUsageNotification model definition"
       },
       "Account": {
         "type": "object",
@@ -7957,14 +7861,45 @@
             "type": "string",
             "format": "date-time"
           },
-          "vat": {
-            "type": "string"
-          },
           "support_administration_enabled": {
             "type": "boolean"
           },
           "deploy_diagnostics_setting": {
             "type": "string"
+          },
+          "ai_usage_enabled_setting": {
+            "type": "string"
+          },
+          "ai_usage_limit_enforced": {
+            "type": "boolean"
+          },
+          "ai_usage_limit_credits": {
+            "type": "integer"
+          },
+          "configurable_limits_exceeded": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "auto_topup_enabled": {
+            "type": "boolean"
+          },
+          "credit_alert_percentage": {
+            "type": "integer",
+            "description": "Usage percentage when credit alert is active"
+          },
+          "plan_credits": {
+            "type": "integer",
+            "description": "Version-specific credit allotment"
+          },
+          "plan_auto_topup_amount": {
+            "type": "string",
+            "description": "Version-specific auto top-up amount"
+          },
+          "plan_auto_topup_per_unit_cost": {
+            "type": "string",
+            "description": "Version-specific auto top-up per unit cost"
           }
         },
         "required": [
@@ -7985,9 +7920,13 @@
           "type_name",
           "type_slug",
           "updated_at",
-          "vat",
           "support_administration_enabled",
-          "deploy_diagnostics_setting"
+          "deploy_diagnostics_setting",
+          "ai_usage_enabled_setting",
+          "ai_usage_limit_enforced",
+          "configurable_limits_exceeded",
+          "auto_topup_enabled",
+          "credit_alert_percentage"
         ],
         "description": "Account model definition"
       },
@@ -8049,12 +7988,20 @@
               },
               "edge_functions_manifest": {
                 "type": "object"
+              },
+              "paid_addons": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Array of paid add-ons for this site"
               }
             },
             "required": [
               "site_build_timelimit",
               "site_build_pre_process_timeout",
-              "site_functions_config"
+              "site_functions_config",
+              "paid_addons"
             ]
           }
         ],
@@ -8113,6 +8060,284 @@
           "user_id"
         ],
         "description": "Administrator model definition"
+      },
+      "AgentRunner": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the runner"
+          },
+          "site_id": {
+            "type": "string",
+            "description": "The id of the site"
+          },
+          "parent_agent_runner_id": {
+            "type": "string",
+            "description": "The id of the parent agent runner"
+          },
+          "state": {
+            "type": "string",
+            "description": "The state of the runner"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "The time the runner was created"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "The time the runner was updated"
+          },
+          "done_at": {
+            "type": "string",
+            "description": "The time the runner was done"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the runner"
+          },
+          "branch": {
+            "type": "string",
+            "description": "The branch of the runner"
+          },
+          "result_branch": {
+            "type": "string",
+            "description": "The result branch of the runner"
+          },
+          "pr_url": {
+            "type": "string",
+            "description": "The URL of the created pull request"
+          },
+          "pr_branch": {
+            "type": "string",
+            "description": "The branch of the pull request"
+          },
+          "pr_state": {
+            "type": "string",
+            "description": "The state of the pull request"
+          },
+          "pr_number": {
+            "type": "integer",
+            "description": "The number of the pull request"
+          },
+          "pr_is_being_created": {
+            "type": "boolean",
+            "description": "Whether PR creation is currently in progress"
+          },
+          "pr_error": {
+            "type": "string",
+            "description": "Error message if PR creation failed"
+          },
+          "current_task": {
+            "type": "string",
+            "description": "The current task of the active running session"
+          },
+          "sha": {
+            "type": "string",
+            "description": "The start commit SHA"
+          },
+          "merge_commit_is_being_created": {
+            "type": "boolean",
+            "description": "Whether branch commit is currently in progress"
+          },
+          "merge_commit_sha": {
+            "type": "string",
+            "description": "The commit SHA when directly committing to branch"
+          },
+          "merge_commit_error": {
+            "type": "string",
+            "description": "Error message if branch commit failed"
+          },
+          "attached_file_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "S3 keys of files attached to this agent runner session"
+          },
+          "active_session_created_at": {
+            "type": "string",
+            "description": "The creation time of the current active session"
+          },
+          "base_deploy_id": {
+            "type": "string",
+            "description": "The ID of the deploy this runner starts from"
+          },
+          "latest_session_deploy_id": {
+            "type": "string",
+            "description": "The ID of the deploy from the latest session (if it has one)"
+          },
+          "latest_session_deploy_url": {
+            "type": "string",
+            "description": "The URL of the deploy preview from the latest session (if it has one)"
+          },
+          "last_session_created_at": {
+            "type": "string",
+            "description": "Date of creation of the newest session"
+          },
+          "user": {
+            "$ref": "#/components/schemas/AgentRunnerUser"
+          },
+          "contributors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentRunnerUser"
+            },
+            "description": "All users who contributed to this agent runner"
+          },
+          "has_result_diff": {
+            "type": "boolean",
+            "description": "Whether result diff exists"
+          }
+        }
+      },
+      "AgentRunnerSession": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the runner"
+          },
+          "agent_runner_id": {
+            "type": "string",
+            "description": "The id of the site"
+          },
+          "dev_server_id": {
+            "type": "string",
+            "description": "The id of the dev server"
+          },
+          "state": {
+            "type": "string",
+            "description": "The state of the runner session"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "The time the runner session was created"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "The time the runner session was updated"
+          },
+          "done_at": {
+            "type": "string",
+            "description": "The time the runner session was done"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the runner session"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "The prompt of the runner session"
+          },
+          "dev_server": {
+            "type": "string",
+            "description": "The dev server of the runner session"
+          },
+          "agent_config": {
+            "$ref": "#/components/schemas/AgentRunnerSessionConfig"
+          },
+          "result": {
+            "type": "string",
+            "description": "The result of the runner session"
+          },
+          "commit_sha": {
+            "type": "string",
+            "description": "The SHA of the branch/pr commit that includes this session's changes"
+          },
+          "deploy_id": {
+            "type": "string",
+            "description": "The deploy id for the runner session"
+          },
+          "deploy_url": {
+            "type": "string",
+            "description": "The URL of the deploy preview (if deploy_id is present)"
+          },
+          "duration": {
+            "type": "number",
+            "description": "The duration of the runner session"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentRunnerSessionStep"
+            },
+            "description": "The steps which agent runner session did"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "attached_file_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "S3 keys of files attached to this agent runner session"
+          },
+          "is_discarded": {
+            "type": "boolean",
+            "description": "Whether the session has been discarded"
+          },
+          "has_result_diff": {
+            "type": "boolean",
+            "description": "Whether result diff exists"
+          },
+          "has_cumulative_diff": {
+            "type": "boolean",
+            "description": "Whether cumulative diff exists"
+          },
+          "mode": {
+            "type": "string",
+            "description": "The mode of the session (normal, redeploy, rebase)"
+          },
+          "source_session_id": {
+            "type": "string",
+            "description": "The ID of the source session (for redeploy mode)"
+          }
+        }
+      },
+      "AgentRunnerSessionStep": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "AgentRunnerSessionConfig": {
+        "type": "object",
+        "properties": {
+          "agent": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          }
+        }
+      },
+      "AgentRunnerUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the user"
+          },
+          "full_name": {
+            "type": "string",
+            "description": "The full name of the user"
+          },
+          "avatar_url": {
+            "type": "string",
+            "description": "The URL for the avatar"
+          },
+          "email": {
+            "type": "string",
+            "description": "The email of the user"
+          }
+        }
       },
       "Asset": {
         "type": "object",
@@ -8286,163 +8511,39 @@
           "period_end_date"
         ]
       },
-      "Billing_ZuoraInvoiceItem": {
+      "BillingAddress": {
         "type": "object",
         "properties": {
-          "id": {
+          "name": {
             "type": "string",
-            "description": "The Zuora id of the invoice item"
+            "description": "Full name for the billing address"
           },
-          "title": {
+          "line1": {
             "type": "string",
-            "description": "The title of the Zuora invoice item"
+            "description": "First line of the street address"
           },
-          "amount": {
-            "type": "integer",
-            "description": "The amount of the Zuora invoice item"
-          },
-          "display_amount": {
+          "line2": {
             "type": "string",
-            "description": "The formatted amount with currency"
+            "description": "Second line of the street address (optional)"
           },
-          "quantity": {
-            "type": "integer",
-            "description": "The quantity of the Zuora invoice item"
-          },
-          "start_date": {
+          "city": {
             "type": "string",
-            "format": "date",
-            "description": "The start date of the Zuora invoice item"
+            "description": "City name"
           },
-          "end_date": {
+          "state": {
             "type": "string",
-            "format": "date",
-            "description": "The end date of the Zuora invoice item"
+            "description": "State or province"
           },
-          "service_start_date": {
+          "postal_code": {
             "type": "string",
-            "description": "The start date of the Zuora invoice item"
+            "description": "Postal or ZIP code"
           },
-          "service_end_date": {
+          "country": {
             "type": "string",
-            "description": "The end date of the Zuora invoice item"
-          },
-          "site_id": {
-            "type": "integer",
-            "description": "The Netlify site ID in which this invoice belongs to"
-          },
-          "domain_name": {
-            "type": "string",
-            "description": "The domain name of the site connected to this Zuora invoice item"
-          },
-          "expires_at": {
-            "type": "string",
-            "description": "The formatted domain expiration date"
-          },
-          "site_name": {
-            "type": "string",
-            "description": "The site name of site connected to this Zuora invoice item"
-          },
-          "site_domain": {
-            "type": "string",
-            "description": "The site domain of the site connected to this Zuora invoice item"
-          },
-          "recurring": {
-            "type": "boolean",
-            "description": "If this Zuora invoice item is recurring"
-          },
-          "tax_amount": {
-            "type": "integer",
-            "description": "The tax amount on the Zuora invoice"
+            "description": "Country code (e.g., \"US\")"
           }
         },
-        "required": [
-          "id",
-          "title",
-          "amount",
-          "display_amount",
-          "quantity",
-          "start_date",
-          "end_date",
-          "service_start_date",
-          "service_end_date",
-          "site_id",
-          "domain_name",
-          "expires_at",
-          "site_name",
-          "site_domain",
-          "recurring",
-          "tax_amount"
-        ],
-        "description": "ZuoraInvoiceItem model definition"
-      },
-      "Billing_ZuoraInvoice": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The Zuora ID of the invoice"
-          },
-          "invoice_number": {
-            "type": "string",
-            "description": "The Zuora invoice number"
-          },
-          "invoice_date": {
-            "type": "string",
-            "format": "date",
-            "description": "The Zuora invoice date"
-          },
-          "due_date": {
-            "type": "string",
-            "format": "date",
-            "description": "The Zuora due_date"
-          },
-          "balance": {
-            "type": "integer",
-            "description": "The remaining balance in Zuora"
-          },
-          "amount": {
-            "type": "integer",
-            "description": "The amount due in Zuora"
-          },
-          "payment_amount": {
-            "type": "integer",
-            "description": "The payment amount on the Zuora invoice"
-          },
-          "refund_amount": {
-            "type": "integer",
-            "description": "The refund amount on the Zuora invoice"
-          },
-          "credit_balance_adjustment_amount": {
-            "type": "integer",
-            "description": "The credit balance adjustment amount"
-          },
-          "tax_amount": {
-            "type": "integer",
-            "description": "The tax amount on the Zuora Invoice"
-          },
-          "invoice_items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Billing_ZuoraInvoiceItem"
-            },
-            "description": "Zuora invoice items"
-          }
-        },
-        "required": [
-          "id",
-          "invoice_number",
-          "invoice_date",
-          "due_date",
-          "balance",
-          "amount",
-          "payment_amount",
-          "refund_amount",
-          "credit_balance_adjustment_amount",
-          "tax_amount",
-          "invoice_items"
-        ],
-        "description": "ZuoraInvoice model definition"
+        "description": "BillingAddress model definition"
       },
       "BitbucketSelfHostedConfig": {
         "type": "object",
@@ -8464,6 +8565,29 @@
             "description": "the client secret of the bitbucket application"
           }
         }
+      },
+      "BuildBotAccount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the account"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the account"
+          },
+          "team_logo_url": {
+            "type": "string",
+            "description": "The URL of the team logo"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "team_logo_url"
+        ],
+        "description": "BuildBotAccount model definition"
       },
       "BuildHook": {
         "type": "object",
@@ -9627,9 +9751,12 @@
               },
               "bitbucket": {
                 "type": "string"
+              },
+              "google": {
+                "type": "string"
               }
             },
-            "description": "information of the connected providers' slug if any"
+            "description": "information of the connected providers' slug/email if any"
           }
         },
         "required": [
@@ -9818,10 +9945,34 @@
           "period_end_date"
         ]
       },
-      "Deploy_LogAttributes": {
+      "CreateProject": {
         "type": "object",
         "properties": {
+          "create_project_id": {
+            "type": "string"
+          },
+          "branch": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
         },
+        "required": [
+          "create_project_id",
+          "branch",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "Deploy_LogAttributes": {
+        "type": "object",
+        "properties": {},
         "description": "Deploy model definition"
       },
       "Deploy_Simple": {
@@ -9977,6 +10128,14 @@
               "none"
             ],
             "description": "The state of the deploy's plugins"
+          },
+          "agent_runner_id": {
+            "type": "string",
+            "description": "The ID of the agent runner associated with the deploy"
+          },
+          "skew_protection_token": {
+            "type": "string",
+            "description": "The skew protection token for this deploy"
           }
         },
         "required": [
@@ -10334,6 +10493,18 @@
             "type": "string",
             "format": "date-time",
             "description": "The date at which the deploy will be soft-deleted"
+          },
+          "agent_runner_id": {
+            "type": "string",
+            "description": "The ID of the agent runner associated with the deploy"
+          },
+          "source_zip_filename": {
+            "type": "string",
+            "description": "The filename of the uploaded source zip in S3"
+          },
+          "skew_protection_token": {
+            "type": "string",
+            "description": "The skew protection token for this deploy"
           }
         },
         "required": [
@@ -10430,6 +10601,45 @@
         },
         "description": "Deploy summary message"
       },
+      "DeployValidationsReport_SecretScanResult": {
+        "type": "object",
+        "properties": {
+          "scannedFilesCount": {
+            "type": "integer",
+            "description": "The number of files scanned"
+          },
+          "secretsScanMatches": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The list of secrets scan matches"
+          },
+          "enhancedSecretsScanMatches": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The list of enhanced secrets scan matches"
+          }
+        }
+      },
+      "DeployValidationsReport": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the deploy validations report"
+          },
+          "deploy_id": {
+            "type": "string",
+            "description": "The id of the deploy"
+          },
+          "secret_scan_result": {
+            "$ref": "#/components/schemas/DeployValidationsReport_SecretScanResult"
+          }
+        }
+      },
       "DeployedBranch": {
         "type": "object",
         "properties": {
@@ -10487,8 +10697,7 @@
       },
       "DevServer_LogAttributes": {
         "type": "object",
-        "properties": {
-        },
+        "properties": {},
         "description": "DevServer model definition"
       },
       "DevServerHook": {
@@ -10600,6 +10809,10 @@
             "type": "string",
             "description": "The time the dev server was updated"
           },
+          "last_activity_at": {
+            "type": "string",
+            "description": "The time the dev server was last active"
+          },
           "url": {
             "type": "string",
             "description": "The url of the dev server"
@@ -10624,9 +10837,17 @@
             "type": "string",
             "description": "The branch of the dev server"
           },
+          "environment": {
+            "type": "string",
+            "description": "The environment of the dev server"
+          },
           "title": {
             "type": "string",
             "description": "The title of the dev server"
+          },
+          "stop_reason": {
+            "type": "string",
+            "description": "The reason the dev server was stopped"
           }
         }
       },
@@ -10662,10 +10883,25 @@
           }
         }
       },
-      "DirectorySyncEntity": {
+      "DevServersSummary": {
         "type": "object",
         "properties": {
-        }
+          "account_id": {
+            "type": "string"
+          },
+          "active_dev_servers_count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "account_id",
+          "active_dev_servers_count"
+        ],
+        "description": "DevServersSummary model definition"
+      },
+      "DirectorySyncEntity": {
+        "type": "object",
+        "properties": {}
       },
       "DnsRecord": {
         "type": "object",
@@ -10715,7 +10951,7 @@
           },
           "weight": {
             "type": "integer",
-            "description": "The weight of the DNS record (for SRV type record)"
+            "description": "The weight of the DNS record (for SRV and HTTPS type record)"
           },
           "port": {
             "type": "integer",
@@ -10780,11 +11016,15 @@
           },
           "weight": {
             "type": "integer",
-            "description": "The weight of the DNS record (for SRV type record)"
+            "description": "The weight of the DNS record (for SRV and HTTPS type record)"
           },
           "port": {
             "type": "integer",
             "description": "The port of the DNS record (for SRV type record)"
+          },
+          "target": {
+            "type": "string",
+            "description": "The target of the DNS record (for HTTPS type record)"
           },
           "flag": {
             "type": "integer",
@@ -10793,6 +11033,23 @@
           "tag": {
             "type": "string",
             "description": "The tag of the DNS record (for CAA type record)"
+          }
+        }
+      },
+      "DnsRecordVerifyParams": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "The value of the DNS record"
+          },
+          "host": {
+            "type": "string",
+            "description": "The host of the DNS record"
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of the DNS record"
           }
         }
       },
@@ -10875,6 +11132,10 @@
             "type": "string",
             "format": "date-time",
             "description": "When the DNS zone was updated"
+          },
+          "uses_netlify_registrar": {
+            "type": "boolean",
+            "description": "Whether the domain was registered with Netlify"
           }
         },
         "required": [
@@ -10892,7 +11153,8 @@
           "ipv6_enabled",
           "dedicated",
           "created_at",
-          "updated_at"
+          "updated_at",
+          "uses_netlify_registrar"
         ]
       },
       "DnsZoneCreateParams": {
@@ -10909,6 +11171,10 @@
           "name": {
             "type": "string",
             "description": "The name of the DNS zone"
+          },
+          "record_txt_value": {
+            "type": "string",
+            "description": "The TXT value for the DNS subdomain ownership verification"
           }
         }
       },
@@ -10928,6 +11194,52 @@
             "description": "The userID to transfer the DNS zone to"
           }
         }
+      },
+      "DomainOwner": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the domain owner record"
+          },
+          "root_domain": {
+            "type": "string",
+            "description": "The root domain (e.g., example.com)"
+          },
+          "account_id": {
+            "type": "string",
+            "description": "The ID of the owning account"
+          },
+          "locked": {
+            "type": "boolean",
+            "description": "Whether the domain owner is locked"
+          },
+          "account_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "IDs of accounts the domain is shared with"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record was created"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record was last updated"
+          }
+        },
+        "required": [
+          "id",
+          "root_domain",
+          "account_id",
+          "locked",
+          "created_at",
+          "updated_at"
+        ]
       },
       "Domain": {
         "type": "object",
@@ -10985,6 +11297,10 @@
             "type": "string",
             "format": "date-time",
             "description": "When the domain was updated"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of the most recent domain transaction"
           }
         },
         "required": [
@@ -11760,7 +12076,10 @@
           "functions_config": {
             "type": "object"
           },
-          "zuora_url": {
+          ":build_ids": {
+            "type": "string"
+          },
+          "orb_url": {
             "type": "string"
           },
           "sites_count": {
@@ -11771,6 +12090,21 @@
           },
           "enterprise_features": {
             "$ref": "#/components/schemas/EnterpriseFeatures"
+          },
+          "prerender": {
+            "type": "string"
+          },
+          "dev_server_settings": {
+            "type": "object",
+            "description": "The dev server settings for the account"
+          },
+          "is_credit_based": {
+            "type": "boolean",
+            "description": "Whether the account is a credit-based plan"
+          },
+          "auto_topup_enabled": {
+            "type": "boolean",
+            "description": "Whether automatic top-up is currently enabled (only for credit-based plans)"
           }
         },
         "required": [
@@ -11782,10 +12116,11 @@
           "dev_server_resources",
           "concurrent_upload_limit",
           "functions_config",
-          "zuora_url",
           "sites_count",
           "dunning",
-          "enterprise_features"
+          "enterprise_features",
+          "prerender",
+          "dev_server_settings"
         ],
         "description": "HeroAccount model definition, see AccountUserMembershipSerializer for other fields"
       },
@@ -11957,6 +12292,138 @@
         },
         "description": "EnterpriseFeaturesParam model definition."
       },
+      "HeroAccountSimple": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The identifier for the account"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the account"
+          },
+          "slug": {
+            "type": "string",
+            "description": "The slug of the account"
+          },
+          "billing_email": {
+            "type": "string",
+            "description": "The billing email of the account"
+          },
+          "admin_url": {
+            "type": "string",
+            "description": "The admin URL for the account"
+          },
+          "is_credit_based": {
+            "type": "boolean",
+            "description": "Whether the account is a credit-based plan"
+          },
+          "auto_topup_enabled": {
+            "type": "boolean",
+            "description": "Whether automatic top-up is currently enabled (only for credit-based plans)"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "billing_email",
+          "admin_url"
+        ],
+        "description": "Simple HeroAccount model definition for basic identification"
+      },
+      "HeroDomainTransaction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the DomainTransaction"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the DomainTransaction"
+          },
+          "price": {
+            "type": "number",
+            "description": "The price of the DomainTransaction"
+          },
+          "status": {
+            "type": "string",
+            "description": "The status of the DomainTransaction"
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of the DomainTransaction"
+          },
+          "orb_invoice_id": {
+            "type": "string",
+            "description": "The Orb invoice ID of the DomainTransaction"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "The created at timestamp of the DomainTransaction"
+          },
+          "updated_at": {
+            "type": "string",
+            "description": "The updated at timestamp of the DomainTransaction"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "price",
+          "status",
+          "type",
+          "orb_invoice_id",
+          "created_at",
+          "updated_at"
+        ],
+        "description": "HeroDomainTransaction model definition, see DomainTransactionSerializer for other fields"
+      },
+      "HeroOrganizationAccountSerializer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The identifier for the account (account ID)"
+          },
+          "slug": {
+            "type": "string",
+            "description": "The slug for the account"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name for the account"
+          },
+          "logo_url": {
+            "type": "string",
+            "description": "The URL for the account's logo"
+          },
+          "billing_email": {
+            "type": "string",
+            "description": "The billing email for the account"
+          },
+          "billing_name": {
+            "type": "string",
+            "description": "The billing name for the account"
+          },
+          "support_level": {
+            "type": "string",
+            "description": "The support level of the account"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "logo_url",
+          "billing_email",
+          "billing_name",
+          "support_level"
+        ],
+        "description": "Simple serializer for organization accounts that only returns basic identifiers.\nUsed when full account details are not needed to avoid timeouts with large datasets."
+      },
       "HeroOrganization": {
         "type": "object",
         "properties": {
@@ -11964,20 +12431,56 @@
             "type": "string",
             "description": "The URL of the organization in the Netlify UI"
           },
-          "zuora_url": {
-            "type": "string",
-            "description": "The URL of the zuora account"
-          },
           "capabilities": {
             "type": "object"
+          },
+          "is_ax_partner": {
+            "type": "boolean",
+            "description": "Whether the organization is an AX partner - will be deprecated for property ax_partner"
+          },
+          "ax_partner": {
+            "type": "boolean",
+            "description": "Whether the organization is an AX partner"
+          },
+          "owners": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "The list of organization owners"
           }
         },
         "required": [
           "admin_url",
-          "zuora_url",
-          "capabilities"
+          "capabilities",
+          "is_ax_partner",
+          "ax_partner",
+          "owners"
         ],
         "description": "HeroOrganization model definition, see OrganizationSerializer for other fields"
+      },
+      "HeroSiteSimple": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The identifier for the site"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the site"
+          },
+          "subdomain": {
+            "type": "string",
+            "description": "The subdomain of the site"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "subdomain"
+        ],
+        "description": "Simple HeroSite model definition for basic identification"
       },
       "HeroSitesSummary": {
         "type": "object",
@@ -12015,6 +12518,80 @@
         ],
         "description": "HeroSitesSummary model definition"
       },
+      "HeroUserAccount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "admin_url": {
+            "type": "string"
+          },
+          "support_priority": {
+            "type": "integer"
+          },
+          "billing_email": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "lifecycle_state": {
+            "type": "string"
+          },
+          "build_timelimit": {
+            "type": "integer"
+          },
+          "concurrent_upload_limit": {
+            "type": "integer"
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "saml_enabled": {
+            "type": "boolean"
+          },
+          "orb_url": {
+            "type": "string"
+          },
+          "type_name": {
+            "type": "string"
+          },
+          "type_slug": {
+            "type": "string"
+          },
+          "organization_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "admin_url",
+          "support_priority",
+          "billing_email",
+          "role",
+          "lifecycle_state",
+          "build_timelimit",
+          "concurrent_upload_limit",
+          "capabilities",
+          "saml_enabled",
+          "orb_url",
+          "type_name",
+          "type_slug"
+        ],
+        "description": "HeroUserAccount model definition for accounts under user search. Also used for account details in Zendesk.\nChanges to this serializer is also reflected in the Zendesk and in Support API (n8n)"
+      },
       "HeroUser": {
         "type": "object",
         "properties": {
@@ -12048,9 +12625,6 @@
           "support_priority": {
             "type": "integer"
           },
-          "zuora_url": {
-            "type": "string"
-          },
           "all_accounts": {
             "type": "array",
             "items": {
@@ -12068,6 +12642,9 @@
           },
           "safe_to_spam": {
             "type": "boolean"
+          },
+          "mfa_enabled": {
+            "type": "boolean"
           }
         },
         "required": [
@@ -12081,13 +12658,51 @@
           "bitbucket_slug",
           "all_sites",
           "support_priority",
-          "zuora_url",
           "all_accounts",
           "all_organizations",
           "sift_spam_score",
-          "safe_to_spam"
+          "safe_to_spam",
+          "mfa_enabled"
         ],
         "description": "HeroUser model definition, see UserSerializer for other fields"
+      },
+      "HeroUserSimple": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The identifier for the user"
+          },
+          "email": {
+            "type": "string",
+            "description": "The email of the user"
+          },
+          "full_name": {
+            "type": "string",
+            "description": "The full name of the user"
+          },
+          "avatar": {
+            "type": "string",
+            "description": "The URL for the avatar"
+          },
+          "slug": {
+            "type": "string",
+            "description": "The slug of the user"
+          },
+          "tracking_id": {
+            "type": "string",
+            "description": "The tracking ID of the user"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "full_name",
+          "avatar",
+          "slug",
+          "tracking_id"
+        ],
+        "description": "Simple HeroUser model definition for basic identification"
       },
       "OutgoingHook": {
         "type": "object",
@@ -12103,6 +12718,10 @@
           "form_id": {
             "type": "string",
             "description": "The form ID associated with this hook"
+          },
+          "organization_id": {
+            "type": "string",
+            "description": "The organization ID associated with this hook"
           },
           "form_name": {
             "type": "string",
@@ -12269,43 +12888,41 @@
           }
         }
       },
-      "IdentityVerification": {
+      "Invite": {
         "type": "object",
         "properties": {
-          "provider": {
+          "id": {
             "type": "string",
-            "description": "The provider of the IdentityVerification (stripe)"
+            "description": "The identifier for the user"
+          },
+          "account_name": {
+            "type": "string",
+            "description": "The name of the team the invite is for"
+          },
+          "organization_name": {
+            "type": "string",
+            "description": "The name of the organization the invite is for"
+          },
+          "role_name": {
+            "type": "string",
+            "description": "The name of the role the user is invited to"
           },
           "code": {
             "type": "string",
-            "description": "The UUID for IdentityVerification lookups"
-          },
-          "session_id": {
-            "type": "string",
-            "description": "The session_id for IdentityVerification session"
-          },
-          "report": {
-            "type": "object",
-            "description": "The report from the identity verification service"
-          },
-          "user": {
-            "$ref": "#/components/schemas/User"
-          },
-          "state": {
-            "type": "string",
-            "description": "The current state of the verification"
+            "description": "The invite code for acceptance"
           },
           "created_at": {
             "type": "string",
-            "format": "date-time",
-            "description": "When the Event IdentityVerification was created"
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "When the Event IdentityVerification was updated"
+            "description": "When the invite was created"
           }
-        }
+        },
+        "required": [
+          "id",
+          "role_name",
+          "code",
+          "created_at"
+        ],
+        "description": "Invite model definition"
       },
       "LogDrain": {
         "type": "object",
@@ -12359,7 +12976,8 @@
         "type": "object",
         "properties": {
           "url": {
-            "type": "string"
+            "type": "string",
+            "description": "The URL for the log drain"
           },
           "tags": {
             "type": "object",
@@ -12393,7 +13011,11 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "the identifier for the member (user ID)"
+            "description": "the identifier for the member"
+          },
+          "user_id": {
+            "type": "string",
+            "description": "the user id of the member"
           },
           "full_name": {
             "type": "string",
@@ -12430,9 +13052,12 @@
               },
               "bitbucket": {
                 "type": "string"
+              },
+              "google": {
+                "type": "string"
               }
             },
-            "description": "information of the connected providers' slug if any"
+            "description": "information of the connected providers' slug/email if any"
           },
           "site_ids": {
             "type": "array",
@@ -12481,6 +13106,7 @@
         },
         "required": [
           "id",
+          "user_id",
           "full_name",
           "email",
           "avatar",
@@ -12749,8 +13375,8 @@
             ],
             "enum": [
               "not_enforced",
-              "enforced",
-              "dry-run_strict"
+              "encouraged",
+              "enforced"
             ],
             "description": "Determines type of mfa enforcement",
             "nullable": true
@@ -12810,6 +13436,10 @@
           "total_member_count": {
             "type": "integer",
             "description": "The number of team members in the organization"
+          },
+          "ax_partner": {
+            "type": "boolean",
+            "description": "Whether the organization is an AX partner"
           }
         },
         "required": [
@@ -12850,7 +13480,8 @@
           "directory_sync_deactivated_at",
           "directory_sync_deleted_at",
           "saml_enabled_at",
-          "total_member_count"
+          "total_member_count",
+          "ax_partner"
         ],
         "description": "Organization model definition"
       },
@@ -13397,8 +14028,8 @@
           "installation_id": {
             "type": "integer"
           },
-          "package_path": {
-            "type": "string"
+          "installation_coding_id": {
+            "type": "integer"
           },
           "private_logs": {
             "type": "boolean"
@@ -13408,9 +14039,6 @@
           },
           "public_repo": {
             "type": "boolean"
-          },
-          "branch": {
-            "type": "string"
           },
           "repo_branch": {
             "type": "string"
@@ -13443,6 +14071,12 @@
           "updated_at": {
             "type": "string",
             "format": "date-time"
+          },
+          "branch": {
+            "type": "string"
+          },
+          "package_path": {
+            "type": "string"
           }
         },
         "description": "Repo model definition"
@@ -13802,6 +14436,9 @@
           "custom_domain": {
             "type": "string"
           },
+          "record_txt_value": {
+            "type": "string"
+          },
           "branch_deploy_custom_domain": {
             "type": "string"
           },
@@ -13814,13 +14451,7 @@
               "type": "string"
             }
           },
-          "password": {
-            "type": "string"
-          },
           "password_context": {
-            "type": "string"
-          },
-          "password_hash": {
             "type": "string"
           },
           "sso_login": {
@@ -13860,15 +14491,6 @@
           },
           "force_ssl": {
             "type": "boolean"
-          },
-          "rum_enabled": {
-            "type": "boolean"
-          },
-          "prevent_non_git_prod_deploys": {
-            "type": "boolean"
-          },
-          "analytics_instance_id": {
-            "type": "string"
           },
           "build_settings": {
             "$ref": "#/components/schemas/Repo"
@@ -13925,7 +14547,7 @@
               "$ref": "#/components/schemas/SiteLabel"
             }
           },
-          "functions_region": {
+          "analytics_instance_id": {
             "type": "string"
           },
           "cdp_enabled_contexts": {
@@ -13934,7 +14556,16 @@
               "type": "string"
             }
           },
+          "functions_region": {
+            "type": "string"
+          },
           "hud_enabled": {
+            "type": "boolean"
+          },
+          "rum_enabled": {
+            "type": "boolean"
+          },
+          "prevent_non_git_prod_deploys": {
             "type": "boolean"
           }
         },
@@ -13975,166 +14606,22 @@
         ],
         "description": "Site model definition"
       },
-      "PartialSite": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "plan": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "default_domain": {
-            "type": "string"
-          },
-          "custom_domain": {
-            "type": "string"
-          },
-          "branch_deploy_custom_domain": {
-            "type": "string"
-          },
-          "deploy_preview_custom_domain": {
-            "type": "string"
-          },
-          "domain_aliases": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "password": {
-            "type": "string"
-          },
-          "password_context": {
-            "type": "string"
-          },
-          "password_hash": {
-            "type": "string"
-          },
-          "sso_login": {
-            "type": "boolean"
-          },
-          "sso_login_context": {
-            "type": "string"
-          },
-          "notification_email": {
-            "type": "string"
-          },
-          "url": {
-            "type": "string"
-          },
-          "admin_url": {
-            "type": "string"
-          },
-          "deploy_url": {
-            "type": "string"
-          },
-          "state": {
-            "type": "string"
-          },
-          "screenshot_url": {
-            "type": "string"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "ssl_url": {
-            "type": "string"
-          },
-          "force_ssl": {
-            "type": "boolean"
-          },
-          "rum_enabled": {
-            "type": "boolean"
-          },
-          "prevent_non_git_prod_deploys": {
-            "type": "boolean"
-          },
-          "build_settings": {
-            "$ref": "#/components/schemas/Repo"
-          },
-          "processing_settings": {
-            "type": "object",
-            "properties": {
-              "html": {
-                "type": "object",
-                "properties": {
-                  "pretty_urls": {
-                    "type": "boolean"
-                  }
-                }
-              },
-              "ignore_html_forms": {
-                "type": "boolean"
-              }
-            }
-          },
-          "deploy_hook": {
-            "type": "string"
-          },
-          "managed_dns": {
-            "type": "boolean"
-          },
-          "account_id": {
-            "type": "string"
-          },
-          "account_slug": {
-            "type": "string"
-          },
-          "account_name": {
-            "type": "string"
-          },
-          "capabilities": {
-            "type": "object"
-          },
-          "id_domain": {
-            "type": "string"
-          },
-          "build_image": {
-            "type": "string"
-          },
-          "build_timelimit": {
-            "type": "number"
-          },
-          "deploy_retention_in_days": {
-            "type": "number"
-          },
-          "labels": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SiteLabel"
-            }
-          },
-          "functions_region": {
-            "type": "string"
-          },
-          "cdp_enabled_contexts": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "hud_enabled": {
-            "type": "boolean"
-          }
-        },
-        "description": "Site model definition"
-      },
       "SitesSummary": {
         "type": "object",
         "properties": {
           "account_id": {
             "type": "string"
           },
-          "total_sites": {
+          "concurrent_builds_count": {
+            "type": "integer"
+          },
+          "extra_concurrent_builds": {
+            "type": "integer"
+          },
+          "dev_servers_count": {
+            "type": "integer"
+          },
+          "extra_dev_servers": {
             "type": "integer"
           },
           "included_sites": {
@@ -14143,20 +14630,19 @@
           "sites_with_custom_domains_count": {
             "type": "integer"
           },
-          "concurrent_builds_count": {
-            "type": "integer"
-          },
-          "extra_concurrent_builds": {
+          "total_sites": {
             "type": "integer"
           }
         },
         "required": [
           "account_id",
-          "total_sites",
+          "concurrent_builds_count",
+          "extra_concurrent_builds",
+          "dev_servers_count",
+          "extra_dev_servers",
           "included_sites",
           "sites_with_custom_domains_count",
-          "concurrent_builds_count",
-          "extra_concurrent_builds"
+          "total_sites"
         ],
         "description": "SitesSummary model definition"
       },
@@ -14172,7 +14658,7 @@
             "description": "The ID of the TeamWorkspace's Account"
           },
           "data": {
-            "type": "hash",
+            "type": "object",
             "description": "The data for the Notification"
           }
         }
@@ -14261,11 +14747,13 @@
             "description": "The ID of the TeamWorkspace's Account"
           },
           "created_at": {
-            "type": "datetime",
+            "type": "string",
+            "format": "date-time",
             "description": "When the TeamWorkspace was created"
           },
           "updated_at": {
-            "type": "datetime",
+            "type": "string",
+            "format": "date-time",
             "description": "When the TeamWorkspace was updated"
           },
           "workspace": {
@@ -14314,11 +14802,13 @@
             "description": "The states for the subscription (only set for deploy events)"
           },
           "created_at": {
-            "type": "datetime",
+            "type": "string",
+            "format": "date-time",
             "description": "When the subscription was created"
           },
           "updated_at": {
-            "type": "datetime",
+            "type": "string",
+            "format": "date-time",
             "description": "When the subscription was updated"
           },
           "account_id": {
@@ -14380,7 +14870,8 @@
             "description": "The Slack ID of the Workspace"
           },
           "cooldown_until": {
-            "type": "datetime",
+            "type": "string",
+            "format": "date-time",
             "description": "The cooldown datetime for the Workspace"
           },
           "plan": {
@@ -14533,6 +15024,117 @@
             "description": "The position to inject the snippet. Uses footer if not specified"
           }
         }
+      },
+      "StripePaymentMethod": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The StripePaymentMethod ID"
+          },
+          "type": {
+            "type": "string",
+            "description": "The name for the organization"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "last4": {
+                "type": "string"
+              },
+              "card_type": {
+                "type": "string"
+              },
+              "country": {
+                "type": "string"
+              }
+            },
+            "description": "The payment method data"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "success",
+              "error"
+            ],
+            "description": "The state of the payment method"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the payment method was created"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the payment method was updated"
+          },
+          "account_id": {
+            "type": "string",
+            "description": "The ID of the Account the payment method belongs to"
+          },
+          "orb_customer_id": {
+            "type": "string",
+            "description": "The ID of the OrbCustomer the payment method belongs to"
+          },
+          "organization_id": {
+            "type": "string",
+            "description": "The ID of the organization the payment method belongs to"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "data",
+          "state",
+          "created_at",
+          "updated_at",
+          "account_id",
+          "orb_customer_id",
+          "organization_id"
+        ],
+        "description": "StripePaymentMethod model definition"
+      },
+      "SupportBot": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The identifier for the support bot"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the support bot"
+          },
+          "service_type": {
+            "type": "string",
+            "description": "The service type identifier"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the bot is active"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata for the bot"
+          },
+          "capabilities": {
+            "type": "object",
+            "description": "The capabilities/permissions of the bot"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "service_type",
+          "active",
+          "metadata",
+          "capabilities"
+        ],
+        "description": "SupportBot model definition"
       },
       "TrafficRule": {
         "type": "object",
@@ -14912,6 +15514,38 @@
           "unpublished_at"
         ]
       },
+      "UserRegistrationScore": {
+        "type": "object",
+        "properties": {
+          "display_name": {
+            "type": "string",
+            "description": "The display name of the user."
+          },
+          "guess_score": {
+            "type": "number",
+            "description": "The score of the user's guess."
+          },
+          "guessed_index": {
+            "type": "number",
+            "description": "The index guessed by the user."
+          },
+          "top_scorers": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "The top scorers in the user registration scoring."
+          },
+          "user_id": {
+            "type": "string",
+            "description": "The user's ID."
+          },
+          "current_index": {
+            "type": "number",
+            "description": "The current index of the user."
+          }
+        }
+      },
       "User": {
         "type": "object",
         "properties": {
@@ -14922,6 +15556,10 @@
           "uid": {
             "type": "string",
             "description": "The uid for multipass"
+          },
+          "account_id": {
+            "type": "string",
+            "description": "The identifier for the user's personal account"
           },
           "full_name": {
             "type": "string",
@@ -14971,9 +15609,12 @@
               },
               "bitbucket": {
                 "type": "string"
+              },
+              "google": {
+                "type": "string"
               }
             },
-            "description": "Information of the connected providers' slug if any"
+            "description": "Information of the connected providers' slug/email if any"
           },
           "tracking_id": {
             "type": "string",
@@ -15018,6 +15659,7 @@
         "required": [
           "id",
           "uid",
+          "account_id",
           "full_name",
           "avatar_url",
           "email",
@@ -15163,8 +15805,156 @@
           }
         }
       },
-      "WafPolicy": {
+      "VisualEditorSite": {
         "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "default_domain": {
+            "type": "string"
+          },
+          "custom_domain": {
+            "type": "string"
+          },
+          "branch_deploy_custom_domain": {
+            "type": "string"
+          },
+          "deploy_preview_custom_domain": {
+            "type": "string"
+          },
+          "domain_aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "url": {
+            "type": "string"
+          },
+          "admin_url": {
+            "type": "string"
+          },
+          "deploy_url": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "screenshot_url": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ssl_url": {
+            "type": "string"
+          },
+          "force_ssl": {
+            "type": "boolean"
+          },
+          "build_settings": {
+            "$ref": "#/components/schemas/Repo"
+          },
+          "deploy_hook": {
+            "type": "string"
+          },
+          "account_id": {
+            "type": "string"
+          },
+          "account_slug": {
+            "type": "string"
+          },
+          "capabilities": {
+            "type": "object"
+          },
+          "id_domain": {
+            "type": "string"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SiteLabel"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "default_domain",
+          "custom_domain",
+          "branch_deploy_custom_domain",
+          "deploy_preview_custom_domain",
+          "domain_aliases",
+          "url",
+          "admin_url",
+          "deploy_url",
+          "state",
+          "screenshot_url",
+          "created_at",
+          "updated_at",
+          "ssl_url",
+          "force_ssl",
+          "build_settings",
+          "deploy_hook",
+          "account_id",
+          "account_slug",
+          "capabilities",
+          "id_domain",
+          "labels"
+        ],
+        "description": "VisualEditorSite model definition"
+      },
+      "WafPolicy": {
+        "example": {
+          "name": "name",
+          "description": "description",
+          "rule_sets": [
+            {
+              "excluded_patterns": [
+                "excluded_patterns",
+                "excluded_patterns"
+              ],
+              "category_thresholds": {
+                "key": 6
+              },
+              "overall_threshold": 0,
+              "passive_mode": true,
+              "managed_id": "managed_id",
+              "rule_overrides": {
+                "key": {
+                  "action": "action"
+                }
+              }
+            },
+            {
+              "excluded_patterns": [
+                "excluded_patterns",
+                "excluded_patterns"
+              ],
+              "category_thresholds": {
+                "key": 6
+              },
+              "overall_threshold": 0,
+              "passive_mode": true,
+              "managed_id": "managed_id",
+              "rule_overrides": {
+                "key": {
+                  "action": "action"
+                }
+              }
+            }
+          ],
+          "id": "id"
+        },
         "properties": {
           "id": {
             "type": "string"
@@ -15176,67 +15966,74 @@
             "type": "string"
           },
           "rule_sets": {
-            "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "managed_id": {
-                  "type": "string"
-                },
-                "excluded_patterns": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "passive_mode": {
-                  "type": "boolean"
-                },
-                "overall_threshold": {
-                  "type": "integer"
-                },
-                "category_thresholds": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "integer"
-                  }
-                },
-                "rule_overrides": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "$ref": "#/components/schemas/WafPolicyRuleOverride"
-                  }
-                }
-              },
-              "required": ["overall_threshold"]
-            }
+              "$ref": "#/components/schemas/WafPolicy_rule_sets_inner"
+            },
+            "type": "array"
           }
         },
-        "required": ["name", "description", "rule_sets"]
+        "required": [
+          "description",
+          "name",
+          "rule_sets"
+        ]
       },
       "WafPolicyRuleOverride": {
-        "type": "object",
+        "example": {
+          "action": "action"
+        },
         "properties": {
           "action": {
             "type": "string"
           }
         },
-        "required": ["action"]
+        "required": [
+          "action"
+        ]
       },
       "WafPolicyUpdate": {
-        "type": "object",
+        "example": {
+          "policy_id": "policy_id"
+        },
         "properties": {
           "policy_id": {
             "type": "string"
           }
         },
-        "required": ["policy_id"]
+        "required": [
+          "policy_id"
+        ]
       },
       "ManagedWafRules": {
-        "type": "object",
+        "example": {
+          "rule_sets": {
+            "key": {
+              "definition": {
+                "id": "id",
+                "type": "type",
+                "version": "version"
+              },
+              "rules": [
+                {
+                  "phase": "phase",
+                  "severity": "severity",
+                  "description": "description",
+                  "id": "id",
+                  "category": "category"
+                },
+                {
+                  "phase": "phase",
+                  "severity": "severity",
+                  "description": "description",
+                  "id": "id",
+                  "category": "category"
+                }
+              ]
+            }
+          }
+        },
         "properties": {
           "rule_sets": {
-            "type": "object",
             "additionalProperties": {
               "$ref": "#/components/schemas/ManagedWafRuleSet"
             }
@@ -15244,46 +16041,286 @@
         }
       },
       "ManagedWafRuleSet": {
-        "type": "object",
+        "example": {
+          "definition": {
+            "id": "id",
+            "type": "type",
+            "version": "version"
+          },
+          "rules": [
+            {
+              "phase": "phase",
+              "severity": "severity",
+              "description": "description",
+              "id": "id",
+              "category": "category"
+            },
+            {
+              "phase": "phase",
+              "severity": "severity",
+              "description": "description",
+              "id": "id",
+              "category": "category"
+            }
+          ]
+        },
         "properties": {
           "definition": {
+            "$ref": "#/components/schemas/ManagedWafRuleSet_definition"
+          },
+          "rules": {
+            "items": {
+              "$ref": "#/components/schemas/ManagedWafRuleSet_rules_inner"
+            },
+            "type": "array"
+          }
+        }
+      },
+      "WafPolicy_rule_sets_inner": {
+        "example": {
+          "excluded_patterns": [
+            "excluded_patterns",
+            "excluded_patterns"
+          ],
+          "category_thresholds": {
+            "key": 6
+          },
+          "overall_threshold": 0,
+          "passive_mode": true,
+          "managed_id": "managed_id",
+          "rule_overrides": {
+            "key": {
+              "action": "action"
+            }
+          }
+        },
+        "properties": {
+          "managed_id": {
+            "type": "string"
+          },
+          "excluded_patterns": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "passive_mode": {
+            "type": "boolean"
+          },
+          "overall_threshold": {
+            "type": "integer"
+          },
+          "category_thresholds": {
+            "additionalProperties": {
+              "type": "integer"
+            }
+          },
+          "rule_overrides": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/WafPolicyRuleOverride"
+            }
+          }
+        },
+        "required": [
+          "overall_threshold"
+        ]
+      },
+      "ManagedWafRuleSet_definition": {
+        "example": {
+          "id": "id",
+          "type": "type",
+          "version": "version"
+        },
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          }
+        }
+      },
+      "ManagedWafRuleSet_rules_inner": {
+        "example": {
+          "phase": "phase",
+          "severity": "severity",
+          "description": "description",
+          "id": "id",
+          "category": "category"
+        },
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "phase": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string"
+          }
+        }
+      },
+      "PartialSite": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "plan": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "default_domain": {
+            "type": "string"
+          },
+          "custom_domain": {
+            "type": "string"
+          },
+          "record_txt_value": {
+            "type": "string"
+          },
+          "branch_deploy_custom_domain": {
+            "type": "string"
+          },
+          "deploy_preview_custom_domain": {
+            "type": "string"
+          },
+          "domain_aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "password_context": {
+            "type": "string"
+          },
+          "sso_login": {
+            "type": "boolean"
+          },
+          "sso_login_context": {
+            "type": "string"
+          },
+          "notification_email": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "admin_url": {
+            "type": "string"
+          },
+          "deploy_url": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "screenshot_url": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ssl_url": {
+            "type": "string"
+          },
+          "force_ssl": {
+            "type": "boolean"
+          },
+          "build_settings": {
+            "$ref": "#/components/schemas/Repo"
+          },
+          "processing_settings": {
             "type": "object",
             "properties": {
-              "id": {
-                "type": "string"
+              "html": {
+                "type": "object",
+                "properties": {
+                  "pretty_urls": {
+                    "type": "boolean"
+                  }
+                }
               },
-              "type": {
-                "type": "string"
-              },
-              "version": {
-                "type": "string"
+              "ignore_html_forms": {
+                "type": "boolean"
               }
             }
           },
-          "rules": {
+          "deploy_hook": {
+            "type": "string"
+          },
+          "managed_dns": {
+            "type": "boolean"
+          },
+          "account_id": {
+            "type": "string"
+          },
+          "account_slug": {
+            "type": "string"
+          },
+          "account_name": {
+            "type": "string"
+          },
+          "capabilities": {
+            "type": "object"
+          },
+          "id_domain": {
+            "type": "string"
+          },
+          "build_image": {
+            "type": "string"
+          },
+          "build_timelimit": {
+            "type": "number"
+          },
+          "deploy_retention_in_days": {
+            "type": "number"
+          },
+          "labels": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "description": {
-                  "type": "string"
-                },
-                "phase": {
-                  "type": "string"
-                },
-                "category": {
-                  "type": "string"
-                },
-                "severity": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/components/schemas/SiteLabel"
             }
+          },
+          "analytics_instance_id": {
+            "type": "string"
+          },
+          "cdp_enabled_contexts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "functions_region": {
+            "type": "string"
+          },
+          "hud_enabled": {
+            "type": "boolean"
+          },
+          "rum_enabled": {
+            "type": "boolean"
+          },
+          "prevent_non_git_prod_deploys": {
+            "type": "boolean"
           }
-        }
+        },
+        "description": "Site model definition"
       }
     },
     "securitySchemes": {
@@ -15313,13 +16350,6 @@
   },
   "x-tagGroups": [
     {
-      "name": "OAuth",
-      "tags": [
-        "Access tokens",
-        "OAuth tickets"
-      ]
-    },
-    {
       "name": "Builds",
       "tags": [
         "Builds"
@@ -15338,7 +16368,6 @@
       "name": "Sites",
       "tags": [
         "Sites",
-        "Analytics",
         "Files",
         "Metadata",
         "Snippets"
@@ -15392,6 +16421,12 @@
       ]
     },
     {
+      "name": "OAuth",
+      "tags": [
+        "OAuth tickets"
+      ]
+    },
+    {
       "name": "Organizations",
       "tags": [
         "Organization receipts",
@@ -15409,12 +16444,6 @@
       "name": "Split Tests",
       "tags": [
         "Split tests"
-      ]
-    },
-    {
-      "name": "SCIM",
-      "tags": [
-        "WorkOSScim"
       ]
     }
   ]

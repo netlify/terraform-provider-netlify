@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -25,14 +25,12 @@ type AccountType struct {
 	Slug string `json:"slug"`
 	Description string `json:"description"`
 	Capabilities map[string]interface{} `json:"capabilities"`
+	// when requested for an account indicates it's available for the account subscribe to, without an account, indicates if it's available for the user to use for a new team
+	Available bool `json:"available"`
 	MonthlyDollarPrice string `json:"monthly_dollar_price"`
-	YearlyDollarPrice string `json:"yearly_dollar_price"`
 	MonthlySeatsAddonDollarPrice string `json:"monthly_seats_addon_dollar_price"`
-	YearlySeatsAddonDollarPrice string `json:"yearly_seats_addon_dollar_price"`
 	MonthlyConcurrentBuildsAddonDollarPrice string `json:"monthly_concurrent_builds_addon_dollar_price"`
 	SkipPayment *bool `json:"skip_payment,omitempty"`
-	// The Zuora products and their attributes given the Zuora environment
-	ZuoraProducts map[string]interface{} `json:"zuora_products,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -42,17 +40,16 @@ type _AccountType AccountType
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAccountType(id string, name string, slug string, description string, capabilities map[string]interface{}, monthlyDollarPrice string, yearlyDollarPrice string, monthlySeatsAddonDollarPrice string, yearlySeatsAddonDollarPrice string, monthlyConcurrentBuildsAddonDollarPrice string) *AccountType {
+func NewAccountType(id string, name string, slug string, description string, capabilities map[string]interface{}, available bool, monthlyDollarPrice string, monthlySeatsAddonDollarPrice string, monthlyConcurrentBuildsAddonDollarPrice string) *AccountType {
 	this := AccountType{}
 	this.Id = id
 	this.Name = name
 	this.Slug = slug
 	this.Description = description
 	this.Capabilities = capabilities
+	this.Available = available
 	this.MonthlyDollarPrice = monthlyDollarPrice
-	this.YearlyDollarPrice = yearlyDollarPrice
 	this.MonthlySeatsAddonDollarPrice = monthlySeatsAddonDollarPrice
-	this.YearlySeatsAddonDollarPrice = yearlySeatsAddonDollarPrice
 	this.MonthlyConcurrentBuildsAddonDollarPrice = monthlyConcurrentBuildsAddonDollarPrice
 	return &this
 }
@@ -185,6 +182,30 @@ func (o *AccountType) SetCapabilities(v map[string]interface{}) {
 	o.Capabilities = v
 }
 
+// GetAvailable returns the Available field value
+func (o *AccountType) GetAvailable() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.Available
+}
+
+// GetAvailableOk returns a tuple with the Available field value
+// and a boolean to check if the value has been set.
+func (o *AccountType) GetAvailableOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Available, true
+}
+
+// SetAvailable sets field value
+func (o *AccountType) SetAvailable(v bool) {
+	o.Available = v
+}
+
 // GetMonthlyDollarPrice returns the MonthlyDollarPrice field value
 func (o *AccountType) GetMonthlyDollarPrice() string {
 	if o == nil {
@@ -209,30 +230,6 @@ func (o *AccountType) SetMonthlyDollarPrice(v string) {
 	o.MonthlyDollarPrice = v
 }
 
-// GetYearlyDollarPrice returns the YearlyDollarPrice field value
-func (o *AccountType) GetYearlyDollarPrice() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.YearlyDollarPrice
-}
-
-// GetYearlyDollarPriceOk returns a tuple with the YearlyDollarPrice field value
-// and a boolean to check if the value has been set.
-func (o *AccountType) GetYearlyDollarPriceOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.YearlyDollarPrice, true
-}
-
-// SetYearlyDollarPrice sets field value
-func (o *AccountType) SetYearlyDollarPrice(v string) {
-	o.YearlyDollarPrice = v
-}
-
 // GetMonthlySeatsAddonDollarPrice returns the MonthlySeatsAddonDollarPrice field value
 func (o *AccountType) GetMonthlySeatsAddonDollarPrice() string {
 	if o == nil {
@@ -255,30 +252,6 @@ func (o *AccountType) GetMonthlySeatsAddonDollarPriceOk() (*string, bool) {
 // SetMonthlySeatsAddonDollarPrice sets field value
 func (o *AccountType) SetMonthlySeatsAddonDollarPrice(v string) {
 	o.MonthlySeatsAddonDollarPrice = v
-}
-
-// GetYearlySeatsAddonDollarPrice returns the YearlySeatsAddonDollarPrice field value
-func (o *AccountType) GetYearlySeatsAddonDollarPrice() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.YearlySeatsAddonDollarPrice
-}
-
-// GetYearlySeatsAddonDollarPriceOk returns a tuple with the YearlySeatsAddonDollarPrice field value
-// and a boolean to check if the value has been set.
-func (o *AccountType) GetYearlySeatsAddonDollarPriceOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.YearlySeatsAddonDollarPrice, true
-}
-
-// SetYearlySeatsAddonDollarPrice sets field value
-func (o *AccountType) SetYearlySeatsAddonDollarPrice(v string) {
-	o.YearlySeatsAddonDollarPrice = v
 }
 
 // GetMonthlyConcurrentBuildsAddonDollarPrice returns the MonthlyConcurrentBuildsAddonDollarPrice field value
@@ -337,38 +310,6 @@ func (o *AccountType) SetSkipPayment(v bool) {
 	o.SkipPayment = &v
 }
 
-// GetZuoraProducts returns the ZuoraProducts field value if set, zero value otherwise.
-func (o *AccountType) GetZuoraProducts() map[string]interface{} {
-	if o == nil || IsNil(o.ZuoraProducts) {
-		var ret map[string]interface{}
-		return ret
-	}
-	return o.ZuoraProducts
-}
-
-// GetZuoraProductsOk returns a tuple with the ZuoraProducts field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *AccountType) GetZuoraProductsOk() (map[string]interface{}, bool) {
-	if o == nil || IsNil(o.ZuoraProducts) {
-		return map[string]interface{}{}, false
-	}
-	return o.ZuoraProducts, true
-}
-
-// HasZuoraProducts returns a boolean if a field has been set.
-func (o *AccountType) HasZuoraProducts() bool {
-	if o != nil && !IsNil(o.ZuoraProducts) {
-		return true
-	}
-
-	return false
-}
-
-// SetZuoraProducts gets a reference to the given map[string]interface{} and assigns it to the ZuoraProducts field.
-func (o *AccountType) SetZuoraProducts(v map[string]interface{}) {
-	o.ZuoraProducts = v
-}
-
 func (o AccountType) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -384,16 +325,12 @@ func (o AccountType) ToMap() (map[string]interface{}, error) {
 	toSerialize["slug"] = o.Slug
 	toSerialize["description"] = o.Description
 	toSerialize["capabilities"] = o.Capabilities
+	toSerialize["available"] = o.Available
 	toSerialize["monthly_dollar_price"] = o.MonthlyDollarPrice
-	toSerialize["yearly_dollar_price"] = o.YearlyDollarPrice
 	toSerialize["monthly_seats_addon_dollar_price"] = o.MonthlySeatsAddonDollarPrice
-	toSerialize["yearly_seats_addon_dollar_price"] = o.YearlySeatsAddonDollarPrice
 	toSerialize["monthly_concurrent_builds_addon_dollar_price"] = o.MonthlyConcurrentBuildsAddonDollarPrice
 	if !IsNil(o.SkipPayment) {
 		toSerialize["skip_payment"] = o.SkipPayment
-	}
-	if !IsNil(o.ZuoraProducts) {
-		toSerialize["zuora_products"] = o.ZuoraProducts
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -413,10 +350,9 @@ func (o *AccountType) UnmarshalJSON(data []byte) (err error) {
 		"slug",
 		"description",
 		"capabilities",
+		"available",
 		"monthly_dollar_price",
-		"yearly_dollar_price",
 		"monthly_seats_addon_dollar_price",
-		"yearly_seats_addon_dollar_price",
 		"monthly_concurrent_builds_addon_dollar_price",
 	}
 
@@ -452,13 +388,11 @@ func (o *AccountType) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "slug")
 		delete(additionalProperties, "description")
 		delete(additionalProperties, "capabilities")
+		delete(additionalProperties, "available")
 		delete(additionalProperties, "monthly_dollar_price")
-		delete(additionalProperties, "yearly_dollar_price")
 		delete(additionalProperties, "monthly_seats_addon_dollar_price")
-		delete(additionalProperties, "yearly_seats_addon_dollar_price")
 		delete(additionalProperties, "monthly_concurrent_builds_addon_dollar_price")
 		delete(additionalProperties, "skip_payment")
-		delete(additionalProperties, "zuora_products")
 		o.AdditionalProperties = additionalProperties
 	}
 

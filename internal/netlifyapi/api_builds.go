@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -31,6 +31,7 @@ type ApiCreateSiteBuildRequest struct {
 	clearCache *bool
 	image *string
 	templateId *string
+	title *string
 }
 
 // The branch to build; defaults to main branch
@@ -57,6 +58,12 @@ func (r ApiCreateSiteBuildRequest) TemplateId(templateId string) ApiCreateSiteBu
 	return r
 }
 
+// The title of the build
+func (r ApiCreateSiteBuildRequest) Title(title string) ApiCreateSiteBuildRequest {
+	r.title = &title
+	return r
+}
+
 func (r ApiCreateSiteBuildRequest) Execute() (*Build, *http.Response, error) {
 	return r.ApiService.CreateSiteBuildExecute(r)
 }
@@ -65,6 +72,7 @@ func (r ApiCreateSiteBuildRequest) Execute() (*Build, *http.Response, error) {
 CreateSiteBuild Method for CreateSiteBuild
 
 Runs a build for a site. The build will be scheduled to run at the first opportunity, but it might not start immediately if insufficient account build capacity is available.
+Files for build could be also uploaded as a zipped site.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param siteId The ID of the site
@@ -111,6 +119,9 @@ func (a *BuildsAPIService) CreateSiteBuildExecute(r ApiCreateSiteBuildRequest) (
 	}
 	if r.templateId != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "template_id", r.templateId, "form", "")
+	}
+	if r.title != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "title", r.title, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -233,6 +244,109 @@ func (a *BuildsAPIService) GetAccountBuildStatusExecute(r ApiGetAccountBuildStat
 	if r.state != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "state", r.state, "form", "")
 	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetBuildZipDownloadUrlRequest struct {
+	ctx context.Context
+	ApiService *BuildsAPIService
+	buildId string
+}
+
+func (r ApiGetBuildZipDownloadUrlRequest) Execute() (*GetSiteAssetPublicSignature200Response, *http.Response, error) {
+	return r.ApiService.GetBuildZipDownloadUrlExecute(r)
+}
+
+/*
+GetBuildZipDownloadUrl Method for GetBuildZipDownloadUrl
+
+Get a presigned download URL for the build zip file.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param buildId build_id
+ @return ApiGetBuildZipDownloadUrlRequest
+*/
+func (a *BuildsAPIService) GetBuildZipDownloadUrl(ctx context.Context, buildId string) ApiGetBuildZipDownloadUrlRequest {
+	return ApiGetBuildZipDownloadUrlRequest{
+		ApiService: a,
+		ctx: ctx,
+		buildId: buildId,
+	}
+}
+
+// Execute executes the request
+//  @return GetSiteAssetPublicSignature200Response
+func (a *BuildsAPIService) GetBuildZipDownloadUrlExecute(r ApiGetBuildZipDownloadUrlRequest) (*GetSiteAssetPublicSignature200Response, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *GetSiteAssetPublicSignature200Response
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "BuildsAPIService.GetBuildZipDownloadUrl")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/builds/{build_id}/download"
+	localVarPath = strings.Replace(localVarPath, "{"+"build_id"+"}", url.PathEscape(parameterValueToString(r.buildId, "buildId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -495,6 +609,7 @@ type ApiNotifyBuildStartRequest struct {
 	buildId string
 	buildVersion *string
 	buildbotVersion *string
+	taskId *string
 }
 
 // build_version
@@ -506,6 +621,12 @@ func (r ApiNotifyBuildStartRequest) BuildVersion(buildVersion string) ApiNotifyB
 // buildbot_version
 func (r ApiNotifyBuildStartRequest) BuildbotVersion(buildbotVersion string) ApiNotifyBuildStartRequest {
 	r.buildbotVersion = &buildbotVersion
+	return r
+}
+
+// task_id
+func (r ApiNotifyBuildStartRequest) TaskId(taskId string) ApiNotifyBuildStartRequest {
+	r.taskId = &taskId
 	return r
 }
 
@@ -555,6 +676,9 @@ func (a *BuildsAPIService) NotifyBuildStartExecute(r ApiNotifyBuildStartRequest)
 	}
 	if r.buildbotVersion != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "buildbot_version", r.buildbotVersion, "form", "")
+	}
+	if r.taskId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "task_id", r.taskId, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}

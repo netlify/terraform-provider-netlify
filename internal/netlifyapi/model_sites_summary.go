@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -21,11 +21,13 @@ var _ MappedNullable = &SitesSummary{}
 // SitesSummary SitesSummary model definition
 type SitesSummary struct {
 	AccountId string `json:"account_id"`
-	TotalSites int64 `json:"total_sites"`
-	IncludedSites int64 `json:"included_sites"`
-	SitesWithCustomDomainsCount int64 `json:"sites_with_custom_domains_count"`
 	ConcurrentBuildsCount int64 `json:"concurrent_builds_count"`
 	ExtraConcurrentBuilds int64 `json:"extra_concurrent_builds"`
+	DevServersCount int64 `json:"dev_servers_count"`
+	ExtraDevServers int64 `json:"extra_dev_servers"`
+	IncludedSites int64 `json:"included_sites"`
+	SitesWithCustomDomainsCount int64 `json:"sites_with_custom_domains_count"`
+	TotalSites int64 `json:"total_sites"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -35,14 +37,16 @@ type _SitesSummary SitesSummary
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSitesSummary(accountId string, totalSites int64, includedSites int64, sitesWithCustomDomainsCount int64, concurrentBuildsCount int64, extraConcurrentBuilds int64) *SitesSummary {
+func NewSitesSummary(accountId string, concurrentBuildsCount int64, extraConcurrentBuilds int64, devServersCount int64, extraDevServers int64, includedSites int64, sitesWithCustomDomainsCount int64, totalSites int64) *SitesSummary {
 	this := SitesSummary{}
 	this.AccountId = accountId
-	this.TotalSites = totalSites
-	this.IncludedSites = includedSites
-	this.SitesWithCustomDomainsCount = sitesWithCustomDomainsCount
 	this.ConcurrentBuildsCount = concurrentBuildsCount
 	this.ExtraConcurrentBuilds = extraConcurrentBuilds
+	this.DevServersCount = devServersCount
+	this.ExtraDevServers = extraDevServers
+	this.IncludedSites = includedSites
+	this.SitesWithCustomDomainsCount = sitesWithCustomDomainsCount
+	this.TotalSites = totalSites
 	return &this
 }
 
@@ -76,78 +80,6 @@ func (o *SitesSummary) GetAccountIdOk() (*string, bool) {
 // SetAccountId sets field value
 func (o *SitesSummary) SetAccountId(v string) {
 	o.AccountId = v
-}
-
-// GetTotalSites returns the TotalSites field value
-func (o *SitesSummary) GetTotalSites() int64 {
-	if o == nil {
-		var ret int64
-		return ret
-	}
-
-	return o.TotalSites
-}
-
-// GetTotalSitesOk returns a tuple with the TotalSites field value
-// and a boolean to check if the value has been set.
-func (o *SitesSummary) GetTotalSitesOk() (*int64, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.TotalSites, true
-}
-
-// SetTotalSites sets field value
-func (o *SitesSummary) SetTotalSites(v int64) {
-	o.TotalSites = v
-}
-
-// GetIncludedSites returns the IncludedSites field value
-func (o *SitesSummary) GetIncludedSites() int64 {
-	if o == nil {
-		var ret int64
-		return ret
-	}
-
-	return o.IncludedSites
-}
-
-// GetIncludedSitesOk returns a tuple with the IncludedSites field value
-// and a boolean to check if the value has been set.
-func (o *SitesSummary) GetIncludedSitesOk() (*int64, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.IncludedSites, true
-}
-
-// SetIncludedSites sets field value
-func (o *SitesSummary) SetIncludedSites(v int64) {
-	o.IncludedSites = v
-}
-
-// GetSitesWithCustomDomainsCount returns the SitesWithCustomDomainsCount field value
-func (o *SitesSummary) GetSitesWithCustomDomainsCount() int64 {
-	if o == nil {
-		var ret int64
-		return ret
-	}
-
-	return o.SitesWithCustomDomainsCount
-}
-
-// GetSitesWithCustomDomainsCountOk returns a tuple with the SitesWithCustomDomainsCount field value
-// and a boolean to check if the value has been set.
-func (o *SitesSummary) GetSitesWithCustomDomainsCountOk() (*int64, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.SitesWithCustomDomainsCount, true
-}
-
-// SetSitesWithCustomDomainsCount sets field value
-func (o *SitesSummary) SetSitesWithCustomDomainsCount(v int64) {
-	o.SitesWithCustomDomainsCount = v
 }
 
 // GetConcurrentBuildsCount returns the ConcurrentBuildsCount field value
@@ -198,6 +130,126 @@ func (o *SitesSummary) SetExtraConcurrentBuilds(v int64) {
 	o.ExtraConcurrentBuilds = v
 }
 
+// GetDevServersCount returns the DevServersCount field value
+func (o *SitesSummary) GetDevServersCount() int64 {
+	if o == nil {
+		var ret int64
+		return ret
+	}
+
+	return o.DevServersCount
+}
+
+// GetDevServersCountOk returns a tuple with the DevServersCount field value
+// and a boolean to check if the value has been set.
+func (o *SitesSummary) GetDevServersCountOk() (*int64, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.DevServersCount, true
+}
+
+// SetDevServersCount sets field value
+func (o *SitesSummary) SetDevServersCount(v int64) {
+	o.DevServersCount = v
+}
+
+// GetExtraDevServers returns the ExtraDevServers field value
+func (o *SitesSummary) GetExtraDevServers() int64 {
+	if o == nil {
+		var ret int64
+		return ret
+	}
+
+	return o.ExtraDevServers
+}
+
+// GetExtraDevServersOk returns a tuple with the ExtraDevServers field value
+// and a boolean to check if the value has been set.
+func (o *SitesSummary) GetExtraDevServersOk() (*int64, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.ExtraDevServers, true
+}
+
+// SetExtraDevServers sets field value
+func (o *SitesSummary) SetExtraDevServers(v int64) {
+	o.ExtraDevServers = v
+}
+
+// GetIncludedSites returns the IncludedSites field value
+func (o *SitesSummary) GetIncludedSites() int64 {
+	if o == nil {
+		var ret int64
+		return ret
+	}
+
+	return o.IncludedSites
+}
+
+// GetIncludedSitesOk returns a tuple with the IncludedSites field value
+// and a boolean to check if the value has been set.
+func (o *SitesSummary) GetIncludedSitesOk() (*int64, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.IncludedSites, true
+}
+
+// SetIncludedSites sets field value
+func (o *SitesSummary) SetIncludedSites(v int64) {
+	o.IncludedSites = v
+}
+
+// GetSitesWithCustomDomainsCount returns the SitesWithCustomDomainsCount field value
+func (o *SitesSummary) GetSitesWithCustomDomainsCount() int64 {
+	if o == nil {
+		var ret int64
+		return ret
+	}
+
+	return o.SitesWithCustomDomainsCount
+}
+
+// GetSitesWithCustomDomainsCountOk returns a tuple with the SitesWithCustomDomainsCount field value
+// and a boolean to check if the value has been set.
+func (o *SitesSummary) GetSitesWithCustomDomainsCountOk() (*int64, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.SitesWithCustomDomainsCount, true
+}
+
+// SetSitesWithCustomDomainsCount sets field value
+func (o *SitesSummary) SetSitesWithCustomDomainsCount(v int64) {
+	o.SitesWithCustomDomainsCount = v
+}
+
+// GetTotalSites returns the TotalSites field value
+func (o *SitesSummary) GetTotalSites() int64 {
+	if o == nil {
+		var ret int64
+		return ret
+	}
+
+	return o.TotalSites
+}
+
+// GetTotalSitesOk returns a tuple with the TotalSites field value
+// and a boolean to check if the value has been set.
+func (o *SitesSummary) GetTotalSitesOk() (*int64, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.TotalSites, true
+}
+
+// SetTotalSites sets field value
+func (o *SitesSummary) SetTotalSites(v int64) {
+	o.TotalSites = v
+}
+
 func (o SitesSummary) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -209,11 +261,13 @@ func (o SitesSummary) MarshalJSON() ([]byte, error) {
 func (o SitesSummary) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["account_id"] = o.AccountId
-	toSerialize["total_sites"] = o.TotalSites
-	toSerialize["included_sites"] = o.IncludedSites
-	toSerialize["sites_with_custom_domains_count"] = o.SitesWithCustomDomainsCount
 	toSerialize["concurrent_builds_count"] = o.ConcurrentBuildsCount
 	toSerialize["extra_concurrent_builds"] = o.ExtraConcurrentBuilds
+	toSerialize["dev_servers_count"] = o.DevServersCount
+	toSerialize["extra_dev_servers"] = o.ExtraDevServers
+	toSerialize["included_sites"] = o.IncludedSites
+	toSerialize["sites_with_custom_domains_count"] = o.SitesWithCustomDomainsCount
+	toSerialize["total_sites"] = o.TotalSites
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -228,11 +282,13 @@ func (o *SitesSummary) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"account_id",
-		"total_sites",
-		"included_sites",
-		"sites_with_custom_domains_count",
 		"concurrent_builds_count",
 		"extra_concurrent_builds",
+		"dev_servers_count",
+		"extra_dev_servers",
+		"included_sites",
+		"sites_with_custom_domains_count",
+		"total_sites",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -263,11 +319,13 @@ func (o *SitesSummary) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "account_id")
-		delete(additionalProperties, "total_sites")
-		delete(additionalProperties, "included_sites")
-		delete(additionalProperties, "sites_with_custom_domains_count")
 		delete(additionalProperties, "concurrent_builds_count")
 		delete(additionalProperties, "extra_concurrent_builds")
+		delete(additionalProperties, "dev_servers_count")
+		delete(additionalProperties, "extra_dev_servers")
+		delete(additionalProperties, "included_sites")
+		delete(additionalProperties, "sites_with_custom_domains_count")
+		delete(additionalProperties, "total_sites")
 		o.AdditionalProperties = additionalProperties
 	}
 

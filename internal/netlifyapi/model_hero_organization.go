@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -22,9 +22,13 @@ var _ MappedNullable = &HeroOrganization{}
 type HeroOrganization struct {
 	// The URL of the organization in the Netlify UI
 	AdminUrl string `json:"admin_url"`
-	// The URL of the zuora account
-	ZuoraUrl string `json:"zuora_url"`
 	Capabilities map[string]interface{} `json:"capabilities"`
+	// Whether the organization is an AX partner - will be deprecated for property ax_partner
+	IsAxPartner bool `json:"is_ax_partner"`
+	// Whether the organization is an AX partner
+	AxPartner bool `json:"ax_partner"`
+	// The list of organization owners
+	Owners []map[string]interface{} `json:"owners"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -34,11 +38,13 @@ type _HeroOrganization HeroOrganization
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewHeroOrganization(adminUrl string, zuoraUrl string, capabilities map[string]interface{}) *HeroOrganization {
+func NewHeroOrganization(adminUrl string, capabilities map[string]interface{}, isAxPartner bool, axPartner bool, owners []map[string]interface{}) *HeroOrganization {
 	this := HeroOrganization{}
 	this.AdminUrl = adminUrl
-	this.ZuoraUrl = zuoraUrl
 	this.Capabilities = capabilities
+	this.IsAxPartner = isAxPartner
+	this.AxPartner = axPartner
+	this.Owners = owners
 	return &this
 }
 
@@ -74,30 +80,6 @@ func (o *HeroOrganization) SetAdminUrl(v string) {
 	o.AdminUrl = v
 }
 
-// GetZuoraUrl returns the ZuoraUrl field value
-func (o *HeroOrganization) GetZuoraUrl() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.ZuoraUrl
-}
-
-// GetZuoraUrlOk returns a tuple with the ZuoraUrl field value
-// and a boolean to check if the value has been set.
-func (o *HeroOrganization) GetZuoraUrlOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.ZuoraUrl, true
-}
-
-// SetZuoraUrl sets field value
-func (o *HeroOrganization) SetZuoraUrl(v string) {
-	o.ZuoraUrl = v
-}
-
 // GetCapabilities returns the Capabilities field value
 func (o *HeroOrganization) GetCapabilities() map[string]interface{} {
 	if o == nil {
@@ -122,6 +104,78 @@ func (o *HeroOrganization) SetCapabilities(v map[string]interface{}) {
 	o.Capabilities = v
 }
 
+// GetIsAxPartner returns the IsAxPartner field value
+func (o *HeroOrganization) GetIsAxPartner() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.IsAxPartner
+}
+
+// GetIsAxPartnerOk returns a tuple with the IsAxPartner field value
+// and a boolean to check if the value has been set.
+func (o *HeroOrganization) GetIsAxPartnerOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.IsAxPartner, true
+}
+
+// SetIsAxPartner sets field value
+func (o *HeroOrganization) SetIsAxPartner(v bool) {
+	o.IsAxPartner = v
+}
+
+// GetAxPartner returns the AxPartner field value
+func (o *HeroOrganization) GetAxPartner() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.AxPartner
+}
+
+// GetAxPartnerOk returns a tuple with the AxPartner field value
+// and a boolean to check if the value has been set.
+func (o *HeroOrganization) GetAxPartnerOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.AxPartner, true
+}
+
+// SetAxPartner sets field value
+func (o *HeroOrganization) SetAxPartner(v bool) {
+	o.AxPartner = v
+}
+
+// GetOwners returns the Owners field value
+func (o *HeroOrganization) GetOwners() []map[string]interface{} {
+	if o == nil {
+		var ret []map[string]interface{}
+		return ret
+	}
+
+	return o.Owners
+}
+
+// GetOwnersOk returns a tuple with the Owners field value
+// and a boolean to check if the value has been set.
+func (o *HeroOrganization) GetOwnersOk() ([]map[string]interface{}, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Owners, true
+}
+
+// SetOwners sets field value
+func (o *HeroOrganization) SetOwners(v []map[string]interface{}) {
+	o.Owners = v
+}
+
 func (o HeroOrganization) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -133,8 +187,10 @@ func (o HeroOrganization) MarshalJSON() ([]byte, error) {
 func (o HeroOrganization) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["admin_url"] = o.AdminUrl
-	toSerialize["zuora_url"] = o.ZuoraUrl
 	toSerialize["capabilities"] = o.Capabilities
+	toSerialize["is_ax_partner"] = o.IsAxPartner
+	toSerialize["ax_partner"] = o.AxPartner
+	toSerialize["owners"] = o.Owners
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -149,8 +205,10 @@ func (o *HeroOrganization) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"admin_url",
-		"zuora_url",
 		"capabilities",
+		"is_ax_partner",
+		"ax_partner",
+		"owners",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -181,8 +239,10 @@ func (o *HeroOrganization) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "admin_url")
-		delete(additionalProperties, "zuora_url")
 		delete(additionalProperties, "capabilities")
+		delete(additionalProperties, "is_ax_partner")
+		delete(additionalProperties, "ax_partner")
+		delete(additionalProperties, "owners")
 		o.AdditionalProperties = additionalProperties
 	}
 

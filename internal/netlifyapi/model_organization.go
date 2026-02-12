@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -96,6 +96,8 @@ type Organization struct {
 	SamlEnabledAt NullableTime `json:"saml_enabled_at"`
 	// The number of team members in the organization
 	TotalMemberCount int64 `json:"total_member_count"`
+	// Whether the organization is an AX partner
+	AxPartner bool `json:"ax_partner"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -105,7 +107,7 @@ type _Organization Organization
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewOrganization(slug string, id string, name string, createdAt time.Time, updatedAt time.Time, billingEmail string, logoUrl string, billingPeriod string, invoicing bool, paymentTerm int64, paymentMethodId string, sandbox bool, billCycleDay int64, contractStartDate time.Time, contractEndDate time.Time, contractTermMonths int64, autoRenew bool, purchaseOrder string, firstName string, lastName string, companyName string, address1 string, address2 string, city string, state string, postalCode string, country string, samlEnabled bool, enforceSaml NullableString, enforceMfa NullableString, capabilities map[string]interface{}, supportAdministrationEnabled bool, directorySyncConnectedAt NullableTime, directorySyncActivatedAt NullableTime, directorySyncDeactivatedAt NullableTime, directorySyncDeletedAt NullableTime, samlEnabledAt NullableTime, totalMemberCount int64) *Organization {
+func NewOrganization(slug string, id string, name string, createdAt time.Time, updatedAt time.Time, billingEmail string, logoUrl string, billingPeriod string, invoicing bool, paymentTerm int64, paymentMethodId string, sandbox bool, billCycleDay int64, contractStartDate time.Time, contractEndDate time.Time, contractTermMonths int64, autoRenew bool, purchaseOrder string, firstName string, lastName string, companyName string, address1 string, address2 string, city string, state string, postalCode string, country string, samlEnabled bool, enforceSaml NullableString, enforceMfa NullableString, capabilities map[string]interface{}, supportAdministrationEnabled bool, directorySyncConnectedAt NullableTime, directorySyncActivatedAt NullableTime, directorySyncDeactivatedAt NullableTime, directorySyncDeletedAt NullableTime, samlEnabledAt NullableTime, totalMemberCount int64, axPartner bool) *Organization {
 	this := Organization{}
 	this.Slug = slug
 	this.Id = id
@@ -145,6 +147,7 @@ func NewOrganization(slug string, id string, name string, createdAt time.Time, u
 	this.DirectorySyncDeletedAt = directorySyncDeletedAt
 	this.SamlEnabledAt = samlEnabledAt
 	this.TotalMemberCount = totalMemberCount
+	this.AxPartner = axPartner
 	return &this
 }
 
@@ -1082,6 +1085,30 @@ func (o *Organization) SetTotalMemberCount(v int64) {
 	o.TotalMemberCount = v
 }
 
+// GetAxPartner returns the AxPartner field value
+func (o *Organization) GetAxPartner() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.AxPartner
+}
+
+// GetAxPartnerOk returns a tuple with the AxPartner field value
+// and a boolean to check if the value has been set.
+func (o *Organization) GetAxPartnerOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.AxPartner, true
+}
+
+// SetAxPartner sets field value
+func (o *Organization) SetAxPartner(v bool) {
+	o.AxPartner = v
+}
+
 func (o Organization) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -1130,6 +1157,7 @@ func (o Organization) ToMap() (map[string]interface{}, error) {
 	toSerialize["directory_sync_deleted_at"] = o.DirectorySyncDeletedAt.Get()
 	toSerialize["saml_enabled_at"] = o.SamlEnabledAt.Get()
 	toSerialize["total_member_count"] = o.TotalMemberCount
+	toSerialize["ax_partner"] = o.AxPartner
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -1181,6 +1209,7 @@ func (o *Organization) UnmarshalJSON(data []byte) (err error) {
 		"directory_sync_deleted_at",
 		"saml_enabled_at",
 		"total_member_count",
+		"ax_partner",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -1248,6 +1277,7 @@ func (o *Organization) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "directory_sync_deleted_at")
 		delete(additionalProperties, "saml_enabled_at")
 		delete(additionalProperties, "total_member_count")
+		delete(additionalProperties, "ax_partner")
 		o.AdditionalProperties = additionalProperties
 	}
 

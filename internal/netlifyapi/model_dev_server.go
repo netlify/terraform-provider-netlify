@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -31,6 +31,8 @@ type DevServer struct {
 	CreatedAt *string `json:"created_at,omitempty"`
 	// The time the dev server was updated
 	UpdatedAt *string `json:"updated_at,omitempty"`
+	// The time the dev server was last active
+	LastActivityAt *string `json:"last_activity_at,omitempty"`
 	// The url of the dev server
 	Url *string `json:"url,omitempty"`
 	// The time the dev server started
@@ -43,8 +45,12 @@ type DevServer struct {
 	DoneAt *string `json:"done_at,omitempty"`
 	// The branch of the dev server
 	Branch *string `json:"branch,omitempty"`
+	// The environment of the dev server
+	Environment *string `json:"environment,omitempty"`
 	// The title of the dev server
 	Title *string `json:"title,omitempty"`
+	// The reason the dev server was stopped
+	StopReason *string `json:"stop_reason,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -259,6 +265,38 @@ func (o *DevServer) SetUpdatedAt(v string) {
 	o.UpdatedAt = &v
 }
 
+// GetLastActivityAt returns the LastActivityAt field value if set, zero value otherwise.
+func (o *DevServer) GetLastActivityAt() string {
+	if o == nil || IsNil(o.LastActivityAt) {
+		var ret string
+		return ret
+	}
+	return *o.LastActivityAt
+}
+
+// GetLastActivityAtOk returns a tuple with the LastActivityAt field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DevServer) GetLastActivityAtOk() (*string, bool) {
+	if o == nil || IsNil(o.LastActivityAt) {
+		return nil, false
+	}
+	return o.LastActivityAt, true
+}
+
+// HasLastActivityAt returns a boolean if a field has been set.
+func (o *DevServer) HasLastActivityAt() bool {
+	if o != nil && !IsNil(o.LastActivityAt) {
+		return true
+	}
+
+	return false
+}
+
+// SetLastActivityAt gets a reference to the given string and assigns it to the LastActivityAt field.
+func (o *DevServer) SetLastActivityAt(v string) {
+	o.LastActivityAt = &v
+}
+
 // GetUrl returns the Url field value if set, zero value otherwise.
 func (o *DevServer) GetUrl() string {
 	if o == nil || IsNil(o.Url) {
@@ -451,6 +489,38 @@ func (o *DevServer) SetBranch(v string) {
 	o.Branch = &v
 }
 
+// GetEnvironment returns the Environment field value if set, zero value otherwise.
+func (o *DevServer) GetEnvironment() string {
+	if o == nil || IsNil(o.Environment) {
+		var ret string
+		return ret
+	}
+	return *o.Environment
+}
+
+// GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DevServer) GetEnvironmentOk() (*string, bool) {
+	if o == nil || IsNil(o.Environment) {
+		return nil, false
+	}
+	return o.Environment, true
+}
+
+// HasEnvironment returns a boolean if a field has been set.
+func (o *DevServer) HasEnvironment() bool {
+	if o != nil && !IsNil(o.Environment) {
+		return true
+	}
+
+	return false
+}
+
+// SetEnvironment gets a reference to the given string and assigns it to the Environment field.
+func (o *DevServer) SetEnvironment(v string) {
+	o.Environment = &v
+}
+
 // GetTitle returns the Title field value if set, zero value otherwise.
 func (o *DevServer) GetTitle() string {
 	if o == nil || IsNil(o.Title) {
@@ -483,6 +553,38 @@ func (o *DevServer) SetTitle(v string) {
 	o.Title = &v
 }
 
+// GetStopReason returns the StopReason field value if set, zero value otherwise.
+func (o *DevServer) GetStopReason() string {
+	if o == nil || IsNil(o.StopReason) {
+		var ret string
+		return ret
+	}
+	return *o.StopReason
+}
+
+// GetStopReasonOk returns a tuple with the StopReason field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DevServer) GetStopReasonOk() (*string, bool) {
+	if o == nil || IsNil(o.StopReason) {
+		return nil, false
+	}
+	return o.StopReason, true
+}
+
+// HasStopReason returns a boolean if a field has been set.
+func (o *DevServer) HasStopReason() bool {
+	if o != nil && !IsNil(o.StopReason) {
+		return true
+	}
+
+	return false
+}
+
+// SetStopReason gets a reference to the given string and assigns it to the StopReason field.
+func (o *DevServer) SetStopReason(v string) {
+	o.StopReason = &v
+}
+
 func (o DevServer) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -511,6 +613,9 @@ func (o DevServer) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedAt) {
 		toSerialize["updated_at"] = o.UpdatedAt
 	}
+	if !IsNil(o.LastActivityAt) {
+		toSerialize["last_activity_at"] = o.LastActivityAt
+	}
 	if !IsNil(o.Url) {
 		toSerialize["url"] = o.Url
 	}
@@ -529,8 +634,14 @@ func (o DevServer) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Branch) {
 		toSerialize["branch"] = o.Branch
 	}
+	if !IsNil(o.Environment) {
+		toSerialize["environment"] = o.Environment
+	}
 	if !IsNil(o.Title) {
 		toSerialize["title"] = o.Title
+	}
+	if !IsNil(o.StopReason) {
+		toSerialize["stop_reason"] = o.StopReason
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -560,13 +671,16 @@ func (o *DevServer) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "enqueued_at")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "last_activity_at")
 		delete(additionalProperties, "url")
 		delete(additionalProperties, "starting_at")
 		delete(additionalProperties, "error_at")
 		delete(additionalProperties, "live_at")
 		delete(additionalProperties, "done_at")
 		delete(additionalProperties, "branch")
+		delete(additionalProperties, "environment")
 		delete(additionalProperties, "title")
+		delete(additionalProperties, "stop_reason")
 		o.AdditionalProperties = additionalProperties
 	}
 

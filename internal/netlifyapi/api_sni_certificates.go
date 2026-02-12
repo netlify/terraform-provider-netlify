@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -23,6 +23,120 @@ import (
 // SNICertificatesAPIService SNICertificatesAPI service
 type SNICertificatesAPIService service
 
+type ApiGetAllCertificatesRequest struct {
+	ctx context.Context
+	ApiService *SNICertificatesAPIService
+	domain *string
+	siteId string
+}
+
+// Domain that certificates are being requested for.
+func (r ApiGetAllCertificatesRequest) Domain(domain string) ApiGetAllCertificatesRequest {
+	r.domain = &domain
+	return r
+}
+
+func (r ApiGetAllCertificatesRequest) Execute() ([]SniCertificate, *http.Response, error) {
+	return r.ApiService.GetAllCertificatesExecute(r)
+}
+
+/*
+GetAllCertificates Method for GetAllCertificates
+
+Returns details about certificates associated with a domain. The site must be using the domain.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param siteId The ID of the site
+ @return ApiGetAllCertificatesRequest
+*/
+func (a *SNICertificatesAPIService) GetAllCertificates(ctx context.Context, siteId string) ApiGetAllCertificatesRequest {
+	return ApiGetAllCertificatesRequest{
+		ApiService: a,
+		ctx: ctx,
+		siteId: siteId,
+	}
+}
+
+// Execute executes the request
+//  @return []SniCertificate
+func (a *SNICertificatesAPIService) GetAllCertificatesExecute(r ApiGetAllCertificatesRequest) ([]SniCertificate, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  []SniCertificate
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SNICertificatesAPIService.GetAllCertificates")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/sites/{site_id}/ssl/certificates"
+	localVarPath = strings.Replace(localVarPath, "{"+"site_id"+"}", url.PathEscape(parameterValueToString(r.siteId, "siteId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.domain == nil {
+		return localVarReturnValue, nil, reportError("domain is required and must be specified")
+	}
+
+	parameterAddToHeaderOrQuery(localVarQueryParams, "domain", r.domain, "form", "")
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiProvisionSiteTLSCertificateRequest struct {
 	ctx context.Context
 	ApiService *SNICertificatesAPIService
@@ -30,7 +144,7 @@ type ApiProvisionSiteTLSCertificateRequest struct {
 	certificateInfo *CertificateInfo
 }
 
-// 
+// Certificate data. Optional for initial provisioning, required for updates.
 func (r ApiProvisionSiteTLSCertificateRequest) CertificateInfo(certificateInfo CertificateInfo) ApiProvisionSiteTLSCertificateRequest {
 	r.certificateInfo = &certificateInfo
 	return r
@@ -43,10 +157,15 @@ func (r ApiProvisionSiteTLSCertificateRequest) Execute() (*SniCertificate, *http
 /*
 ProvisionSiteTLSCertificate Method for ProvisionSiteTLSCertificate
 
-Creates a certificate with the site. If the certificate param is passed,
-create a custom certificate with it. Otherwise, initiate the Let's
-Encrypt certificate provisioning.
-If there is already associated certificate with the site, update it.
+Provisions or updates a TLS certificate for the site.
+
+**Creating a certificate (site has no certificate):**
+- Omit certificate params to initiate Let's Encrypt provisioning
+- Provide certificate, key, and ca_certificates to upload a custom certificate
+
+**Updating a certificate (site already has a certificate):**
+- REQUIRES certificate, key, and ca_certificates to replace with a new custom certificate
+- Use POST /api/v1/sites/{site_id}/ssl/renew to renew an existing Let's Encrypt certificate
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param siteId The ID of the site

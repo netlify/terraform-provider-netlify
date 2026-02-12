@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -25,12 +25,11 @@ type PartialSite struct {
 	Name *string `json:"name,omitempty"`
 	DefaultDomain *string `json:"default_domain,omitempty"`
 	CustomDomain *string `json:"custom_domain,omitempty"`
+	RecordTxtValue *string `json:"record_txt_value,omitempty"`
 	BranchDeployCustomDomain *string `json:"branch_deploy_custom_domain,omitempty"`
 	DeployPreviewCustomDomain *string `json:"deploy_preview_custom_domain,omitempty"`
 	DomainAliases []string `json:"domain_aliases,omitempty"`
-	Password *string `json:"password,omitempty"`
 	PasswordContext *string `json:"password_context,omitempty"`
-	PasswordHash *string `json:"password_hash,omitempty"`
 	SsoLogin *bool `json:"sso_login,omitempty"`
 	SsoLoginContext *string `json:"sso_login_context,omitempty"`
 	NotificationEmail *string `json:"notification_email,omitempty"`
@@ -43,8 +42,6 @@ type PartialSite struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 	SslUrl *string `json:"ssl_url,omitempty"`
 	ForceSsl *bool `json:"force_ssl,omitempty"`
-	RumEnabled *bool `json:"rum_enabled,omitempty"`
-	PreventNonGitProdDeploys *bool `json:"prevent_non_git_prod_deploys,omitempty"`
 	BuildSettings *Repo `json:"build_settings,omitempty"`
 	ProcessingSettings *SiteProcessingSettings `json:"processing_settings,omitempty"`
 	DeployHook *string `json:"deploy_hook,omitempty"`
@@ -58,9 +55,12 @@ type PartialSite struct {
 	BuildTimelimit *float32 `json:"build_timelimit,omitempty"`
 	DeployRetentionInDays *float32 `json:"deploy_retention_in_days,omitempty"`
 	Labels []SiteLabel `json:"labels,omitempty"`
-	FunctionsRegion *string `json:"functions_region,omitempty"`
+	AnalyticsInstanceId *string `json:"analytics_instance_id,omitempty"`
 	CdpEnabledContexts []string `json:"cdp_enabled_contexts,omitempty"`
+	FunctionsRegion *string `json:"functions_region,omitempty"`
 	HudEnabled *bool `json:"hud_enabled,omitempty"`
+	RumEnabled *bool `json:"rum_enabled,omitempty"`
+	PreventNonGitProdDeploys *bool `json:"prevent_non_git_prod_deploys,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -243,6 +243,38 @@ func (o *PartialSite) SetCustomDomain(v string) {
 	o.CustomDomain = &v
 }
 
+// GetRecordTxtValue returns the RecordTxtValue field value if set, zero value otherwise.
+func (o *PartialSite) GetRecordTxtValue() string {
+	if o == nil || IsNil(o.RecordTxtValue) {
+		var ret string
+		return ret
+	}
+	return *o.RecordTxtValue
+}
+
+// GetRecordTxtValueOk returns a tuple with the RecordTxtValue field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PartialSite) GetRecordTxtValueOk() (*string, bool) {
+	if o == nil || IsNil(o.RecordTxtValue) {
+		return nil, false
+	}
+	return o.RecordTxtValue, true
+}
+
+// HasRecordTxtValue returns a boolean if a field has been set.
+func (o *PartialSite) HasRecordTxtValue() bool {
+	if o != nil && !IsNil(o.RecordTxtValue) {
+		return true
+	}
+
+	return false
+}
+
+// SetRecordTxtValue gets a reference to the given string and assigns it to the RecordTxtValue field.
+func (o *PartialSite) SetRecordTxtValue(v string) {
+	o.RecordTxtValue = &v
+}
+
 // GetBranchDeployCustomDomain returns the BranchDeployCustomDomain field value if set, zero value otherwise.
 func (o *PartialSite) GetBranchDeployCustomDomain() string {
 	if o == nil || IsNil(o.BranchDeployCustomDomain) {
@@ -339,38 +371,6 @@ func (o *PartialSite) SetDomainAliases(v []string) {
 	o.DomainAliases = v
 }
 
-// GetPassword returns the Password field value if set, zero value otherwise.
-func (o *PartialSite) GetPassword() string {
-	if o == nil || IsNil(o.Password) {
-		var ret string
-		return ret
-	}
-	return *o.Password
-}
-
-// GetPasswordOk returns a tuple with the Password field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *PartialSite) GetPasswordOk() (*string, bool) {
-	if o == nil || IsNil(o.Password) {
-		return nil, false
-	}
-	return o.Password, true
-}
-
-// HasPassword returns a boolean if a field has been set.
-func (o *PartialSite) HasPassword() bool {
-	if o != nil && !IsNil(o.Password) {
-		return true
-	}
-
-	return false
-}
-
-// SetPassword gets a reference to the given string and assigns it to the Password field.
-func (o *PartialSite) SetPassword(v string) {
-	o.Password = &v
-}
-
 // GetPasswordContext returns the PasswordContext field value if set, zero value otherwise.
 func (o *PartialSite) GetPasswordContext() string {
 	if o == nil || IsNil(o.PasswordContext) {
@@ -401,38 +401,6 @@ func (o *PartialSite) HasPasswordContext() bool {
 // SetPasswordContext gets a reference to the given string and assigns it to the PasswordContext field.
 func (o *PartialSite) SetPasswordContext(v string) {
 	o.PasswordContext = &v
-}
-
-// GetPasswordHash returns the PasswordHash field value if set, zero value otherwise.
-func (o *PartialSite) GetPasswordHash() string {
-	if o == nil || IsNil(o.PasswordHash) {
-		var ret string
-		return ret
-	}
-	return *o.PasswordHash
-}
-
-// GetPasswordHashOk returns a tuple with the PasswordHash field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *PartialSite) GetPasswordHashOk() (*string, bool) {
-	if o == nil || IsNil(o.PasswordHash) {
-		return nil, false
-	}
-	return o.PasswordHash, true
-}
-
-// HasPasswordHash returns a boolean if a field has been set.
-func (o *PartialSite) HasPasswordHash() bool {
-	if o != nil && !IsNil(o.PasswordHash) {
-		return true
-	}
-
-	return false
-}
-
-// SetPasswordHash gets a reference to the given string and assigns it to the PasswordHash field.
-func (o *PartialSite) SetPasswordHash(v string) {
-	o.PasswordHash = &v
 }
 
 // GetSsoLogin returns the SsoLogin field value if set, zero value otherwise.
@@ -817,70 +785,6 @@ func (o *PartialSite) HasForceSsl() bool {
 // SetForceSsl gets a reference to the given bool and assigns it to the ForceSsl field.
 func (o *PartialSite) SetForceSsl(v bool) {
 	o.ForceSsl = &v
-}
-
-// GetRumEnabled returns the RumEnabled field value if set, zero value otherwise.
-func (o *PartialSite) GetRumEnabled() bool {
-	if o == nil || IsNil(o.RumEnabled) {
-		var ret bool
-		return ret
-	}
-	return *o.RumEnabled
-}
-
-// GetRumEnabledOk returns a tuple with the RumEnabled field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *PartialSite) GetRumEnabledOk() (*bool, bool) {
-	if o == nil || IsNil(o.RumEnabled) {
-		return nil, false
-	}
-	return o.RumEnabled, true
-}
-
-// HasRumEnabled returns a boolean if a field has been set.
-func (o *PartialSite) HasRumEnabled() bool {
-	if o != nil && !IsNil(o.RumEnabled) {
-		return true
-	}
-
-	return false
-}
-
-// SetRumEnabled gets a reference to the given bool and assigns it to the RumEnabled field.
-func (o *PartialSite) SetRumEnabled(v bool) {
-	o.RumEnabled = &v
-}
-
-// GetPreventNonGitProdDeploys returns the PreventNonGitProdDeploys field value if set, zero value otherwise.
-func (o *PartialSite) GetPreventNonGitProdDeploys() bool {
-	if o == nil || IsNil(o.PreventNonGitProdDeploys) {
-		var ret bool
-		return ret
-	}
-	return *o.PreventNonGitProdDeploys
-}
-
-// GetPreventNonGitProdDeploysOk returns a tuple with the PreventNonGitProdDeploys field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *PartialSite) GetPreventNonGitProdDeploysOk() (*bool, bool) {
-	if o == nil || IsNil(o.PreventNonGitProdDeploys) {
-		return nil, false
-	}
-	return o.PreventNonGitProdDeploys, true
-}
-
-// HasPreventNonGitProdDeploys returns a boolean if a field has been set.
-func (o *PartialSite) HasPreventNonGitProdDeploys() bool {
-	if o != nil && !IsNil(o.PreventNonGitProdDeploys) {
-		return true
-	}
-
-	return false
-}
-
-// SetPreventNonGitProdDeploys gets a reference to the given bool and assigns it to the PreventNonGitProdDeploys field.
-func (o *PartialSite) SetPreventNonGitProdDeploys(v bool) {
-	o.PreventNonGitProdDeploys = &v
 }
 
 // GetBuildSettings returns the BuildSettings field value if set, zero value otherwise.
@@ -1299,36 +1203,36 @@ func (o *PartialSite) SetLabels(v []SiteLabel) {
 	o.Labels = v
 }
 
-// GetFunctionsRegion returns the FunctionsRegion field value if set, zero value otherwise.
-func (o *PartialSite) GetFunctionsRegion() string {
-	if o == nil || IsNil(o.FunctionsRegion) {
+// GetAnalyticsInstanceId returns the AnalyticsInstanceId field value if set, zero value otherwise.
+func (o *PartialSite) GetAnalyticsInstanceId() string {
+	if o == nil || IsNil(o.AnalyticsInstanceId) {
 		var ret string
 		return ret
 	}
-	return *o.FunctionsRegion
+	return *o.AnalyticsInstanceId
 }
 
-// GetFunctionsRegionOk returns a tuple with the FunctionsRegion field value if set, nil otherwise
+// GetAnalyticsInstanceIdOk returns a tuple with the AnalyticsInstanceId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PartialSite) GetFunctionsRegionOk() (*string, bool) {
-	if o == nil || IsNil(o.FunctionsRegion) {
+func (o *PartialSite) GetAnalyticsInstanceIdOk() (*string, bool) {
+	if o == nil || IsNil(o.AnalyticsInstanceId) {
 		return nil, false
 	}
-	return o.FunctionsRegion, true
+	return o.AnalyticsInstanceId, true
 }
 
-// HasFunctionsRegion returns a boolean if a field has been set.
-func (o *PartialSite) HasFunctionsRegion() bool {
-	if o != nil && !IsNil(o.FunctionsRegion) {
+// HasAnalyticsInstanceId returns a boolean if a field has been set.
+func (o *PartialSite) HasAnalyticsInstanceId() bool {
+	if o != nil && !IsNil(o.AnalyticsInstanceId) {
 		return true
 	}
 
 	return false
 }
 
-// SetFunctionsRegion gets a reference to the given string and assigns it to the FunctionsRegion field.
-func (o *PartialSite) SetFunctionsRegion(v string) {
-	o.FunctionsRegion = &v
+// SetAnalyticsInstanceId gets a reference to the given string and assigns it to the AnalyticsInstanceId field.
+func (o *PartialSite) SetAnalyticsInstanceId(v string) {
+	o.AnalyticsInstanceId = &v
 }
 
 // GetCdpEnabledContexts returns the CdpEnabledContexts field value if set, zero value otherwise.
@@ -1363,6 +1267,38 @@ func (o *PartialSite) SetCdpEnabledContexts(v []string) {
 	o.CdpEnabledContexts = v
 }
 
+// GetFunctionsRegion returns the FunctionsRegion field value if set, zero value otherwise.
+func (o *PartialSite) GetFunctionsRegion() string {
+	if o == nil || IsNil(o.FunctionsRegion) {
+		var ret string
+		return ret
+	}
+	return *o.FunctionsRegion
+}
+
+// GetFunctionsRegionOk returns a tuple with the FunctionsRegion field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PartialSite) GetFunctionsRegionOk() (*string, bool) {
+	if o == nil || IsNil(o.FunctionsRegion) {
+		return nil, false
+	}
+	return o.FunctionsRegion, true
+}
+
+// HasFunctionsRegion returns a boolean if a field has been set.
+func (o *PartialSite) HasFunctionsRegion() bool {
+	if o != nil && !IsNil(o.FunctionsRegion) {
+		return true
+	}
+
+	return false
+}
+
+// SetFunctionsRegion gets a reference to the given string and assigns it to the FunctionsRegion field.
+func (o *PartialSite) SetFunctionsRegion(v string) {
+	o.FunctionsRegion = &v
+}
+
 // GetHudEnabled returns the HudEnabled field value if set, zero value otherwise.
 func (o *PartialSite) GetHudEnabled() bool {
 	if o == nil || IsNil(o.HudEnabled) {
@@ -1395,6 +1331,70 @@ func (o *PartialSite) SetHudEnabled(v bool) {
 	o.HudEnabled = &v
 }
 
+// GetRumEnabled returns the RumEnabled field value if set, zero value otherwise.
+func (o *PartialSite) GetRumEnabled() bool {
+	if o == nil || IsNil(o.RumEnabled) {
+		var ret bool
+		return ret
+	}
+	return *o.RumEnabled
+}
+
+// GetRumEnabledOk returns a tuple with the RumEnabled field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PartialSite) GetRumEnabledOk() (*bool, bool) {
+	if o == nil || IsNil(o.RumEnabled) {
+		return nil, false
+	}
+	return o.RumEnabled, true
+}
+
+// HasRumEnabled returns a boolean if a field has been set.
+func (o *PartialSite) HasRumEnabled() bool {
+	if o != nil && !IsNil(o.RumEnabled) {
+		return true
+	}
+
+	return false
+}
+
+// SetRumEnabled gets a reference to the given bool and assigns it to the RumEnabled field.
+func (o *PartialSite) SetRumEnabled(v bool) {
+	o.RumEnabled = &v
+}
+
+// GetPreventNonGitProdDeploys returns the PreventNonGitProdDeploys field value if set, zero value otherwise.
+func (o *PartialSite) GetPreventNonGitProdDeploys() bool {
+	if o == nil || IsNil(o.PreventNonGitProdDeploys) {
+		var ret bool
+		return ret
+	}
+	return *o.PreventNonGitProdDeploys
+}
+
+// GetPreventNonGitProdDeploysOk returns a tuple with the PreventNonGitProdDeploys field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PartialSite) GetPreventNonGitProdDeploysOk() (*bool, bool) {
+	if o == nil || IsNil(o.PreventNonGitProdDeploys) {
+		return nil, false
+	}
+	return o.PreventNonGitProdDeploys, true
+}
+
+// HasPreventNonGitProdDeploys returns a boolean if a field has been set.
+func (o *PartialSite) HasPreventNonGitProdDeploys() bool {
+	if o != nil && !IsNil(o.PreventNonGitProdDeploys) {
+		return true
+	}
+
+	return false
+}
+
+// SetPreventNonGitProdDeploys gets a reference to the given bool and assigns it to the PreventNonGitProdDeploys field.
+func (o *PartialSite) SetPreventNonGitProdDeploys(v bool) {
+	o.PreventNonGitProdDeploys = &v
+}
+
 func (o PartialSite) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -1420,6 +1420,9 @@ func (o PartialSite) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.CustomDomain) {
 		toSerialize["custom_domain"] = o.CustomDomain
 	}
+	if !IsNil(o.RecordTxtValue) {
+		toSerialize["record_txt_value"] = o.RecordTxtValue
+	}
 	if !IsNil(o.BranchDeployCustomDomain) {
 		toSerialize["branch_deploy_custom_domain"] = o.BranchDeployCustomDomain
 	}
@@ -1429,14 +1432,8 @@ func (o PartialSite) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.DomainAliases) {
 		toSerialize["domain_aliases"] = o.DomainAliases
 	}
-	if !IsNil(o.Password) {
-		toSerialize["password"] = o.Password
-	}
 	if !IsNil(o.PasswordContext) {
 		toSerialize["password_context"] = o.PasswordContext
-	}
-	if !IsNil(o.PasswordHash) {
-		toSerialize["password_hash"] = o.PasswordHash
 	}
 	if !IsNil(o.SsoLogin) {
 		toSerialize["sso_login"] = o.SsoLogin
@@ -1473,12 +1470,6 @@ func (o PartialSite) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ForceSsl) {
 		toSerialize["force_ssl"] = o.ForceSsl
-	}
-	if !IsNil(o.RumEnabled) {
-		toSerialize["rum_enabled"] = o.RumEnabled
-	}
-	if !IsNil(o.PreventNonGitProdDeploys) {
-		toSerialize["prevent_non_git_prod_deploys"] = o.PreventNonGitProdDeploys
 	}
 	if !IsNil(o.BuildSettings) {
 		toSerialize["build_settings"] = o.BuildSettings
@@ -1519,14 +1510,23 @@ func (o PartialSite) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Labels) {
 		toSerialize["labels"] = o.Labels
 	}
-	if !IsNil(o.FunctionsRegion) {
-		toSerialize["functions_region"] = o.FunctionsRegion
+	if !IsNil(o.AnalyticsInstanceId) {
+		toSerialize["analytics_instance_id"] = o.AnalyticsInstanceId
 	}
 	if !IsNil(o.CdpEnabledContexts) {
 		toSerialize["cdp_enabled_contexts"] = o.CdpEnabledContexts
 	}
+	if !IsNil(o.FunctionsRegion) {
+		toSerialize["functions_region"] = o.FunctionsRegion
+	}
 	if !IsNil(o.HudEnabled) {
 		toSerialize["hud_enabled"] = o.HudEnabled
+	}
+	if !IsNil(o.RumEnabled) {
+		toSerialize["rum_enabled"] = o.RumEnabled
+	}
+	if !IsNil(o.PreventNonGitProdDeploys) {
+		toSerialize["prevent_non_git_prod_deploys"] = o.PreventNonGitProdDeploys
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -1555,12 +1555,11 @@ func (o *PartialSite) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "default_domain")
 		delete(additionalProperties, "custom_domain")
+		delete(additionalProperties, "record_txt_value")
 		delete(additionalProperties, "branch_deploy_custom_domain")
 		delete(additionalProperties, "deploy_preview_custom_domain")
 		delete(additionalProperties, "domain_aliases")
-		delete(additionalProperties, "password")
 		delete(additionalProperties, "password_context")
-		delete(additionalProperties, "password_hash")
 		delete(additionalProperties, "sso_login")
 		delete(additionalProperties, "sso_login_context")
 		delete(additionalProperties, "notification_email")
@@ -1573,8 +1572,6 @@ func (o *PartialSite) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "updated_at")
 		delete(additionalProperties, "ssl_url")
 		delete(additionalProperties, "force_ssl")
-		delete(additionalProperties, "rum_enabled")
-		delete(additionalProperties, "prevent_non_git_prod_deploys")
 		delete(additionalProperties, "build_settings")
 		delete(additionalProperties, "processing_settings")
 		delete(additionalProperties, "deploy_hook")
@@ -1588,9 +1585,12 @@ func (o *PartialSite) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "build_timelimit")
 		delete(additionalProperties, "deploy_retention_in_days")
 		delete(additionalProperties, "labels")
-		delete(additionalProperties, "functions_region")
+		delete(additionalProperties, "analytics_instance_id")
 		delete(additionalProperties, "cdp_enabled_contexts")
+		delete(additionalProperties, "functions_region")
 		delete(additionalProperties, "hud_enabled")
+		delete(additionalProperties, "rum_enabled")
+		delete(additionalProperties, "prevent_non_git_prod_deploys")
 		o.AdditionalProperties = additionalProperties
 	}
 

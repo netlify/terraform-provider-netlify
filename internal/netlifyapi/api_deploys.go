@@ -1,7 +1,7 @@
 /*
 Netlify's API documentation
 
-Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://docs.netlify.com/api/get-started/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/js-client) 
+Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.   This document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).   Additionally, we have two API clients for your convenience: - [Go Client](https://github.com/netlify/open-api#go-client) - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client) 
 
 API version: 1.0
 */
@@ -564,27 +564,27 @@ func (a *DeploysAPIService) GetDeployExecute(r ApiGetDeployRequest) (*Deploy, *h
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiGetSimplePublicDeployRequest struct {
+type ApiGetDeploySourceDownloadUrlRequest struct {
 	ctx context.Context
 	ApiService *DeploysAPIService
 	deployId string
 }
 
-func (r ApiGetSimplePublicDeployRequest) Execute() (*DeploySimple, *http.Response, error) {
-	return r.ApiService.GetSimplePublicDeployExecute(r)
+func (r ApiGetDeploySourceDownloadUrlRequest) Execute() (*GetSiteAssetPublicSignature200Response, *http.Response, error) {
+	return r.ApiService.GetDeploySourceDownloadUrlExecute(r)
 }
 
 /*
-GetSimplePublicDeploy Method for GetSimplePublicDeploy
+GetDeploySourceDownloadUrl Method for GetDeploySourceDownloadUrl
 
-Returns public information about a deploy.
+Get a presigned download URL for the deploy source zip file.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param deployId The ID of the deploy
- @return ApiGetSimplePublicDeployRequest
+ @param deployId deploy_id
+ @return ApiGetDeploySourceDownloadUrlRequest
 */
-func (a *DeploysAPIService) GetSimplePublicDeploy(ctx context.Context, deployId string) ApiGetSimplePublicDeployRequest {
-	return ApiGetSimplePublicDeployRequest{
+func (a *DeploysAPIService) GetDeploySourceDownloadUrl(ctx context.Context, deployId string) ApiGetDeploySourceDownloadUrlRequest {
+	return ApiGetDeploySourceDownloadUrlRequest{
 		ApiService: a,
 		ctx: ctx,
 		deployId: deployId,
@@ -592,21 +592,21 @@ func (a *DeploysAPIService) GetSimplePublicDeploy(ctx context.Context, deployId 
 }
 
 // Execute executes the request
-//  @return DeploySimple
-func (a *DeploysAPIService) GetSimplePublicDeployExecute(r ApiGetSimplePublicDeployRequest) (*DeploySimple, *http.Response, error) {
+//  @return GetSiteAssetPublicSignature200Response
+func (a *DeploysAPIService) GetDeploySourceDownloadUrlExecute(r ApiGetDeploySourceDownloadUrlRequest) (*GetSiteAssetPublicSignature200Response, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *DeploySimple
+		localVarReturnValue  *GetSiteAssetPublicSignature200Response
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DeploysAPIService.GetSimplePublicDeploy")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DeploysAPIService.GetDeploySourceDownloadUrl")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/api/v1/deploys/{deploy_id}/simple"
+	localVarPath := localBasePath + "/api/v1/deploys/{deploy_id}/download"
 	localVarPath = strings.Replace(localVarPath, "{"+"deploy_id"+"}", url.PathEscape(parameterValueToString(r.deployId, "deployId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
