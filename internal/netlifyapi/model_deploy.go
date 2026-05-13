@@ -102,22 +102,12 @@ type Deploy struct {
 	EdgeFunctionsPresent *bool `json:"edge_functions_present,omitempty"`
 	// The date at which the deploy will be soft-deleted
 	ExpiresAt *time.Time `json:"expires_at,omitempty"`
-	// The ID of the database branch associated with the deploy
-	DatabaseBranchId *string `json:"database_branch_id,omitempty"`
-	DatabaseMigrations *DeployDatabaseMigrations `json:"database_migrations,omitempty"`
-	DatabaseSnapshots *DeployDatabaseSnapshots `json:"database_snapshots,omitempty"`
-	// The source that created this deploy (api, cli, drop, git, agent_runner)
-	DeploySource *string `json:"deploy_source,omitempty"`
 	// The ID of the agent runner associated with the deploy
 	AgentRunnerId *string `json:"agent_runner_id,omitempty"`
 	// The filename of the uploaded source zip in S3
 	SourceZipFilename *string `json:"source_zip_filename,omitempty"`
 	// The skew protection token for this deploy
 	SkewProtectionToken *string `json:"skew_protection_token,omitempty"`
-	// Whether the deploy has source zip
-	HasSourceZip *bool `json:"has_source_zip,omitempty"`
-	// The subdomain alias for the deploy
-	SubdomainAlias *string `json:"subdomain_alias,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -1179,134 +1169,6 @@ func (o *Deploy) SetExpiresAt(v time.Time) {
 	o.ExpiresAt = &v
 }
 
-// GetDatabaseBranchId returns the DatabaseBranchId field value if set, zero value otherwise.
-func (o *Deploy) GetDatabaseBranchId() string {
-	if o == nil || IsNil(o.DatabaseBranchId) {
-		var ret string
-		return ret
-	}
-	return *o.DatabaseBranchId
-}
-
-// GetDatabaseBranchIdOk returns a tuple with the DatabaseBranchId field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Deploy) GetDatabaseBranchIdOk() (*string, bool) {
-	if o == nil || IsNil(o.DatabaseBranchId) {
-		return nil, false
-	}
-	return o.DatabaseBranchId, true
-}
-
-// HasDatabaseBranchId returns a boolean if a field has been set.
-func (o *Deploy) HasDatabaseBranchId() bool {
-	if o != nil && !IsNil(o.DatabaseBranchId) {
-		return true
-	}
-
-	return false
-}
-
-// SetDatabaseBranchId gets a reference to the given string and assigns it to the DatabaseBranchId field.
-func (o *Deploy) SetDatabaseBranchId(v string) {
-	o.DatabaseBranchId = &v
-}
-
-// GetDatabaseMigrations returns the DatabaseMigrations field value if set, zero value otherwise.
-func (o *Deploy) GetDatabaseMigrations() DeployDatabaseMigrations {
-	if o == nil || IsNil(o.DatabaseMigrations) {
-		var ret DeployDatabaseMigrations
-		return ret
-	}
-	return *o.DatabaseMigrations
-}
-
-// GetDatabaseMigrationsOk returns a tuple with the DatabaseMigrations field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Deploy) GetDatabaseMigrationsOk() (*DeployDatabaseMigrations, bool) {
-	if o == nil || IsNil(o.DatabaseMigrations) {
-		return nil, false
-	}
-	return o.DatabaseMigrations, true
-}
-
-// HasDatabaseMigrations returns a boolean if a field has been set.
-func (o *Deploy) HasDatabaseMigrations() bool {
-	if o != nil && !IsNil(o.DatabaseMigrations) {
-		return true
-	}
-
-	return false
-}
-
-// SetDatabaseMigrations gets a reference to the given DeployDatabaseMigrations and assigns it to the DatabaseMigrations field.
-func (o *Deploy) SetDatabaseMigrations(v DeployDatabaseMigrations) {
-	o.DatabaseMigrations = &v
-}
-
-// GetDatabaseSnapshots returns the DatabaseSnapshots field value if set, zero value otherwise.
-func (o *Deploy) GetDatabaseSnapshots() DeployDatabaseSnapshots {
-	if o == nil || IsNil(o.DatabaseSnapshots) {
-		var ret DeployDatabaseSnapshots
-		return ret
-	}
-	return *o.DatabaseSnapshots
-}
-
-// GetDatabaseSnapshotsOk returns a tuple with the DatabaseSnapshots field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Deploy) GetDatabaseSnapshotsOk() (*DeployDatabaseSnapshots, bool) {
-	if o == nil || IsNil(o.DatabaseSnapshots) {
-		return nil, false
-	}
-	return o.DatabaseSnapshots, true
-}
-
-// HasDatabaseSnapshots returns a boolean if a field has been set.
-func (o *Deploy) HasDatabaseSnapshots() bool {
-	if o != nil && !IsNil(o.DatabaseSnapshots) {
-		return true
-	}
-
-	return false
-}
-
-// SetDatabaseSnapshots gets a reference to the given DeployDatabaseSnapshots and assigns it to the DatabaseSnapshots field.
-func (o *Deploy) SetDatabaseSnapshots(v DeployDatabaseSnapshots) {
-	o.DatabaseSnapshots = &v
-}
-
-// GetDeploySource returns the DeploySource field value if set, zero value otherwise.
-func (o *Deploy) GetDeploySource() string {
-	if o == nil || IsNil(o.DeploySource) {
-		var ret string
-		return ret
-	}
-	return *o.DeploySource
-}
-
-// GetDeploySourceOk returns a tuple with the DeploySource field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Deploy) GetDeploySourceOk() (*string, bool) {
-	if o == nil || IsNil(o.DeploySource) {
-		return nil, false
-	}
-	return o.DeploySource, true
-}
-
-// HasDeploySource returns a boolean if a field has been set.
-func (o *Deploy) HasDeploySource() bool {
-	if o != nil && !IsNil(o.DeploySource) {
-		return true
-	}
-
-	return false
-}
-
-// SetDeploySource gets a reference to the given string and assigns it to the DeploySource field.
-func (o *Deploy) SetDeploySource(v string) {
-	o.DeploySource = &v
-}
-
 // GetAgentRunnerId returns the AgentRunnerId field value if set, zero value otherwise.
 func (o *Deploy) GetAgentRunnerId() string {
 	if o == nil || IsNil(o.AgentRunnerId) {
@@ -1403,70 +1265,6 @@ func (o *Deploy) SetSkewProtectionToken(v string) {
 	o.SkewProtectionToken = &v
 }
 
-// GetHasSourceZip returns the HasSourceZip field value if set, zero value otherwise.
-func (o *Deploy) GetHasSourceZip() bool {
-	if o == nil || IsNil(o.HasSourceZip) {
-		var ret bool
-		return ret
-	}
-	return *o.HasSourceZip
-}
-
-// GetHasSourceZipOk returns a tuple with the HasSourceZip field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Deploy) GetHasSourceZipOk() (*bool, bool) {
-	if o == nil || IsNil(o.HasSourceZip) {
-		return nil, false
-	}
-	return o.HasSourceZip, true
-}
-
-// HasHasSourceZip returns a boolean if a field has been set.
-func (o *Deploy) HasHasSourceZip() bool {
-	if o != nil && !IsNil(o.HasSourceZip) {
-		return true
-	}
-
-	return false
-}
-
-// SetHasSourceZip gets a reference to the given bool and assigns it to the HasSourceZip field.
-func (o *Deploy) SetHasSourceZip(v bool) {
-	o.HasSourceZip = &v
-}
-
-// GetSubdomainAlias returns the SubdomainAlias field value if set, zero value otherwise.
-func (o *Deploy) GetSubdomainAlias() string {
-	if o == nil || IsNil(o.SubdomainAlias) {
-		var ret string
-		return ret
-	}
-	return *o.SubdomainAlias
-}
-
-// GetSubdomainAliasOk returns a tuple with the SubdomainAlias field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Deploy) GetSubdomainAliasOk() (*string, bool) {
-	if o == nil || IsNil(o.SubdomainAlias) {
-		return nil, false
-	}
-	return o.SubdomainAlias, true
-}
-
-// HasSubdomainAlias returns a boolean if a field has been set.
-func (o *Deploy) HasSubdomainAlias() bool {
-	if o != nil && !IsNil(o.SubdomainAlias) {
-		return true
-	}
-
-	return false
-}
-
-// SetSubdomainAlias gets a reference to the given string and assigns it to the SubdomainAlias field.
-func (o *Deploy) SetSubdomainAlias(v string) {
-	o.SubdomainAlias = &v
-}
-
 func (o Deploy) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -1522,18 +1320,6 @@ func (o Deploy) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ExpiresAt) {
 		toSerialize["expires_at"] = o.ExpiresAt
 	}
-	if !IsNil(o.DatabaseBranchId) {
-		toSerialize["database_branch_id"] = o.DatabaseBranchId
-	}
-	if !IsNil(o.DatabaseMigrations) {
-		toSerialize["database_migrations"] = o.DatabaseMigrations
-	}
-	if !IsNil(o.DatabaseSnapshots) {
-		toSerialize["database_snapshots"] = o.DatabaseSnapshots
-	}
-	if !IsNil(o.DeploySource) {
-		toSerialize["deploy_source"] = o.DeploySource
-	}
 	if !IsNil(o.AgentRunnerId) {
 		toSerialize["agent_runner_id"] = o.AgentRunnerId
 	}
@@ -1542,12 +1328,6 @@ func (o Deploy) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.SkewProtectionToken) {
 		toSerialize["skew_protection_token"] = o.SkewProtectionToken
-	}
-	if !IsNil(o.HasSourceZip) {
-		toSerialize["has_source_zip"] = o.HasSourceZip
-	}
-	if !IsNil(o.SubdomainAlias) {
-		toSerialize["subdomain_alias"] = o.SubdomainAlias
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -1671,15 +1451,9 @@ func (o *Deploy) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "function_schedules")
 		delete(additionalProperties, "edge_functions_present")
 		delete(additionalProperties, "expires_at")
-		delete(additionalProperties, "database_branch_id")
-		delete(additionalProperties, "database_migrations")
-		delete(additionalProperties, "database_snapshots")
-		delete(additionalProperties, "deploy_source")
 		delete(additionalProperties, "agent_runner_id")
 		delete(additionalProperties, "source_zip_filename")
 		delete(additionalProperties, "skew_protection_token")
-		delete(additionalProperties, "has_source_zip")
-		delete(additionalProperties, "subdomain_alias")
 		o.AdditionalProperties = additionalProperties
 	}
 

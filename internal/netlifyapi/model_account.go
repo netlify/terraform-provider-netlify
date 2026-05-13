@@ -23,12 +23,14 @@ var _ MappedNullable = &Account{}
 type Account struct {
 	BillingEmail string `json:"billing_email"`
 	BillingName string `json:"billing_name"`
+	BillingPeriod string `json:"billing_period"`
 	Capabilities map[string]interface{} `json:"capabilities"`
 	CreatedAt time.Time `json:"created_at"`
 	Id string `json:"id"`
 	MemberRoles []map[string]interface{} `json:"member_roles"`
 	Name string `json:"name"`
 	OwnerIds []string `json:"owner_ids"`
+	PaymentMethodId string `json:"payment_method_id"`
 	Role string `json:"role"`
 	RolesAllowed []string `json:"roles_allowed"`
 	Slug string `json:"slug"`
@@ -41,9 +43,8 @@ type Account struct {
 	AiUsageEnabledSetting string `json:"ai_usage_enabled_setting"`
 	AiUsageLimitEnforced bool `json:"ai_usage_limit_enforced"`
 	AiUsageLimitCredits *int64 `json:"ai_usage_limit_credits,omitempty"`
-	ConfigurableLimitsExceeded []ConfigurableLimitRecord `json:"configurable_limits_exceeded"`
+	ConfigurableLimitsExceeded []string `json:"configurable_limits_exceeded"`
 	AutoTopupEnabled bool `json:"auto_topup_enabled"`
-	BlockSiteTransfers bool `json:"block_site_transfers"`
 	// Usage percentage when credit alert is active
 	CreditAlertPercentage int64 `json:"credit_alert_percentage"`
 	// Version-specific credit allotment
@@ -52,12 +53,6 @@ type Account struct {
 	PlanAutoTopupAmount *string `json:"plan_auto_topup_amount,omitempty"`
 	// Version-specific auto top-up per unit cost
 	PlanAutoTopupPerUnitCost *string `json:"plan_auto_topup_per_unit_cost,omitempty"`
-	// SWAR auto top-up credit amount (0 if not eligible)
-	SwarAutoTopupCredits *int64 `json:"swar_auto_topup_credits,omitempty"`
-	// Whether the account is in grace operational mode
-	InOperationalMode bool `json:"in_operational_mode"`
-	// When the grace credit top-up was granted
-	GraceTopupGrantedAt *time.Time `json:"grace_topup_granted_at,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -67,16 +62,18 @@ type _Account Account
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAccount(billingEmail string, billingName string, capabilities map[string]interface{}, createdAt time.Time, id string, memberRoles []map[string]interface{}, name string, ownerIds []string, role string, rolesAllowed []string, slug string, typeId string, typeName string, typeSlug string, updatedAt time.Time, supportAdministrationEnabled bool, deployDiagnosticsSetting string, aiUsageEnabledSetting string, aiUsageLimitEnforced bool, configurableLimitsExceeded []ConfigurableLimitRecord, autoTopupEnabled bool, blockSiteTransfers bool, creditAlertPercentage int64, inOperationalMode bool) *Account {
+func NewAccount(billingEmail string, billingName string, billingPeriod string, capabilities map[string]interface{}, createdAt time.Time, id string, memberRoles []map[string]interface{}, name string, ownerIds []string, paymentMethodId string, role string, rolesAllowed []string, slug string, typeId string, typeName string, typeSlug string, updatedAt time.Time, supportAdministrationEnabled bool, deployDiagnosticsSetting string, aiUsageEnabledSetting string, aiUsageLimitEnforced bool, configurableLimitsExceeded []string, autoTopupEnabled bool, creditAlertPercentage int64) *Account {
 	this := Account{}
 	this.BillingEmail = billingEmail
 	this.BillingName = billingName
+	this.BillingPeriod = billingPeriod
 	this.Capabilities = capabilities
 	this.CreatedAt = createdAt
 	this.Id = id
 	this.MemberRoles = memberRoles
 	this.Name = name
 	this.OwnerIds = ownerIds
+	this.PaymentMethodId = paymentMethodId
 	this.Role = role
 	this.RolesAllowed = rolesAllowed
 	this.Slug = slug
@@ -90,9 +87,7 @@ func NewAccount(billingEmail string, billingName string, capabilities map[string
 	this.AiUsageLimitEnforced = aiUsageLimitEnforced
 	this.ConfigurableLimitsExceeded = configurableLimitsExceeded
 	this.AutoTopupEnabled = autoTopupEnabled
-	this.BlockSiteTransfers = blockSiteTransfers
 	this.CreditAlertPercentage = creditAlertPercentage
-	this.InOperationalMode = inOperationalMode
 	return &this
 }
 
@@ -150,6 +145,30 @@ func (o *Account) GetBillingNameOk() (*string, bool) {
 // SetBillingName sets field value
 func (o *Account) SetBillingName(v string) {
 	o.BillingName = v
+}
+
+// GetBillingPeriod returns the BillingPeriod field value
+func (o *Account) GetBillingPeriod() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.BillingPeriod
+}
+
+// GetBillingPeriodOk returns a tuple with the BillingPeriod field value
+// and a boolean to check if the value has been set.
+func (o *Account) GetBillingPeriodOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.BillingPeriod, true
+}
+
+// SetBillingPeriod sets field value
+func (o *Account) SetBillingPeriod(v string) {
+	o.BillingPeriod = v
 }
 
 // GetCapabilities returns the Capabilities field value
@@ -294,6 +313,30 @@ func (o *Account) GetOwnerIdsOk() ([]string, bool) {
 // SetOwnerIds sets field value
 func (o *Account) SetOwnerIds(v []string) {
 	o.OwnerIds = v
+}
+
+// GetPaymentMethodId returns the PaymentMethodId field value
+func (o *Account) GetPaymentMethodId() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.PaymentMethodId
+}
+
+// GetPaymentMethodIdOk returns a tuple with the PaymentMethodId field value
+// and a boolean to check if the value has been set.
+func (o *Account) GetPaymentMethodIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.PaymentMethodId, true
+}
+
+// SetPaymentMethodId sets field value
+func (o *Account) SetPaymentMethodId(v string) {
+	o.PaymentMethodId = v
 }
 
 // GetRole returns the Role field value
@@ -593,9 +636,9 @@ func (o *Account) SetAiUsageLimitCredits(v int64) {
 }
 
 // GetConfigurableLimitsExceeded returns the ConfigurableLimitsExceeded field value
-func (o *Account) GetConfigurableLimitsExceeded() []ConfigurableLimitRecord {
+func (o *Account) GetConfigurableLimitsExceeded() []string {
 	if o == nil {
-		var ret []ConfigurableLimitRecord
+		var ret []string
 		return ret
 	}
 
@@ -604,7 +647,7 @@ func (o *Account) GetConfigurableLimitsExceeded() []ConfigurableLimitRecord {
 
 // GetConfigurableLimitsExceededOk returns a tuple with the ConfigurableLimitsExceeded field value
 // and a boolean to check if the value has been set.
-func (o *Account) GetConfigurableLimitsExceededOk() ([]ConfigurableLimitRecord, bool) {
+func (o *Account) GetConfigurableLimitsExceededOk() ([]string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -612,7 +655,7 @@ func (o *Account) GetConfigurableLimitsExceededOk() ([]ConfigurableLimitRecord, 
 }
 
 // SetConfigurableLimitsExceeded sets field value
-func (o *Account) SetConfigurableLimitsExceeded(v []ConfigurableLimitRecord) {
+func (o *Account) SetConfigurableLimitsExceeded(v []string) {
 	o.ConfigurableLimitsExceeded = v
 }
 
@@ -638,30 +681,6 @@ func (o *Account) GetAutoTopupEnabledOk() (*bool, bool) {
 // SetAutoTopupEnabled sets field value
 func (o *Account) SetAutoTopupEnabled(v bool) {
 	o.AutoTopupEnabled = v
-}
-
-// GetBlockSiteTransfers returns the BlockSiteTransfers field value
-func (o *Account) GetBlockSiteTransfers() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.BlockSiteTransfers
-}
-
-// GetBlockSiteTransfersOk returns a tuple with the BlockSiteTransfers field value
-// and a boolean to check if the value has been set.
-func (o *Account) GetBlockSiteTransfersOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.BlockSiteTransfers, true
-}
-
-// SetBlockSiteTransfers sets field value
-func (o *Account) SetBlockSiteTransfers(v bool) {
-	o.BlockSiteTransfers = v
 }
 
 // GetCreditAlertPercentage returns the CreditAlertPercentage field value
@@ -784,94 +803,6 @@ func (o *Account) SetPlanAutoTopupPerUnitCost(v string) {
 	o.PlanAutoTopupPerUnitCost = &v
 }
 
-// GetSwarAutoTopupCredits returns the SwarAutoTopupCredits field value if set, zero value otherwise.
-func (o *Account) GetSwarAutoTopupCredits() int64 {
-	if o == nil || IsNil(o.SwarAutoTopupCredits) {
-		var ret int64
-		return ret
-	}
-	return *o.SwarAutoTopupCredits
-}
-
-// GetSwarAutoTopupCreditsOk returns a tuple with the SwarAutoTopupCredits field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Account) GetSwarAutoTopupCreditsOk() (*int64, bool) {
-	if o == nil || IsNil(o.SwarAutoTopupCredits) {
-		return nil, false
-	}
-	return o.SwarAutoTopupCredits, true
-}
-
-// HasSwarAutoTopupCredits returns a boolean if a field has been set.
-func (o *Account) HasSwarAutoTopupCredits() bool {
-	if o != nil && !IsNil(o.SwarAutoTopupCredits) {
-		return true
-	}
-
-	return false
-}
-
-// SetSwarAutoTopupCredits gets a reference to the given int64 and assigns it to the SwarAutoTopupCredits field.
-func (o *Account) SetSwarAutoTopupCredits(v int64) {
-	o.SwarAutoTopupCredits = &v
-}
-
-// GetInOperationalMode returns the InOperationalMode field value
-func (o *Account) GetInOperationalMode() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.InOperationalMode
-}
-
-// GetInOperationalModeOk returns a tuple with the InOperationalMode field value
-// and a boolean to check if the value has been set.
-func (o *Account) GetInOperationalModeOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.InOperationalMode, true
-}
-
-// SetInOperationalMode sets field value
-func (o *Account) SetInOperationalMode(v bool) {
-	o.InOperationalMode = v
-}
-
-// GetGraceTopupGrantedAt returns the GraceTopupGrantedAt field value if set, zero value otherwise.
-func (o *Account) GetGraceTopupGrantedAt() time.Time {
-	if o == nil || IsNil(o.GraceTopupGrantedAt) {
-		var ret time.Time
-		return ret
-	}
-	return *o.GraceTopupGrantedAt
-}
-
-// GetGraceTopupGrantedAtOk returns a tuple with the GraceTopupGrantedAt field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Account) GetGraceTopupGrantedAtOk() (*time.Time, bool) {
-	if o == nil || IsNil(o.GraceTopupGrantedAt) {
-		return nil, false
-	}
-	return o.GraceTopupGrantedAt, true
-}
-
-// HasGraceTopupGrantedAt returns a boolean if a field has been set.
-func (o *Account) HasGraceTopupGrantedAt() bool {
-	if o != nil && !IsNil(o.GraceTopupGrantedAt) {
-		return true
-	}
-
-	return false
-}
-
-// SetGraceTopupGrantedAt gets a reference to the given time.Time and assigns it to the GraceTopupGrantedAt field.
-func (o *Account) SetGraceTopupGrantedAt(v time.Time) {
-	o.GraceTopupGrantedAt = &v
-}
-
 func (o Account) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -884,12 +815,14 @@ func (o Account) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["billing_email"] = o.BillingEmail
 	toSerialize["billing_name"] = o.BillingName
+	toSerialize["billing_period"] = o.BillingPeriod
 	toSerialize["capabilities"] = o.Capabilities
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["id"] = o.Id
 	toSerialize["member_roles"] = o.MemberRoles
 	toSerialize["name"] = o.Name
 	toSerialize["owner_ids"] = o.OwnerIds
+	toSerialize["payment_method_id"] = o.PaymentMethodId
 	toSerialize["role"] = o.Role
 	toSerialize["roles_allowed"] = o.RolesAllowed
 	toSerialize["slug"] = o.Slug
@@ -906,7 +839,6 @@ func (o Account) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["configurable_limits_exceeded"] = o.ConfigurableLimitsExceeded
 	toSerialize["auto_topup_enabled"] = o.AutoTopupEnabled
-	toSerialize["block_site_transfers"] = o.BlockSiteTransfers
 	toSerialize["credit_alert_percentage"] = o.CreditAlertPercentage
 	if !IsNil(o.PlanCredits) {
 		toSerialize["plan_credits"] = o.PlanCredits
@@ -916,13 +848,6 @@ func (o Account) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.PlanAutoTopupPerUnitCost) {
 		toSerialize["plan_auto_topup_per_unit_cost"] = o.PlanAutoTopupPerUnitCost
-	}
-	if !IsNil(o.SwarAutoTopupCredits) {
-		toSerialize["swar_auto_topup_credits"] = o.SwarAutoTopupCredits
-	}
-	toSerialize["in_operational_mode"] = o.InOperationalMode
-	if !IsNil(o.GraceTopupGrantedAt) {
-		toSerialize["grace_topup_granted_at"] = o.GraceTopupGrantedAt
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -939,12 +864,14 @@ func (o *Account) UnmarshalJSON(data []byte) (err error) {
 	requiredProperties := []string{
 		"billing_email",
 		"billing_name",
+		"billing_period",
 		"capabilities",
 		"created_at",
 		"id",
 		"member_roles",
 		"name",
 		"owner_ids",
+		"payment_method_id",
 		"role",
 		"roles_allowed",
 		"slug",
@@ -958,9 +885,7 @@ func (o *Account) UnmarshalJSON(data []byte) (err error) {
 		"ai_usage_limit_enforced",
 		"configurable_limits_exceeded",
 		"auto_topup_enabled",
-		"block_site_transfers",
 		"credit_alert_percentage",
-		"in_operational_mode",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -992,12 +917,14 @@ func (o *Account) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "billing_email")
 		delete(additionalProperties, "billing_name")
+		delete(additionalProperties, "billing_period")
 		delete(additionalProperties, "capabilities")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "member_roles")
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "owner_ids")
+		delete(additionalProperties, "payment_method_id")
 		delete(additionalProperties, "role")
 		delete(additionalProperties, "roles_allowed")
 		delete(additionalProperties, "slug")
@@ -1012,14 +939,10 @@ func (o *Account) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "ai_usage_limit_credits")
 		delete(additionalProperties, "configurable_limits_exceeded")
 		delete(additionalProperties, "auto_topup_enabled")
-		delete(additionalProperties, "block_site_transfers")
 		delete(additionalProperties, "credit_alert_percentage")
 		delete(additionalProperties, "plan_credits")
 		delete(additionalProperties, "plan_auto_topup_amount")
 		delete(additionalProperties, "plan_auto_topup_per_unit_cost")
-		delete(additionalProperties, "swar_auto_topup_credits")
-		delete(additionalProperties, "in_operational_mode")
-		delete(additionalProperties, "grace_topup_granted_at")
 		o.AdditionalProperties = additionalProperties
 	}
 

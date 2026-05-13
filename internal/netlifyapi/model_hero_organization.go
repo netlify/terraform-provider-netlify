@@ -29,12 +29,6 @@ type HeroOrganization struct {
 	AxPartner bool `json:"ax_partner"`
 	// The list of organization owners
 	Owners []map[string]interface{} `json:"owners"`
-	// Whether the organization uses Orb billing (feature flag enabled)
-	IsOrbEnabled bool `json:"is_orb_enabled"`
-	// Whether the organization has an OrbCustomer record
-	HasOrbCustomer bool `json:"has_orb_customer"`
-	// Whether the organization has a legacy Customer record
-	HasCustomer bool `json:"has_customer"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -44,16 +38,13 @@ type _HeroOrganization HeroOrganization
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewHeroOrganization(adminUrl string, capabilities map[string]interface{}, isAxPartner bool, axPartner bool, owners []map[string]interface{}, isOrbEnabled bool, hasOrbCustomer bool, hasCustomer bool) *HeroOrganization {
+func NewHeroOrganization(adminUrl string, capabilities map[string]interface{}, isAxPartner bool, axPartner bool, owners []map[string]interface{}) *HeroOrganization {
 	this := HeroOrganization{}
 	this.AdminUrl = adminUrl
 	this.Capabilities = capabilities
 	this.IsAxPartner = isAxPartner
 	this.AxPartner = axPartner
 	this.Owners = owners
-	this.IsOrbEnabled = isOrbEnabled
-	this.HasOrbCustomer = hasOrbCustomer
-	this.HasCustomer = hasCustomer
 	return &this
 }
 
@@ -185,78 +176,6 @@ func (o *HeroOrganization) SetOwners(v []map[string]interface{}) {
 	o.Owners = v
 }
 
-// GetIsOrbEnabled returns the IsOrbEnabled field value
-func (o *HeroOrganization) GetIsOrbEnabled() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.IsOrbEnabled
-}
-
-// GetIsOrbEnabledOk returns a tuple with the IsOrbEnabled field value
-// and a boolean to check if the value has been set.
-func (o *HeroOrganization) GetIsOrbEnabledOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.IsOrbEnabled, true
-}
-
-// SetIsOrbEnabled sets field value
-func (o *HeroOrganization) SetIsOrbEnabled(v bool) {
-	o.IsOrbEnabled = v
-}
-
-// GetHasOrbCustomer returns the HasOrbCustomer field value
-func (o *HeroOrganization) GetHasOrbCustomer() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.HasOrbCustomer
-}
-
-// GetHasOrbCustomerOk returns a tuple with the HasOrbCustomer field value
-// and a boolean to check if the value has been set.
-func (o *HeroOrganization) GetHasOrbCustomerOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.HasOrbCustomer, true
-}
-
-// SetHasOrbCustomer sets field value
-func (o *HeroOrganization) SetHasOrbCustomer(v bool) {
-	o.HasOrbCustomer = v
-}
-
-// GetHasCustomer returns the HasCustomer field value
-func (o *HeroOrganization) GetHasCustomer() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.HasCustomer
-}
-
-// GetHasCustomerOk returns a tuple with the HasCustomer field value
-// and a boolean to check if the value has been set.
-func (o *HeroOrganization) GetHasCustomerOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.HasCustomer, true
-}
-
-// SetHasCustomer sets field value
-func (o *HeroOrganization) SetHasCustomer(v bool) {
-	o.HasCustomer = v
-}
-
 func (o HeroOrganization) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -272,9 +191,6 @@ func (o HeroOrganization) ToMap() (map[string]interface{}, error) {
 	toSerialize["is_ax_partner"] = o.IsAxPartner
 	toSerialize["ax_partner"] = o.AxPartner
 	toSerialize["owners"] = o.Owners
-	toSerialize["is_orb_enabled"] = o.IsOrbEnabled
-	toSerialize["has_orb_customer"] = o.HasOrbCustomer
-	toSerialize["has_customer"] = o.HasCustomer
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -293,9 +209,6 @@ func (o *HeroOrganization) UnmarshalJSON(data []byte) (err error) {
 		"is_ax_partner",
 		"ax_partner",
 		"owners",
-		"is_orb_enabled",
-		"has_orb_customer",
-		"has_customer",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -330,9 +243,6 @@ func (o *HeroOrganization) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "is_ax_partner")
 		delete(additionalProperties, "ax_partner")
 		delete(additionalProperties, "owners")
-		delete(additionalProperties, "is_orb_enabled")
-		delete(additionalProperties, "has_orb_customer")
-		delete(additionalProperties, "has_customer")
 		o.AdditionalProperties = additionalProperties
 	}
 

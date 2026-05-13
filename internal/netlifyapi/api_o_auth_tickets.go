@@ -27,18 +27,11 @@ type ApiCreateTicketRequest struct {
 	ctx context.Context
 	ApiService *OAuthTicketsAPIService
 	clientId *string
-	message *string
 }
 
 // The UID of the OAuth application
 func (r ApiCreateTicketRequest) ClientId(clientId string) ApiCreateTicketRequest {
 	r.clientId = &clientId
-	return r
-}
-
-// Optional message describing the reason for the ticket request
-func (r ApiCreateTicketRequest) Message(message string) ApiCreateTicketRequest {
-	r.message = &message
 	return r
 }
 
@@ -84,9 +77,6 @@ func (a *OAuthTicketsAPIService) CreateTicketExecute(r ApiCreateTicketRequest) (
 
 	if r.clientId != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "client_id", r.clientId, "form", "")
-	}
-	if r.message != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "message", r.message, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}

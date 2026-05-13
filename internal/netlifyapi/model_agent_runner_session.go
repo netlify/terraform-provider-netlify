@@ -61,11 +61,10 @@ type AgentRunnerSession struct {
 	HasResultDiff *bool `json:"has_result_diff,omitempty"`
 	// Whether cumulative diff exists
 	HasCumulativeDiff *bool `json:"has_cumulative_diff,omitempty"`
-	// The mode of the session (normal, redeploy, rebase, conflict_resolution, git_sync, create, ask)
+	// The mode of the session (normal, redeploy, rebase)
 	Mode *string `json:"mode,omitempty"`
 	// The ID of the source session (for redeploy mode)
 	SourceSessionId *string `json:"source_session_id,omitempty"`
-	Usage *AgentRunnerSessionUsage `json:"usage,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -856,38 +855,6 @@ func (o *AgentRunnerSession) SetSourceSessionId(v string) {
 	o.SourceSessionId = &v
 }
 
-// GetUsage returns the Usage field value if set, zero value otherwise.
-func (o *AgentRunnerSession) GetUsage() AgentRunnerSessionUsage {
-	if o == nil || IsNil(o.Usage) {
-		var ret AgentRunnerSessionUsage
-		return ret
-	}
-	return *o.Usage
-}
-
-// GetUsageOk returns a tuple with the Usage field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *AgentRunnerSession) GetUsageOk() (*AgentRunnerSessionUsage, bool) {
-	if o == nil || IsNil(o.Usage) {
-		return nil, false
-	}
-	return o.Usage, true
-}
-
-// HasUsage returns a boolean if a field has been set.
-func (o *AgentRunnerSession) HasUsage() bool {
-	if o != nil && !IsNil(o.Usage) {
-		return true
-	}
-
-	return false
-}
-
-// SetUsage gets a reference to the given AgentRunnerSessionUsage and assigns it to the Usage field.
-func (o *AgentRunnerSession) SetUsage(v AgentRunnerSessionUsage) {
-	o.Usage = &v
-}
-
 func (o AgentRunnerSession) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -970,9 +937,6 @@ func (o AgentRunnerSession) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.SourceSessionId) {
 		toSerialize["source_session_id"] = o.SourceSessionId
 	}
-	if !IsNil(o.Usage) {
-		toSerialize["usage"] = o.Usage
-	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -1019,7 +983,6 @@ func (o *AgentRunnerSession) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "has_cumulative_diff")
 		delete(additionalProperties, "mode")
 		delete(additionalProperties, "source_session_id")
-		delete(additionalProperties, "usage")
 		o.AdditionalProperties = additionalProperties
 	}
 

@@ -21,8 +21,6 @@ var _ MappedNullable = &AgentRunnerSessionStep{}
 type AgentRunnerSessionStep struct {
 	Title *string `json:"title,omitempty"`
 	Message *string `json:"message,omitempty"`
-	Category *string `json:"category,omitempty"`
-	Type *string `json:"type,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -109,70 +107,6 @@ func (o *AgentRunnerSessionStep) SetMessage(v string) {
 	o.Message = &v
 }
 
-// GetCategory returns the Category field value if set, zero value otherwise.
-func (o *AgentRunnerSessionStep) GetCategory() string {
-	if o == nil || IsNil(o.Category) {
-		var ret string
-		return ret
-	}
-	return *o.Category
-}
-
-// GetCategoryOk returns a tuple with the Category field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *AgentRunnerSessionStep) GetCategoryOk() (*string, bool) {
-	if o == nil || IsNil(o.Category) {
-		return nil, false
-	}
-	return o.Category, true
-}
-
-// HasCategory returns a boolean if a field has been set.
-func (o *AgentRunnerSessionStep) HasCategory() bool {
-	if o != nil && !IsNil(o.Category) {
-		return true
-	}
-
-	return false
-}
-
-// SetCategory gets a reference to the given string and assigns it to the Category field.
-func (o *AgentRunnerSessionStep) SetCategory(v string) {
-	o.Category = &v
-}
-
-// GetType returns the Type field value if set, zero value otherwise.
-func (o *AgentRunnerSessionStep) GetType() string {
-	if o == nil || IsNil(o.Type) {
-		var ret string
-		return ret
-	}
-	return *o.Type
-}
-
-// GetTypeOk returns a tuple with the Type field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *AgentRunnerSessionStep) GetTypeOk() (*string, bool) {
-	if o == nil || IsNil(o.Type) {
-		return nil, false
-	}
-	return o.Type, true
-}
-
-// HasType returns a boolean if a field has been set.
-func (o *AgentRunnerSessionStep) HasType() bool {
-	if o != nil && !IsNil(o.Type) {
-		return true
-	}
-
-	return false
-}
-
-// SetType gets a reference to the given string and assigns it to the Type field.
-func (o *AgentRunnerSessionStep) SetType(v string) {
-	o.Type = &v
-}
-
 func (o AgentRunnerSessionStep) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -188,12 +122,6 @@ func (o AgentRunnerSessionStep) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Message) {
 		toSerialize["message"] = o.Message
-	}
-	if !IsNil(o.Category) {
-		toSerialize["category"] = o.Category
-	}
-	if !IsNil(o.Type) {
-		toSerialize["type"] = o.Type
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -219,8 +147,6 @@ func (o *AgentRunnerSessionStep) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "title")
 		delete(additionalProperties, "message")
-		delete(additionalProperties, "category")
-		delete(additionalProperties, "type")
 		o.AdditionalProperties = additionalProperties
 	}
 

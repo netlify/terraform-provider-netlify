@@ -139,7 +139,6 @@ Class | Method | HTTP request | Description
 *DeploysAPI* | [**CreateSiteDeploy**](docs/DeploysAPI.md#createsitedeploy) | **Post** /api/v1/sites/{site_id}/deploys | 
 *DeploysAPI* | [**DeleteDeploy**](docs/DeploysAPI.md#deletedeploy) | **Delete** /api/v1/deploys/{deploy_id} | 
 *DeploysAPI* | [**DeleteSiteDeploy**](docs/DeploysAPI.md#deletesitedeploy) | **Delete** /api/v1/sites/{site_id}/deploys/{deploy_id} | 
-*DeploysAPI* | [**DeleteSiteDeploysBySubdomain**](docs/DeploysAPI.md#deletesitedeploysbysubdomain) | **Delete** /api/v1/sites/{site_id}/deploys | 
 *DeploysAPI* | [**GetDeploy**](docs/DeploysAPI.md#getdeploy) | **Get** /api/v1/deploys/{deploy_id} | 
 *DeploysAPI* | [**GetDeploySourceDownloadUrl**](docs/DeploysAPI.md#getdeploysourcedownloadurl) | **Get** /api/v1/deploys/{deploy_id}/download | 
 *DeploysAPI* | [**GetSiteDeploy**](docs/DeploysAPI.md#getsitedeploy) | **Get** /api/v1/sites/{site_id}/deploys/{deploy_id} | 
@@ -270,7 +269,6 @@ Class | Method | HTTP request | Description
  - [AgentRunnerSession](docs/AgentRunnerSession.md)
  - [AgentRunnerSessionConfig](docs/AgentRunnerSessionConfig.md)
  - [AgentRunnerSessionStep](docs/AgentRunnerSessionStep.md)
- - [AgentRunnerSessionUsage](docs/AgentRunnerSessionUsage.md)
  - [AgentRunnerUser](docs/AgentRunnerUser.md)
  - [Asset](docs/Asset.md)
  - [AssetCreateForm](docs/AssetCreateForm.md)
@@ -311,7 +309,6 @@ Class | Method | HTTP request | Description
  - [CertificateInfo](docs/CertificateInfo.md)
  - [Committer](docs/Committer.md)
  - [CompositeTargetConfig](docs/CompositeTargetConfig.md)
- - [ConfigurableLimitRecord](docs/ConfigurableLimitRecord.md)
  - [ConnectBandwidthUsage](docs/ConnectBandwidthUsage.md)
  - [CreateAccountFirewallConfig](docs/CreateAccountFirewallConfig.md)
  - [CreateAccountRequest](docs/CreateAccountRequest.md)
@@ -329,10 +326,6 @@ Class | Method | HTTP request | Description
  - [CreateSiteFirewallConfig](docs/CreateSiteFirewallConfig.md)
  - [CreateSplitTestRequest](docs/CreateSplitTestRequest.md)
  - [Deploy](docs/Deploy.md)
- - [DeployDatabaseMigrations](docs/DeployDatabaseMigrations.md)
- - [DeployDatabaseMigrationsFilesInner](docs/DeployDatabaseMigrationsFilesInner.md)
- - [DeployDatabaseSnapshots](docs/DeployDatabaseSnapshots.md)
- - [DeployDatabaseSnapshotsSnapshotsInner](docs/DeployDatabaseSnapshotsSnapshotsInner.md)
  - [DeployKey](docs/DeployKey.md)
  - [DeploySimple](docs/DeploySimple.md)
  - [DeploySimpleState](docs/DeploySimpleState.md)
@@ -393,10 +386,8 @@ Class | Method | HTTP request | Description
  - [HeroUser](docs/HeroUser.md)
  - [HeroUserAccount](docs/HeroUserAccount.md)
  - [HeroUserSimple](docs/HeroUserSimple.md)
- - [HeroUserVisibility](docs/HeroUserVisibility.md)
  - [HighPerformanceFeatureAttributes](docs/HighPerformanceFeatureAttributes.md)
  - [IPTargetConfig](docs/IPTargetConfig.md)
- - [Insight](docs/Insight.md)
  - [Invite](docs/Invite.md)
  - [KeyValueTargetConfig](docs/KeyValueTargetConfig.md)
  - [LogDrain](docs/LogDrain.md)
@@ -411,7 +402,6 @@ Class | Method | HTTP request | Description
  - [MfaConfirmation](docs/MfaConfirmation.md)
  - [MfaSetup](docs/MfaSetup.md)
  - [OAuthTicket](docs/OAuthTicket.md)
- - [OrbInvoice](docs/OrbInvoice.md)
  - [Organization](docs/Organization.md)
  - [OrganizationAccount](docs/OrganizationAccount.md)
  - [OutgoingHook](docs/OutgoingHook.md)
@@ -420,7 +410,6 @@ Class | Method | HTTP request | Description
  - [PartialSite](docs/PartialSite.md)
  - [PaymentMethod](docs/PaymentMethod.md)
  - [PaymentMethodData](docs/PaymentMethodData.md)
- - [PlanChangeTransaction](docs/PlanChangeTransaction.md)
  - [Plugin](docs/Plugin.md)
  - [PluginCreateParams](docs/PluginCreateParams.md)
  - [PluginParams](docs/PluginParams.md)
@@ -450,7 +439,6 @@ Class | Method | HTTP request | Description
  - [SiteFileUploadResponse](docs/SiteFileUploadResponse.md)
  - [SiteFirewallConfig](docs/SiteFirewallConfig.md)
  - [SiteLabel](docs/SiteLabel.md)
- - [SiteMembership](docs/SiteMembership.md)
  - [SiteProcessingSettings](docs/SiteProcessingSettings.md)
  - [SiteProcessingSettingsHtml](docs/SiteProcessingSettingsHtml.md)
  - [SiteSimple](docs/SiteSimple.md)

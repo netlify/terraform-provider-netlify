@@ -3,6 +3,7 @@ DOCKER ?= docker
 GO_TEST_EXTRA_ARGS ?=
 
 INPUT_OPENAPI_SCHEMA ?=
+OPENAPI_PATCHED_SCHEMA ?= openapi-patched.json
 OPENAPI_SCHEMA ?= openapi.json
 
 help: ## Show this help.
@@ -71,7 +72,7 @@ clean-client: ## Remove existing generated API client files.
 
 client: clean-client ## Generate an API client from the OpenAPI schema.
 	@$(DOCKER) run --rm \
-		--mount type=bind,src=$(PWD),dst=/local \
+		--mount type=bind,src=$(PWD),dst=/local,rw,z \
 		docker.io/openapitools/openapi-generator-cli \
 		generate \
 		--additional-properties=disallowAdditionalPropertiesIfNotPresent=false,isGoSubmodule=true,packageName=netlifyapi,withGoMod=false \

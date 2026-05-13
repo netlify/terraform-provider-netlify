@@ -53,7 +53,6 @@ model_agent_runner.go
 model_agent_runner_session.go
 model_agent_runner_session_config.go
 model_agent_runner_session_step.go
-model_agent_runner_session_usage.go
 model_agent_runner_user.go
 model_asset.go
 model_asset_create_form.go
@@ -94,7 +93,6 @@ model_cert_order.go
 model_certificate_info.go
 model_committer.go
 model_composite_target_config.go
-model_configurable_limit_record.go
 model_connect_bandwidth_usage.go
 model_create_account_firewall_config.go
 model_create_account_request.go
@@ -112,10 +110,6 @@ model_create_site_deploy_request_functions_config_name_routes_inner.go
 model_create_site_firewall_config.go
 model_create_split_test_request.go
 model_deploy.go
-model_deploy_database_migrations.go
-model_deploy_database_migrations_files_inner.go
-model_deploy_database_snapshots.go
-model_deploy_database_snapshots_snapshots_inner.go
 model_deploy_key.go
 model_deploy_simple.go
 model_deploy_simple_state.go
@@ -176,9 +170,7 @@ model_hero_sites_summary.go
 model_hero_user.go
 model_hero_user_account.go
 model_hero_user_simple.go
-model_hero_user_visibility.go
 model_high_performance_feature_attributes.go
-model_insight.go
 model_invite.go
 model_ip_target_config.go
 model_key_value_target_config.go
@@ -194,7 +186,6 @@ model_member_committer_match_method.go
 model_mfa_confirmation.go
 model_mfa_setup.go
 model_o_auth_ticket.go
-model_orb_invoice.go
 model_organization.go
 model_organization_account.go
 model_outgoing_hook.go
@@ -203,7 +194,6 @@ model_outgoing_hook_type_fields_inner.go
 model_partial_site.go
 model_payment_method.go
 model_payment_method_data.go
-model_plan_change_transaction.go
 model_plugin.go
 model_plugin_create_params.go
 model_plugin_params.go
@@ -233,7 +223,6 @@ model_site_file.go
 model_site_file_upload_response.go
 model_site_firewall_config.go
 model_site_label.go
-model_site_membership.go
 model_site_processing_settings.go
 model_site_processing_settings_html.go
 model_site_simple.go

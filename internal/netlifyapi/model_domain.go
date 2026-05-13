@@ -25,8 +25,6 @@ type Domain struct {
 	Id string `json:"id"`
 	// The name of the domain
 	Name string `json:"name"`
-	// The ID of the account that owns the domain
-	AccountId string `json:"account_id"`
 	// The user ID of the domain creator
 	UserId string `json:"user_id"`
 	// When the domain expires
@@ -58,11 +56,10 @@ type _Domain Domain
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDomain(id string, name string, accountId string, userId string, expiresAt time.Time, registeredAt time.Time, renewalPrice string, autoRenew bool, authCode string, transferredAt time.Time, autoRenewAt time.Time, createdAt time.Time, updatedAt time.Time) *Domain {
+func NewDomain(id string, name string, userId string, expiresAt time.Time, registeredAt time.Time, renewalPrice string, autoRenew bool, authCode string, transferredAt time.Time, autoRenewAt time.Time, createdAt time.Time, updatedAt time.Time) *Domain {
 	this := Domain{}
 	this.Id = id
 	this.Name = name
-	this.AccountId = accountId
 	this.UserId = userId
 	this.ExpiresAt = expiresAt
 	this.RegisteredAt = registeredAt
@@ -130,30 +127,6 @@ func (o *Domain) GetNameOk() (*string, bool) {
 // SetName sets field value
 func (o *Domain) SetName(v string) {
 	o.Name = v
-}
-
-// GetAccountId returns the AccountId field value
-func (o *Domain) GetAccountId() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.AccountId
-}
-
-// GetAccountIdOk returns a tuple with the AccountId field value
-// and a boolean to check if the value has been set.
-func (o *Domain) GetAccountIdOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.AccountId, true
-}
-
-// SetAccountId sets field value
-func (o *Domain) SetAccountId(v string) {
-	o.AccountId = v
 }
 
 // GetUserId returns the UserId field value
@@ -440,7 +413,6 @@ func (o Domain) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id
 	toSerialize["name"] = o.Name
-	toSerialize["account_id"] = o.AccountId
 	toSerialize["user_id"] = o.UserId
 	toSerialize["expires_at"] = o.ExpiresAt
 	toSerialize["registered_at"] = o.RegisteredAt
@@ -469,7 +441,6 @@ func (o *Domain) UnmarshalJSON(data []byte) (err error) {
 	requiredProperties := []string{
 		"id",
 		"name",
-		"account_id",
 		"user_id",
 		"expires_at",
 		"registered_at",
@@ -511,7 +482,6 @@ func (o *Domain) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "name")
-		delete(additionalProperties, "account_id")
 		delete(additionalProperties, "user_id")
 		delete(additionalProperties, "expires_at")
 		delete(additionalProperties, "registered_at")

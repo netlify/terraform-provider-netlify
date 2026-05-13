@@ -21,25 +21,25 @@ var _ MappedNullable = &HeroAccount{}
 // HeroAccount HeroAccount model definition, see AccountUserMembershipSerializer for other fields
 type HeroAccount struct {
 	AdminUrl string `json:"admin_url"`
-	// Whether automatic top-up is currently enabled (only for credit-based plans)
-	AutoTopupEnabled *bool `json:"auto_topup_enabled,omitempty"`
-	BuildIds []string `json:"build_ids,omitempty"`
 	BuildNodePool string `json:"build_node_pool"`
 	BuildPreProcessTimeout int64 `json:"build_pre_process_timeout"`
 	BuildResources map[string]interface{} `json:"build_resources"`
 	BuildTimelimit int64 `json:"build_timelimit"`
-	ConcurrentUploadLimit int64 `json:"concurrent_upload_limit"`
 	DevServerResources map[string]interface{} `json:"dev_server_resources"`
-	// The dev server settings for the account
-	DevServerSettings map[string]interface{} `json:"dev_server_settings"`
+	ConcurrentUploadLimit int64 `json:"concurrent_upload_limit"`
+	FunctionsConfig map[string]interface{} `json:"functions_config"`
+	BuildIds *string `json:":build_ids,omitempty"`
+	OrbUrl *string `json:"orb_url,omitempty"`
+	SitesCount int64 `json:"sites_count"`
 	Dunning bool `json:"dunning"`
 	EnterpriseFeatures EnterpriseFeatures `json:"enterprise_features"`
-	FunctionsConfig map[string]interface{} `json:"functions_config"`
+	Prerender string `json:"prerender"`
+	// The dev server settings for the account
+	DevServerSettings map[string]interface{} `json:"dev_server_settings"`
 	// Whether the account is a credit-based plan
 	IsCreditBased *bool `json:"is_credit_based,omitempty"`
-	OrbUrl *string `json:"orb_url,omitempty"`
-	Prerender string `json:"prerender"`
-	SitesCount int64 `json:"sites_count"`
+	// Whether automatic top-up is currently enabled (only for credit-based plans)
+	AutoTopupEnabled *bool `json:"auto_topup_enabled,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -49,21 +49,21 @@ type _HeroAccount HeroAccount
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewHeroAccount(adminUrl string, buildNodePool string, buildPreProcessTimeout int64, buildResources map[string]interface{}, buildTimelimit int64, concurrentUploadLimit int64, devServerResources map[string]interface{}, devServerSettings map[string]interface{}, dunning bool, enterpriseFeatures EnterpriseFeatures, functionsConfig map[string]interface{}, prerender string, sitesCount int64) *HeroAccount {
+func NewHeroAccount(adminUrl string, buildNodePool string, buildPreProcessTimeout int64, buildResources map[string]interface{}, buildTimelimit int64, devServerResources map[string]interface{}, concurrentUploadLimit int64, functionsConfig map[string]interface{}, sitesCount int64, dunning bool, enterpriseFeatures EnterpriseFeatures, prerender string, devServerSettings map[string]interface{}) *HeroAccount {
 	this := HeroAccount{}
 	this.AdminUrl = adminUrl
 	this.BuildNodePool = buildNodePool
 	this.BuildPreProcessTimeout = buildPreProcessTimeout
 	this.BuildResources = buildResources
 	this.BuildTimelimit = buildTimelimit
-	this.ConcurrentUploadLimit = concurrentUploadLimit
 	this.DevServerResources = devServerResources
-	this.DevServerSettings = devServerSettings
+	this.ConcurrentUploadLimit = concurrentUploadLimit
+	this.FunctionsConfig = functionsConfig
+	this.SitesCount = sitesCount
 	this.Dunning = dunning
 	this.EnterpriseFeatures = enterpriseFeatures
-	this.FunctionsConfig = functionsConfig
 	this.Prerender = prerender
-	this.SitesCount = sitesCount
+	this.DevServerSettings = devServerSettings
 	return &this
 }
 
@@ -97,70 +97,6 @@ func (o *HeroAccount) GetAdminUrlOk() (*string, bool) {
 // SetAdminUrl sets field value
 func (o *HeroAccount) SetAdminUrl(v string) {
 	o.AdminUrl = v
-}
-
-// GetAutoTopupEnabled returns the AutoTopupEnabled field value if set, zero value otherwise.
-func (o *HeroAccount) GetAutoTopupEnabled() bool {
-	if o == nil || IsNil(o.AutoTopupEnabled) {
-		var ret bool
-		return ret
-	}
-	return *o.AutoTopupEnabled
-}
-
-// GetAutoTopupEnabledOk returns a tuple with the AutoTopupEnabled field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *HeroAccount) GetAutoTopupEnabledOk() (*bool, bool) {
-	if o == nil || IsNil(o.AutoTopupEnabled) {
-		return nil, false
-	}
-	return o.AutoTopupEnabled, true
-}
-
-// HasAutoTopupEnabled returns a boolean if a field has been set.
-func (o *HeroAccount) HasAutoTopupEnabled() bool {
-	if o != nil && !IsNil(o.AutoTopupEnabled) {
-		return true
-	}
-
-	return false
-}
-
-// SetAutoTopupEnabled gets a reference to the given bool and assigns it to the AutoTopupEnabled field.
-func (o *HeroAccount) SetAutoTopupEnabled(v bool) {
-	o.AutoTopupEnabled = &v
-}
-
-// GetBuildIds returns the BuildIds field value if set, zero value otherwise.
-func (o *HeroAccount) GetBuildIds() []string {
-	if o == nil || IsNil(o.BuildIds) {
-		var ret []string
-		return ret
-	}
-	return o.BuildIds
-}
-
-// GetBuildIdsOk returns a tuple with the BuildIds field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *HeroAccount) GetBuildIdsOk() ([]string, bool) {
-	if o == nil || IsNil(o.BuildIds) {
-		return nil, false
-	}
-	return o.BuildIds, true
-}
-
-// HasBuildIds returns a boolean if a field has been set.
-func (o *HeroAccount) HasBuildIds() bool {
-	if o != nil && !IsNil(o.BuildIds) {
-		return true
-	}
-
-	return false
-}
-
-// SetBuildIds gets a reference to the given []string and assigns it to the BuildIds field.
-func (o *HeroAccount) SetBuildIds(v []string) {
-	o.BuildIds = v
 }
 
 // GetBuildNodePool returns the BuildNodePool field value
@@ -259,30 +195,6 @@ func (o *HeroAccount) SetBuildTimelimit(v int64) {
 	o.BuildTimelimit = v
 }
 
-// GetConcurrentUploadLimit returns the ConcurrentUploadLimit field value
-func (o *HeroAccount) GetConcurrentUploadLimit() int64 {
-	if o == nil {
-		var ret int64
-		return ret
-	}
-
-	return o.ConcurrentUploadLimit
-}
-
-// GetConcurrentUploadLimitOk returns a tuple with the ConcurrentUploadLimit field value
-// and a boolean to check if the value has been set.
-func (o *HeroAccount) GetConcurrentUploadLimitOk() (*int64, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.ConcurrentUploadLimit, true
-}
-
-// SetConcurrentUploadLimit sets field value
-func (o *HeroAccount) SetConcurrentUploadLimit(v int64) {
-	o.ConcurrentUploadLimit = v
-}
-
 // GetDevServerResources returns the DevServerResources field value
 func (o *HeroAccount) GetDevServerResources() map[string]interface{} {
 	if o == nil {
@@ -307,28 +219,140 @@ func (o *HeroAccount) SetDevServerResources(v map[string]interface{}) {
 	o.DevServerResources = v
 }
 
-// GetDevServerSettings returns the DevServerSettings field value
-func (o *HeroAccount) GetDevServerSettings() map[string]interface{} {
+// GetConcurrentUploadLimit returns the ConcurrentUploadLimit field value
+func (o *HeroAccount) GetConcurrentUploadLimit() int64 {
+	if o == nil {
+		var ret int64
+		return ret
+	}
+
+	return o.ConcurrentUploadLimit
+}
+
+// GetConcurrentUploadLimitOk returns a tuple with the ConcurrentUploadLimit field value
+// and a boolean to check if the value has been set.
+func (o *HeroAccount) GetConcurrentUploadLimitOk() (*int64, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.ConcurrentUploadLimit, true
+}
+
+// SetConcurrentUploadLimit sets field value
+func (o *HeroAccount) SetConcurrentUploadLimit(v int64) {
+	o.ConcurrentUploadLimit = v
+}
+
+// GetFunctionsConfig returns the FunctionsConfig field value
+func (o *HeroAccount) GetFunctionsConfig() map[string]interface{} {
 	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
 
-	return o.DevServerSettings
+	return o.FunctionsConfig
 }
 
-// GetDevServerSettingsOk returns a tuple with the DevServerSettings field value
+// GetFunctionsConfigOk returns a tuple with the FunctionsConfig field value
 // and a boolean to check if the value has been set.
-func (o *HeroAccount) GetDevServerSettingsOk() (map[string]interface{}, bool) {
+func (o *HeroAccount) GetFunctionsConfigOk() (map[string]interface{}, bool) {
 	if o == nil {
 		return map[string]interface{}{}, false
 	}
-	return o.DevServerSettings, true
+	return o.FunctionsConfig, true
 }
 
-// SetDevServerSettings sets field value
-func (o *HeroAccount) SetDevServerSettings(v map[string]interface{}) {
-	o.DevServerSettings = v
+// SetFunctionsConfig sets field value
+func (o *HeroAccount) SetFunctionsConfig(v map[string]interface{}) {
+	o.FunctionsConfig = v
+}
+
+// GetBuildIds returns the BuildIds field value if set, zero value otherwise.
+func (o *HeroAccount) GetBuildIds() string {
+	if o == nil || IsNil(o.BuildIds) {
+		var ret string
+		return ret
+	}
+	return *o.BuildIds
+}
+
+// GetBuildIdsOk returns a tuple with the BuildIds field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *HeroAccount) GetBuildIdsOk() (*string, bool) {
+	if o == nil || IsNil(o.BuildIds) {
+		return nil, false
+	}
+	return o.BuildIds, true
+}
+
+// HasBuildIds returns a boolean if a field has been set.
+func (o *HeroAccount) HasBuildIds() bool {
+	if o != nil && !IsNil(o.BuildIds) {
+		return true
+	}
+
+	return false
+}
+
+// SetBuildIds gets a reference to the given string and assigns it to the BuildIds field.
+func (o *HeroAccount) SetBuildIds(v string) {
+	o.BuildIds = &v
+}
+
+// GetOrbUrl returns the OrbUrl field value if set, zero value otherwise.
+func (o *HeroAccount) GetOrbUrl() string {
+	if o == nil || IsNil(o.OrbUrl) {
+		var ret string
+		return ret
+	}
+	return *o.OrbUrl
+}
+
+// GetOrbUrlOk returns a tuple with the OrbUrl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *HeroAccount) GetOrbUrlOk() (*string, bool) {
+	if o == nil || IsNil(o.OrbUrl) {
+		return nil, false
+	}
+	return o.OrbUrl, true
+}
+
+// HasOrbUrl returns a boolean if a field has been set.
+func (o *HeroAccount) HasOrbUrl() bool {
+	if o != nil && !IsNil(o.OrbUrl) {
+		return true
+	}
+
+	return false
+}
+
+// SetOrbUrl gets a reference to the given string and assigns it to the OrbUrl field.
+func (o *HeroAccount) SetOrbUrl(v string) {
+	o.OrbUrl = &v
+}
+
+// GetSitesCount returns the SitesCount field value
+func (o *HeroAccount) GetSitesCount() int64 {
+	if o == nil {
+		var ret int64
+		return ret
+	}
+
+	return o.SitesCount
+}
+
+// GetSitesCountOk returns a tuple with the SitesCount field value
+// and a boolean to check if the value has been set.
+func (o *HeroAccount) GetSitesCountOk() (*int64, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.SitesCount, true
+}
+
+// SetSitesCount sets field value
+func (o *HeroAccount) SetSitesCount(v int64) {
+	o.SitesCount = v
 }
 
 // GetDunning returns the Dunning field value
@@ -379,28 +403,52 @@ func (o *HeroAccount) SetEnterpriseFeatures(v EnterpriseFeatures) {
 	o.EnterpriseFeatures = v
 }
 
-// GetFunctionsConfig returns the FunctionsConfig field value
-func (o *HeroAccount) GetFunctionsConfig() map[string]interface{} {
+// GetPrerender returns the Prerender field value
+func (o *HeroAccount) GetPrerender() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Prerender
+}
+
+// GetPrerenderOk returns a tuple with the Prerender field value
+// and a boolean to check if the value has been set.
+func (o *HeroAccount) GetPrerenderOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Prerender, true
+}
+
+// SetPrerender sets field value
+func (o *HeroAccount) SetPrerender(v string) {
+	o.Prerender = v
+}
+
+// GetDevServerSettings returns the DevServerSettings field value
+func (o *HeroAccount) GetDevServerSettings() map[string]interface{} {
 	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
 
-	return o.FunctionsConfig
+	return o.DevServerSettings
 }
 
-// GetFunctionsConfigOk returns a tuple with the FunctionsConfig field value
+// GetDevServerSettingsOk returns a tuple with the DevServerSettings field value
 // and a boolean to check if the value has been set.
-func (o *HeroAccount) GetFunctionsConfigOk() (map[string]interface{}, bool) {
+func (o *HeroAccount) GetDevServerSettingsOk() (map[string]interface{}, bool) {
 	if o == nil {
 		return map[string]interface{}{}, false
 	}
-	return o.FunctionsConfig, true
+	return o.DevServerSettings, true
 }
 
-// SetFunctionsConfig sets field value
-func (o *HeroAccount) SetFunctionsConfig(v map[string]interface{}) {
-	o.FunctionsConfig = v
+// SetDevServerSettings sets field value
+func (o *HeroAccount) SetDevServerSettings(v map[string]interface{}) {
+	o.DevServerSettings = v
 }
 
 // GetIsCreditBased returns the IsCreditBased field value if set, zero value otherwise.
@@ -435,84 +483,36 @@ func (o *HeroAccount) SetIsCreditBased(v bool) {
 	o.IsCreditBased = &v
 }
 
-// GetOrbUrl returns the OrbUrl field value if set, zero value otherwise.
-func (o *HeroAccount) GetOrbUrl() string {
-	if o == nil || IsNil(o.OrbUrl) {
-		var ret string
+// GetAutoTopupEnabled returns the AutoTopupEnabled field value if set, zero value otherwise.
+func (o *HeroAccount) GetAutoTopupEnabled() bool {
+	if o == nil || IsNil(o.AutoTopupEnabled) {
+		var ret bool
 		return ret
 	}
-	return *o.OrbUrl
+	return *o.AutoTopupEnabled
 }
 
-// GetOrbUrlOk returns a tuple with the OrbUrl field value if set, nil otherwise
+// GetAutoTopupEnabledOk returns a tuple with the AutoTopupEnabled field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *HeroAccount) GetOrbUrlOk() (*string, bool) {
-	if o == nil || IsNil(o.OrbUrl) {
+func (o *HeroAccount) GetAutoTopupEnabledOk() (*bool, bool) {
+	if o == nil || IsNil(o.AutoTopupEnabled) {
 		return nil, false
 	}
-	return o.OrbUrl, true
+	return o.AutoTopupEnabled, true
 }
 
-// HasOrbUrl returns a boolean if a field has been set.
-func (o *HeroAccount) HasOrbUrl() bool {
-	if o != nil && !IsNil(o.OrbUrl) {
+// HasAutoTopupEnabled returns a boolean if a field has been set.
+func (o *HeroAccount) HasAutoTopupEnabled() bool {
+	if o != nil && !IsNil(o.AutoTopupEnabled) {
 		return true
 	}
 
 	return false
 }
 
-// SetOrbUrl gets a reference to the given string and assigns it to the OrbUrl field.
-func (o *HeroAccount) SetOrbUrl(v string) {
-	o.OrbUrl = &v
-}
-
-// GetPrerender returns the Prerender field value
-func (o *HeroAccount) GetPrerender() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.Prerender
-}
-
-// GetPrerenderOk returns a tuple with the Prerender field value
-// and a boolean to check if the value has been set.
-func (o *HeroAccount) GetPrerenderOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.Prerender, true
-}
-
-// SetPrerender sets field value
-func (o *HeroAccount) SetPrerender(v string) {
-	o.Prerender = v
-}
-
-// GetSitesCount returns the SitesCount field value
-func (o *HeroAccount) GetSitesCount() int64 {
-	if o == nil {
-		var ret int64
-		return ret
-	}
-
-	return o.SitesCount
-}
-
-// GetSitesCountOk returns a tuple with the SitesCount field value
-// and a boolean to check if the value has been set.
-func (o *HeroAccount) GetSitesCountOk() (*int64, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.SitesCount, true
-}
-
-// SetSitesCount sets field value
-func (o *HeroAccount) SetSitesCount(v int64) {
-	o.SitesCount = v
+// SetAutoTopupEnabled gets a reference to the given bool and assigns it to the AutoTopupEnabled field.
+func (o *HeroAccount) SetAutoTopupEnabled(v bool) {
+	o.AutoTopupEnabled = &v
 }
 
 func (o HeroAccount) MarshalJSON() ([]byte, error) {
@@ -526,30 +526,30 @@ func (o HeroAccount) MarshalJSON() ([]byte, error) {
 func (o HeroAccount) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["admin_url"] = o.AdminUrl
-	if !IsNil(o.AutoTopupEnabled) {
-		toSerialize["auto_topup_enabled"] = o.AutoTopupEnabled
-	}
-	if !IsNil(o.BuildIds) {
-		toSerialize["build_ids"] = o.BuildIds
-	}
 	toSerialize["build_node_pool"] = o.BuildNodePool
 	toSerialize["build_pre_process_timeout"] = o.BuildPreProcessTimeout
 	toSerialize["build_resources"] = o.BuildResources
 	toSerialize["build_timelimit"] = o.BuildTimelimit
-	toSerialize["concurrent_upload_limit"] = o.ConcurrentUploadLimit
 	toSerialize["dev_server_resources"] = o.DevServerResources
-	toSerialize["dev_server_settings"] = o.DevServerSettings
-	toSerialize["dunning"] = o.Dunning
-	toSerialize["enterprise_features"] = o.EnterpriseFeatures
+	toSerialize["concurrent_upload_limit"] = o.ConcurrentUploadLimit
 	toSerialize["functions_config"] = o.FunctionsConfig
-	if !IsNil(o.IsCreditBased) {
-		toSerialize["is_credit_based"] = o.IsCreditBased
+	if !IsNil(o.BuildIds) {
+		toSerialize[":build_ids"] = o.BuildIds
 	}
 	if !IsNil(o.OrbUrl) {
 		toSerialize["orb_url"] = o.OrbUrl
 	}
-	toSerialize["prerender"] = o.Prerender
 	toSerialize["sites_count"] = o.SitesCount
+	toSerialize["dunning"] = o.Dunning
+	toSerialize["enterprise_features"] = o.EnterpriseFeatures
+	toSerialize["prerender"] = o.Prerender
+	toSerialize["dev_server_settings"] = o.DevServerSettings
+	if !IsNil(o.IsCreditBased) {
+		toSerialize["is_credit_based"] = o.IsCreditBased
+	}
+	if !IsNil(o.AutoTopupEnabled) {
+		toSerialize["auto_topup_enabled"] = o.AutoTopupEnabled
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -568,14 +568,14 @@ func (o *HeroAccount) UnmarshalJSON(data []byte) (err error) {
 		"build_pre_process_timeout",
 		"build_resources",
 		"build_timelimit",
-		"concurrent_upload_limit",
 		"dev_server_resources",
-		"dev_server_settings",
+		"concurrent_upload_limit",
+		"functions_config",
+		"sites_count",
 		"dunning",
 		"enterprise_features",
-		"functions_config",
 		"prerender",
-		"sites_count",
+		"dev_server_settings",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -606,22 +606,22 @@ func (o *HeroAccount) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "admin_url")
-		delete(additionalProperties, "auto_topup_enabled")
-		delete(additionalProperties, "build_ids")
 		delete(additionalProperties, "build_node_pool")
 		delete(additionalProperties, "build_pre_process_timeout")
 		delete(additionalProperties, "build_resources")
 		delete(additionalProperties, "build_timelimit")
-		delete(additionalProperties, "concurrent_upload_limit")
 		delete(additionalProperties, "dev_server_resources")
-		delete(additionalProperties, "dev_server_settings")
+		delete(additionalProperties, "concurrent_upload_limit")
+		delete(additionalProperties, "functions_config")
+		delete(additionalProperties, ":build_ids")
+		delete(additionalProperties, "orb_url")
+		delete(additionalProperties, "sites_count")
 		delete(additionalProperties, "dunning")
 		delete(additionalProperties, "enterprise_features")
-		delete(additionalProperties, "functions_config")
-		delete(additionalProperties, "is_credit_based")
-		delete(additionalProperties, "orb_url")
 		delete(additionalProperties, "prerender")
-		delete(additionalProperties, "sites_count")
+		delete(additionalProperties, "dev_server_settings")
+		delete(additionalProperties, "is_credit_based")
+		delete(additionalProperties, "auto_topup_enabled")
 		o.AdditionalProperties = additionalProperties
 	}
 
