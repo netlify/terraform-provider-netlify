@@ -71,6 +71,8 @@ type AgentRunner struct {
 	LatestSessionDeployId *string `json:"latest_session_deploy_id,omitempty"`
 	// The URL of the deploy preview from the latest session (if it has one)
 	LatestSessionDeployUrl *string `json:"latest_session_deploy_url,omitempty"`
+	// The screenshot URL of the deploy from the latest session (if it has one)
+	LatestSessionDeployScreenshotUrl *string `json:"latest_session_deploy_screenshot_url,omitempty"`
 	// Date of creation of the newest session
 	LastSessionCreatedAt *string `json:"last_session_created_at,omitempty"`
 	User *AgentRunnerUser `json:"user,omitempty"`
@@ -78,6 +80,16 @@ type AgentRunner struct {
 	Contributors []AgentRunnerUser `json:"contributors,omitempty"`
 	// Whether result diff exists
 	HasResultDiff *bool `json:"has_result_diff,omitempty"`
+	// The mode of the latest session
+	LatestSessionMode *string `json:"latest_session_mode,omitempty"`
+	// Whether the latest session has been published
+	LatestSessionIsPublished *bool `json:"latest_session_is_published,omitempty"`
+	// Whether the runner needs a git sync (code origin changed from zip to git)
+	NeedsGitSync *bool `json:"needs_git_sync,omitempty"`
+	// Whether a deploy-based rebase is available (non-git sites only)
+	RebaseAvailable *bool `json:"rebase_available,omitempty"`
+	// Whether a git merge-target operation is available (git-backed sites only)
+	MergeTargetAvailable *bool `json:"merge_target_available,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -932,6 +944,38 @@ func (o *AgentRunner) SetLatestSessionDeployUrl(v string) {
 	o.LatestSessionDeployUrl = &v
 }
 
+// GetLatestSessionDeployScreenshotUrl returns the LatestSessionDeployScreenshotUrl field value if set, zero value otherwise.
+func (o *AgentRunner) GetLatestSessionDeployScreenshotUrl() string {
+	if o == nil || IsNil(o.LatestSessionDeployScreenshotUrl) {
+		var ret string
+		return ret
+	}
+	return *o.LatestSessionDeployScreenshotUrl
+}
+
+// GetLatestSessionDeployScreenshotUrlOk returns a tuple with the LatestSessionDeployScreenshotUrl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentRunner) GetLatestSessionDeployScreenshotUrlOk() (*string, bool) {
+	if o == nil || IsNil(o.LatestSessionDeployScreenshotUrl) {
+		return nil, false
+	}
+	return o.LatestSessionDeployScreenshotUrl, true
+}
+
+// HasLatestSessionDeployScreenshotUrl returns a boolean if a field has been set.
+func (o *AgentRunner) HasLatestSessionDeployScreenshotUrl() bool {
+	if o != nil && !IsNil(o.LatestSessionDeployScreenshotUrl) {
+		return true
+	}
+
+	return false
+}
+
+// SetLatestSessionDeployScreenshotUrl gets a reference to the given string and assigns it to the LatestSessionDeployScreenshotUrl field.
+func (o *AgentRunner) SetLatestSessionDeployScreenshotUrl(v string) {
+	o.LatestSessionDeployScreenshotUrl = &v
+}
+
 // GetLastSessionCreatedAt returns the LastSessionCreatedAt field value if set, zero value otherwise.
 func (o *AgentRunner) GetLastSessionCreatedAt() string {
 	if o == nil || IsNil(o.LastSessionCreatedAt) {
@@ -1060,6 +1104,166 @@ func (o *AgentRunner) SetHasResultDiff(v bool) {
 	o.HasResultDiff = &v
 }
 
+// GetLatestSessionMode returns the LatestSessionMode field value if set, zero value otherwise.
+func (o *AgentRunner) GetLatestSessionMode() string {
+	if o == nil || IsNil(o.LatestSessionMode) {
+		var ret string
+		return ret
+	}
+	return *o.LatestSessionMode
+}
+
+// GetLatestSessionModeOk returns a tuple with the LatestSessionMode field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentRunner) GetLatestSessionModeOk() (*string, bool) {
+	if o == nil || IsNil(o.LatestSessionMode) {
+		return nil, false
+	}
+	return o.LatestSessionMode, true
+}
+
+// HasLatestSessionMode returns a boolean if a field has been set.
+func (o *AgentRunner) HasLatestSessionMode() bool {
+	if o != nil && !IsNil(o.LatestSessionMode) {
+		return true
+	}
+
+	return false
+}
+
+// SetLatestSessionMode gets a reference to the given string and assigns it to the LatestSessionMode field.
+func (o *AgentRunner) SetLatestSessionMode(v string) {
+	o.LatestSessionMode = &v
+}
+
+// GetLatestSessionIsPublished returns the LatestSessionIsPublished field value if set, zero value otherwise.
+func (o *AgentRunner) GetLatestSessionIsPublished() bool {
+	if o == nil || IsNil(o.LatestSessionIsPublished) {
+		var ret bool
+		return ret
+	}
+	return *o.LatestSessionIsPublished
+}
+
+// GetLatestSessionIsPublishedOk returns a tuple with the LatestSessionIsPublished field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentRunner) GetLatestSessionIsPublishedOk() (*bool, bool) {
+	if o == nil || IsNil(o.LatestSessionIsPublished) {
+		return nil, false
+	}
+	return o.LatestSessionIsPublished, true
+}
+
+// HasLatestSessionIsPublished returns a boolean if a field has been set.
+func (o *AgentRunner) HasLatestSessionIsPublished() bool {
+	if o != nil && !IsNil(o.LatestSessionIsPublished) {
+		return true
+	}
+
+	return false
+}
+
+// SetLatestSessionIsPublished gets a reference to the given bool and assigns it to the LatestSessionIsPublished field.
+func (o *AgentRunner) SetLatestSessionIsPublished(v bool) {
+	o.LatestSessionIsPublished = &v
+}
+
+// GetNeedsGitSync returns the NeedsGitSync field value if set, zero value otherwise.
+func (o *AgentRunner) GetNeedsGitSync() bool {
+	if o == nil || IsNil(o.NeedsGitSync) {
+		var ret bool
+		return ret
+	}
+	return *o.NeedsGitSync
+}
+
+// GetNeedsGitSyncOk returns a tuple with the NeedsGitSync field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentRunner) GetNeedsGitSyncOk() (*bool, bool) {
+	if o == nil || IsNil(o.NeedsGitSync) {
+		return nil, false
+	}
+	return o.NeedsGitSync, true
+}
+
+// HasNeedsGitSync returns a boolean if a field has been set.
+func (o *AgentRunner) HasNeedsGitSync() bool {
+	if o != nil && !IsNil(o.NeedsGitSync) {
+		return true
+	}
+
+	return false
+}
+
+// SetNeedsGitSync gets a reference to the given bool and assigns it to the NeedsGitSync field.
+func (o *AgentRunner) SetNeedsGitSync(v bool) {
+	o.NeedsGitSync = &v
+}
+
+// GetRebaseAvailable returns the RebaseAvailable field value if set, zero value otherwise.
+func (o *AgentRunner) GetRebaseAvailable() bool {
+	if o == nil || IsNil(o.RebaseAvailable) {
+		var ret bool
+		return ret
+	}
+	return *o.RebaseAvailable
+}
+
+// GetRebaseAvailableOk returns a tuple with the RebaseAvailable field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentRunner) GetRebaseAvailableOk() (*bool, bool) {
+	if o == nil || IsNil(o.RebaseAvailable) {
+		return nil, false
+	}
+	return o.RebaseAvailable, true
+}
+
+// HasRebaseAvailable returns a boolean if a field has been set.
+func (o *AgentRunner) HasRebaseAvailable() bool {
+	if o != nil && !IsNil(o.RebaseAvailable) {
+		return true
+	}
+
+	return false
+}
+
+// SetRebaseAvailable gets a reference to the given bool and assigns it to the RebaseAvailable field.
+func (o *AgentRunner) SetRebaseAvailable(v bool) {
+	o.RebaseAvailable = &v
+}
+
+// GetMergeTargetAvailable returns the MergeTargetAvailable field value if set, zero value otherwise.
+func (o *AgentRunner) GetMergeTargetAvailable() bool {
+	if o == nil || IsNil(o.MergeTargetAvailable) {
+		var ret bool
+		return ret
+	}
+	return *o.MergeTargetAvailable
+}
+
+// GetMergeTargetAvailableOk returns a tuple with the MergeTargetAvailable field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentRunner) GetMergeTargetAvailableOk() (*bool, bool) {
+	if o == nil || IsNil(o.MergeTargetAvailable) {
+		return nil, false
+	}
+	return o.MergeTargetAvailable, true
+}
+
+// HasMergeTargetAvailable returns a boolean if a field has been set.
+func (o *AgentRunner) HasMergeTargetAvailable() bool {
+	if o != nil && !IsNil(o.MergeTargetAvailable) {
+		return true
+	}
+
+	return false
+}
+
+// SetMergeTargetAvailable gets a reference to the given bool and assigns it to the MergeTargetAvailable field.
+func (o *AgentRunner) SetMergeTargetAvailable(v bool) {
+	o.MergeTargetAvailable = &v
+}
+
 func (o AgentRunner) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -1148,6 +1352,9 @@ func (o AgentRunner) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.LatestSessionDeployUrl) {
 		toSerialize["latest_session_deploy_url"] = o.LatestSessionDeployUrl
 	}
+	if !IsNil(o.LatestSessionDeployScreenshotUrl) {
+		toSerialize["latest_session_deploy_screenshot_url"] = o.LatestSessionDeployScreenshotUrl
+	}
 	if !IsNil(o.LastSessionCreatedAt) {
 		toSerialize["last_session_created_at"] = o.LastSessionCreatedAt
 	}
@@ -1159,6 +1366,21 @@ func (o AgentRunner) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.HasResultDiff) {
 		toSerialize["has_result_diff"] = o.HasResultDiff
+	}
+	if !IsNil(o.LatestSessionMode) {
+		toSerialize["latest_session_mode"] = o.LatestSessionMode
+	}
+	if !IsNil(o.LatestSessionIsPublished) {
+		toSerialize["latest_session_is_published"] = o.LatestSessionIsPublished
+	}
+	if !IsNil(o.NeedsGitSync) {
+		toSerialize["needs_git_sync"] = o.NeedsGitSync
+	}
+	if !IsNil(o.RebaseAvailable) {
+		toSerialize["rebase_available"] = o.RebaseAvailable
+	}
+	if !IsNil(o.MergeTargetAvailable) {
+		toSerialize["merge_target_available"] = o.MergeTargetAvailable
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -1208,10 +1430,16 @@ func (o *AgentRunner) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "base_deploy_id")
 		delete(additionalProperties, "latest_session_deploy_id")
 		delete(additionalProperties, "latest_session_deploy_url")
+		delete(additionalProperties, "latest_session_deploy_screenshot_url")
 		delete(additionalProperties, "last_session_created_at")
 		delete(additionalProperties, "user")
 		delete(additionalProperties, "contributors")
 		delete(additionalProperties, "has_result_diff")
+		delete(additionalProperties, "latest_session_mode")
+		delete(additionalProperties, "latest_session_is_published")
+		delete(additionalProperties, "needs_git_sync")
+		delete(additionalProperties, "rebase_available")
+		delete(additionalProperties, "merge_target_available")
 		o.AdditionalProperties = additionalProperties
 	}
 

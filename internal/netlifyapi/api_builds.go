@@ -29,7 +29,9 @@ type ApiCreateSiteBuildRequest struct {
 	siteId string
 	branch *string
 	clearCache *bool
+	commitSha *string
 	image *string
+	reviewId *int64
 	templateId *string
 	title *string
 }
@@ -46,9 +48,21 @@ func (r ApiCreateSiteBuildRequest) ClearCache(clearCache bool) ApiCreateSiteBuil
 	return r
 }
 
+// The commit SHA to build; when omitted, fetched from the git host API
+func (r ApiCreateSiteBuildRequest) CommitSha(commitSha string) ApiCreateSiteBuildRequest {
+	r.commitSha = &commitSha
+	return r
+}
+
 // The build image tag to use for the build
 func (r ApiCreateSiteBuildRequest) Image(image string) ApiCreateSiteBuildRequest {
 	r.image = &image
+	return r
+}
+
+// The merge/pull request ID to build; triggers a deploy preview
+func (r ApiCreateSiteBuildRequest) ReviewId(reviewId int64) ApiCreateSiteBuildRequest {
+	r.reviewId = &reviewId
 	return r
 }
 
@@ -58,7 +72,7 @@ func (r ApiCreateSiteBuildRequest) TemplateId(templateId string) ApiCreateSiteBu
 	return r
 }
 
-// The title of the build
+// The title of the build; overrides any title fetched from the git host
 func (r ApiCreateSiteBuildRequest) Title(title string) ApiCreateSiteBuildRequest {
 	r.title = &title
 	return r
@@ -114,8 +128,14 @@ func (a *BuildsAPIService) CreateSiteBuildExecute(r ApiCreateSiteBuildRequest) (
 	if r.clearCache != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "clear_cache", r.clearCache, "form", "")
 	}
+	if r.commitSha != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "commit_sha", r.commitSha, "form", "")
+	}
 	if r.image != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "image", r.image, "form", "")
+	}
+	if r.reviewId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "review_id", r.reviewId, "form", "")
 	}
 	if r.templateId != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "template_id", r.templateId, "form", "")
@@ -311,7 +331,10 @@ func (r ApiGetBuildZipDownloadUrlRequest) Execute() (*GetSiteAssetPublicSignatur
 /*
 GetBuildZipDownloadUrl Method for GetBuildZipDownloadUrl
 
-Get a presigned download URL for the build zip file.
+Get a presigned download URL for the source code at this build's
+deploy. Delegates to Deploy#source_zip_download_url, which is the
+single source of truth for source-code zip resolution (cached zip
+→ build's uploaded zip → on-demand generation from git).
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param buildId build_id
@@ -506,6 +529,13 @@ type ApiListSiteBuildsRequest struct {
 	ctx context.Context
 	ApiService *BuildsAPIService
 	siteId string
+	sha *string
+}
+
+// Filter builds by commit SHA
+func (r ApiListSiteBuildsRequest) Sha(sha string) ApiListSiteBuildsRequest {
+	r.sha = &sha
+	return r
 }
 
 func (r ApiListSiteBuildsRequest) Execute() ([]Build, *http.Response, error) {
@@ -549,6 +579,9 @@ func (a *BuildsAPIService) ListSiteBuildsExecute(r ApiListSiteBuildsRequest) ([]
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.sha != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "sha", r.sha, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 

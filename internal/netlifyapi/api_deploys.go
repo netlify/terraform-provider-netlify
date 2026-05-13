@@ -461,6 +461,121 @@ func (a *DeploysAPIService) DeleteSiteDeployExecute(r ApiDeleteSiteDeployRequest
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiDeleteSiteDeploysBySubdomainRequest struct {
+	ctx context.Context
+	ApiService *DeploysAPIService
+	siteId string
+	subdomainAlias *string
+}
+
+// The subdomain alias to delete deploys for (e.g. \&quot;deploy-preview-42\&quot; or \&quot;my-branch\&quot;)
+func (r ApiDeleteSiteDeploysBySubdomainRequest) SubdomainAlias(subdomainAlias string) ApiDeleteSiteDeploysBySubdomainRequest {
+	r.subdomainAlias = &subdomainAlias
+	return r
+}
+
+func (r ApiDeleteSiteDeploysBySubdomainRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteSiteDeploysBySubdomainExecute(r)
+}
+
+/*
+DeleteSiteDeploysBySubdomain Method for DeleteSiteDeploysBySubdomain
+
+Soft-deletes all deploys matching a subdomain alias for a site.
+This is useful for cleaning up all deploys from a deploy preview
+or branch deploy.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param siteId The ID of the site
+ @return ApiDeleteSiteDeploysBySubdomainRequest
+*/
+func (a *DeploysAPIService) DeleteSiteDeploysBySubdomain(ctx context.Context, siteId string) ApiDeleteSiteDeploysBySubdomainRequest {
+	return ApiDeleteSiteDeploysBySubdomainRequest{
+		ApiService: a,
+		ctx: ctx,
+		siteId: siteId,
+	}
+}
+
+// Execute executes the request
+func (a *DeploysAPIService) DeleteSiteDeploysBySubdomainExecute(r ApiDeleteSiteDeploysBySubdomainRequest) (*http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodDelete
+		localVarPostBody     interface{}
+		formFiles            []formFile
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DeploysAPIService.DeleteSiteDeploysBySubdomain")
+	if err != nil {
+		return nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/v1/sites/{site_id}/deploys"
+	localVarPath = strings.Replace(localVarPath, "{"+"site_id"+"}", url.PathEscape(parameterValueToString(r.siteId, "siteId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.subdomainAlias == nil {
+		return nil, reportError("subdomainAlias is required and must be specified")
+	}
+
+	parameterAddToHeaderOrQuery(localVarQueryParams, "subdomain_alias", r.subdomainAlias, "form", "")
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 422 {
+			var v UpdateSiteBuildLog422Response
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
 type ApiGetDeployRequest struct {
 	ctx context.Context
 	ApiService *DeploysAPIService

@@ -269,18 +269,41 @@ type ApiListMembersForAccountRequest struct {
 	ctx context.Context
 	ApiService *MembersAPIService
 	accountId string
+	activeSince *string
 	emails *[]string
+	inactiveSince *string
+	orderBy *string
 	page *string
 	perPage *string
 	roles *[]string
+	search *string
+	siteAccess *string
 	siteId *string
 	sortBy *string
 	states *[]string
 }
 
+// ISO 8601 date-time. Returns members whose last_activity_at is on or after this time.
+func (r ApiListMembersForAccountRequest) ActiveSince(activeSince string) ApiListMembersForAccountRequest {
+	r.activeSince = &activeSince
+	return r
+}
+
 // Search for members in email field
 func (r ApiListMembersForAccountRequest) Emails(emails []string) ApiListMembersForAccountRequest {
 	r.emails = &emails
+	return r
+}
+
+// ISO 8601 date-time. Returns members whose last_activity_at is before this time OR who have never been active.
+func (r ApiListMembersForAccountRequest) InactiveSince(inactiveSince string) ApiListMembersForAccountRequest {
+	r.inactiveSince = &inactiveSince
+	return r
+}
+
+// Sort direction. Defaults to desc (descending).
+func (r ApiListMembersForAccountRequest) OrderBy(orderBy string) ApiListMembersForAccountRequest {
+	r.orderBy = &orderBy
 	return r
 }
 
@@ -302,13 +325,25 @@ func (r ApiListMembersForAccountRequest) Roles(roles []string) ApiListMembersFor
 	return r
 }
 
+// Search for members by email or full name
+func (r ApiListMembersForAccountRequest) Search(search string) ApiListMembersForAccountRequest {
+	r.search = &search
+	return r
+}
+
+// Filter members by site access level
+func (r ApiListMembersForAccountRequest) SiteAccess(siteAccess string) ApiListMembersForAccountRequest {
+	r.siteAccess = &siteAccess
+	return r
+}
+
 // Filter members by a site
 func (r ApiListMembersForAccountRequest) SiteId(siteId string) ApiListMembersForAccountRequest {
 	r.siteId = &siteId
 	return r
 }
 
-// Field of member to sort by (descending). When reviewer role is specified self_invite_pending and invite_pending are the defaults.
+// Field of member to sort by. When only the reviewer role is specified, self_invite_pending and invite_pending are the defaults.
 func (r ApiListMembersForAccountRequest) SortBy(sortBy string) ApiListMembersForAccountRequest {
 	r.sortBy = &sortBy
 	return r
@@ -363,6 +398,9 @@ func (a *MembersAPIService) ListMembersForAccountExecute(r ApiListMembersForAcco
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.activeSince != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "active_since", r.activeSince, "form", "")
+	}
 	if r.emails != nil {
 		t := *r.emails
 		if reflect.TypeOf(t).Kind() == reflect.Slice {
@@ -373,6 +411,12 @@ func (a *MembersAPIService) ListMembersForAccountExecute(r ApiListMembersForAcco
 		} else {
 			parameterAddToHeaderOrQuery(localVarQueryParams, "emails", t, "form", "multi")
 		}
+	}
+	if r.inactiveSince != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "inactive_since", r.inactiveSince, "form", "")
+	}
+	if r.orderBy != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "order_by", r.orderBy, "form", "")
 	}
 	if r.page != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "page", r.page, "form", "")
@@ -390,6 +434,12 @@ func (a *MembersAPIService) ListMembersForAccountExecute(r ApiListMembersForAcco
 		} else {
 			parameterAddToHeaderOrQuery(localVarQueryParams, "roles", t, "form", "multi")
 		}
+	}
+	if r.search != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "search", r.search, "form", "")
+	}
+	if r.siteAccess != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "site_access", r.siteAccess, "form", "")
 	}
 	if r.siteId != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "site_id", r.siteId, "form", "")
