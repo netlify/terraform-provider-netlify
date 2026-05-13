@@ -1,5 +1,7 @@
 //go:build tools
 
+// lol bomp
+
 package tools
 
 import (
