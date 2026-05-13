@@ -1,0 +1,49 @@
+name: Scheduled Tests
+
+on:
+  schedule:
+    - cron: "0 16 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Terraform Provider Acceptance Tests
+    runs-on: ubuntu-latest
+    concurrency:
+      group: acc-tests-netlify
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        terraform:
+          - "1.0.*"
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
+        with:
+          go-version-file: "go.mod"
+          cache: true
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        with:
+          terraform_version: ${{ matrix.terraform }}
+          terraform_wrapper: false
+      - run: go mod download
+      - name: Run acceptance tests
+        env:
+          TF_ACC: "1"
+          NETLIFY_API_TOKEN: ${{ secrets.NETLIFY_API_TOKEN }}
+          MAX_ATTEMPTS: ${{ github.event_name == 'schedule' && '3' || '1' }}
+        run: |
+          for attempt in $(seq 1 "$MAX_ATTEMPTS"); do
+            echo "::group::Attempt $attempt of $MAX_ATTEMPTS"
+            if go test -v -cover ./internal/provider/; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+          done
+          exit 1
+        timeout-minutes: 10
