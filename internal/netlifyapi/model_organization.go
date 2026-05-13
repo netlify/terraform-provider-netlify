@@ -36,7 +36,7 @@ type Organization struct {
 	// The logo url of the organization
 	LogoUrl string `json:"logo_url"`
 	// Billing Period
-	BillingPeriod string `json:"billing_period"`
+	BillingPeriod *string `json:"billing_period,omitempty"`
 	// Whether the organization uses invoices
 	Invoicing bool `json:"invoicing"`
 	// The number of days to pay the invoice; Only applies to organizations where invoicing is true.  Value values: *30*, *60*, *null*, defaults to 30.
@@ -107,7 +107,7 @@ type _Organization Organization
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewOrganization(slug string, id string, name string, createdAt time.Time, updatedAt time.Time, billingEmail string, logoUrl string, billingPeriod string, invoicing bool, paymentTerm int64, paymentMethodId string, sandbox bool, billCycleDay int64, contractStartDate time.Time, contractEndDate time.Time, contractTermMonths int64, autoRenew bool, purchaseOrder string, firstName string, lastName string, companyName string, address1 string, address2 string, city string, state string, postalCode string, country string, samlEnabled bool, enforceSaml NullableString, enforceMfa NullableString, capabilities map[string]interface{}, supportAdministrationEnabled bool, directorySyncConnectedAt NullableTime, directorySyncActivatedAt NullableTime, directorySyncDeactivatedAt NullableTime, directorySyncDeletedAt NullableTime, samlEnabledAt NullableTime, totalMemberCount int64, axPartner bool) *Organization {
+func NewOrganization(slug string, id string, name string, createdAt time.Time, updatedAt time.Time, billingEmail string, logoUrl string, invoicing bool, paymentTerm int64, paymentMethodId string, sandbox bool, billCycleDay int64, contractStartDate time.Time, contractEndDate time.Time, contractTermMonths int64, autoRenew bool, purchaseOrder string, firstName string, lastName string, companyName string, address1 string, address2 string, city string, state string, postalCode string, country string, samlEnabled bool, enforceSaml NullableString, enforceMfa NullableString, capabilities map[string]interface{}, supportAdministrationEnabled bool, directorySyncConnectedAt NullableTime, directorySyncActivatedAt NullableTime, directorySyncDeactivatedAt NullableTime, directorySyncDeletedAt NullableTime, samlEnabledAt NullableTime, totalMemberCount int64, axPartner bool) *Organization {
 	this := Organization{}
 	this.Slug = slug
 	this.Id = id
@@ -116,7 +116,6 @@ func NewOrganization(slug string, id string, name string, createdAt time.Time, u
 	this.UpdatedAt = updatedAt
 	this.BillingEmail = billingEmail
 	this.LogoUrl = logoUrl
-	this.BillingPeriod = billingPeriod
 	this.Invoicing = invoicing
 	this.PaymentTerm = paymentTerm
 	this.PaymentMethodId = paymentMethodId
@@ -327,28 +326,36 @@ func (o *Organization) SetLogoUrl(v string) {
 	o.LogoUrl = v
 }
 
-// GetBillingPeriod returns the BillingPeriod field value
+// GetBillingPeriod returns the BillingPeriod field value if set, zero value otherwise.
 func (o *Organization) GetBillingPeriod() string {
-	if o == nil {
+	if o == nil || IsNil(o.BillingPeriod) {
 		var ret string
 		return ret
 	}
-
-	return o.BillingPeriod
+	return *o.BillingPeriod
 }
 
-// GetBillingPeriodOk returns a tuple with the BillingPeriod field value
+// GetBillingPeriodOk returns a tuple with the BillingPeriod field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Organization) GetBillingPeriodOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.BillingPeriod) {
 		return nil, false
 	}
-	return &o.BillingPeriod, true
+	return o.BillingPeriod, true
 }
 
-// SetBillingPeriod sets field value
+// HasBillingPeriod returns a boolean if a field has been set.
+func (o *Organization) HasBillingPeriod() bool {
+	if o != nil && !IsNil(o.BillingPeriod) {
+		return true
+	}
+
+	return false
+}
+
+// SetBillingPeriod gets a reference to the given string and assigns it to the BillingPeriod field.
 func (o *Organization) SetBillingPeriod(v string) {
-	o.BillingPeriod = v
+	o.BillingPeriod = &v
 }
 
 // GetInvoicing returns the Invoicing field value
@@ -1126,7 +1133,9 @@ func (o Organization) ToMap() (map[string]interface{}, error) {
 	toSerialize["updated_at"] = o.UpdatedAt
 	toSerialize["billing_email"] = o.BillingEmail
 	toSerialize["logo_url"] = o.LogoUrl
-	toSerialize["billing_period"] = o.BillingPeriod
+	if !IsNil(o.BillingPeriod) {
+		toSerialize["billing_period"] = o.BillingPeriod
+	}
 	toSerialize["invoicing"] = o.Invoicing
 	toSerialize["payment_term"] = o.PaymentTerm
 	toSerialize["payment_method_id"] = o.PaymentMethodId
@@ -1178,7 +1187,6 @@ func (o *Organization) UnmarshalJSON(data []byte) (err error) {
 		"updated_at",
 		"billing_email",
 		"logo_url",
-		"billing_period",
 		"invoicing",
 		"payment_term",
 		"payment_method_id",
