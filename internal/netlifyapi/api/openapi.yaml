@@ -10783,7 +10783,6 @@ components:
       - ax_partner
       - bill_cycle_day
       - billing_email
-      - billing_period
       - capabilities
       - city
       - company_name

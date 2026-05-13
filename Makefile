@@ -56,6 +56,7 @@ endif
 		| jq '.paths["/api/v1/accounts/{account_id}/env/{env_key}"].put.parameters |= map(select(.name != "is_secret"))' \
 		| jq '.components.schemas.EnvVar.required |= map(select(. != "scopes"))' \
 		| jq 'del(.components.schemas.LogDrainServiceConfig.required)' \
+		| jq '.components.schemas.Organization.required |= map(select(. != "billing_period"))' \
 		| jq '.components.schemas.Site.required |= map(select(. != "password"))' \
 		| jq '.components.schemas.Site.required |= map(select(. != "password_context"))' \
 		| jq '.components.schemas.Site.required |= map(select(. != "password_hash"))' \

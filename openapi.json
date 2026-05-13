@@ -14003,7 +14003,6 @@
           "updated_at",
           "billing_email",
           "logo_url",
-          "billing_period",
           "invoicing",
           "payment_term",
           "payment_method_id",
