@@ -27,6 +27,8 @@ type CreateSiteDeployRequest struct {
 	FunctionsConfig *CreateSiteDeployRequestFunctionsConfig `json:"functions_config,omitempty"`
 	Branch *string `json:"branch,omitempty"`
 	Framework *string `json:"framework,omitempty"`
+	FrameworkVersion *string `json:"framework_version,omitempty"`
+	BuildVersion *string `json:"build_version,omitempty"`
 	IncludeUploadUrl *bool `json:"include_upload_url,omitempty"`
 	Environment []CreateSiteDeployRequestEnvironmentInner `json:"environment,omitempty"`
 	AdditionalProperties map[string]interface{}
@@ -307,6 +309,70 @@ func (o *CreateSiteDeployRequest) SetFramework(v string) {
 	o.Framework = &v
 }
 
+// GetFrameworkVersion returns the FrameworkVersion field value if set, zero value otherwise.
+func (o *CreateSiteDeployRequest) GetFrameworkVersion() string {
+	if o == nil || IsNil(o.FrameworkVersion) {
+		var ret string
+		return ret
+	}
+	return *o.FrameworkVersion
+}
+
+// GetFrameworkVersionOk returns a tuple with the FrameworkVersion field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSiteDeployRequest) GetFrameworkVersionOk() (*string, bool) {
+	if o == nil || IsNil(o.FrameworkVersion) {
+		return nil, false
+	}
+	return o.FrameworkVersion, true
+}
+
+// HasFrameworkVersion returns a boolean if a field has been set.
+func (o *CreateSiteDeployRequest) HasFrameworkVersion() bool {
+	if o != nil && !IsNil(o.FrameworkVersion) {
+		return true
+	}
+
+	return false
+}
+
+// SetFrameworkVersion gets a reference to the given string and assigns it to the FrameworkVersion field.
+func (o *CreateSiteDeployRequest) SetFrameworkVersion(v string) {
+	o.FrameworkVersion = &v
+}
+
+// GetBuildVersion returns the BuildVersion field value if set, zero value otherwise.
+func (o *CreateSiteDeployRequest) GetBuildVersion() string {
+	if o == nil || IsNil(o.BuildVersion) {
+		var ret string
+		return ret
+	}
+	return *o.BuildVersion
+}
+
+// GetBuildVersionOk returns a tuple with the BuildVersion field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSiteDeployRequest) GetBuildVersionOk() (*string, bool) {
+	if o == nil || IsNil(o.BuildVersion) {
+		return nil, false
+	}
+	return o.BuildVersion, true
+}
+
+// HasBuildVersion returns a boolean if a field has been set.
+func (o *CreateSiteDeployRequest) HasBuildVersion() bool {
+	if o != nil && !IsNil(o.BuildVersion) {
+		return true
+	}
+
+	return false
+}
+
+// SetBuildVersion gets a reference to the given string and assigns it to the BuildVersion field.
+func (o *CreateSiteDeployRequest) SetBuildVersion(v string) {
+	o.BuildVersion = &v
+}
+
 // GetIncludeUploadUrl returns the IncludeUploadUrl field value if set, zero value otherwise.
 func (o *CreateSiteDeployRequest) GetIncludeUploadUrl() bool {
 	if o == nil || IsNil(o.IncludeUploadUrl) {
@@ -405,6 +471,12 @@ func (o CreateSiteDeployRequest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Framework) {
 		toSerialize["framework"] = o.Framework
 	}
+	if !IsNil(o.FrameworkVersion) {
+		toSerialize["framework_version"] = o.FrameworkVersion
+	}
+	if !IsNil(o.BuildVersion) {
+		toSerialize["build_version"] = o.BuildVersion
+	}
 	if !IsNil(o.IncludeUploadUrl) {
 		toSerialize["include_upload_url"] = o.IncludeUploadUrl
 	}
@@ -441,6 +513,8 @@ func (o *CreateSiteDeployRequest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "functions_config")
 		delete(additionalProperties, "branch")
 		delete(additionalProperties, "framework")
+		delete(additionalProperties, "framework_version")
+		delete(additionalProperties, "build_version")
 		delete(additionalProperties, "include_upload_url")
 		delete(additionalProperties, "environment")
 		o.AdditionalProperties = additionalProperties

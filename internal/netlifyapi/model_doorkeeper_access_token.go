@@ -35,6 +35,8 @@ type DoorkeeperAccessToken struct {
 	CreatedAt time.Time `json:"created_at"`
 	// When the access token expires
 	ExpiresAt time.Time `json:"expires_at"`
+	// When the access token was revoked, if applicable
+	RevokedAt *time.Time `json:"revoked_at,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -232,6 +234,38 @@ func (o *DoorkeeperAccessToken) SetExpiresAt(v time.Time) {
 	o.ExpiresAt = v
 }
 
+// GetRevokedAt returns the RevokedAt field value if set, zero value otherwise.
+func (o *DoorkeeperAccessToken) GetRevokedAt() time.Time {
+	if o == nil || IsNil(o.RevokedAt) {
+		var ret time.Time
+		return ret
+	}
+	return *o.RevokedAt
+}
+
+// GetRevokedAtOk returns a tuple with the RevokedAt field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DoorkeeperAccessToken) GetRevokedAtOk() (*time.Time, bool) {
+	if o == nil || IsNil(o.RevokedAt) {
+		return nil, false
+	}
+	return o.RevokedAt, true
+}
+
+// HasRevokedAt returns a boolean if a field has been set.
+func (o *DoorkeeperAccessToken) HasRevokedAt() bool {
+	if o != nil && !IsNil(o.RevokedAt) {
+		return true
+	}
+
+	return false
+}
+
+// SetRevokedAt gets a reference to the given time.Time and assigns it to the RevokedAt field.
+func (o *DoorkeeperAccessToken) SetRevokedAt(v time.Time) {
+	o.RevokedAt = &v
+}
+
 func (o DoorkeeperAccessToken) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -249,6 +283,9 @@ func (o DoorkeeperAccessToken) ToMap() (map[string]interface{}, error) {
 	toSerialize["scopes"] = o.Scopes
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["expires_at"] = o.ExpiresAt
+	if !IsNil(o.RevokedAt) {
+		toSerialize["revoked_at"] = o.RevokedAt
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -305,6 +342,7 @@ func (o *DoorkeeperAccessToken) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "scopes")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "expires_at")
+		delete(additionalProperties, "revoked_at")
 		o.AdditionalProperties = additionalProperties
 	}
 

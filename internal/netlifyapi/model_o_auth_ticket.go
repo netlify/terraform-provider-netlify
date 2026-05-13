@@ -29,6 +29,8 @@ type OAuthTicket struct {
 	Authorized bool `json:"authorized"`
 	// When the OAuth ticket was created
 	CreatedAt time.Time `json:"created_at"`
+	// Optional message describing the reason for the ticket
+	Message *string `json:"message,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -151,6 +153,38 @@ func (o *OAuthTicket) SetCreatedAt(v time.Time) {
 	o.CreatedAt = v
 }
 
+// GetMessage returns the Message field value if set, zero value otherwise.
+func (o *OAuthTicket) GetMessage() string {
+	if o == nil || IsNil(o.Message) {
+		var ret string
+		return ret
+	}
+	return *o.Message
+}
+
+// GetMessageOk returns a tuple with the Message field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OAuthTicket) GetMessageOk() (*string, bool) {
+	if o == nil || IsNil(o.Message) {
+		return nil, false
+	}
+	return o.Message, true
+}
+
+// HasMessage returns a boolean if a field has been set.
+func (o *OAuthTicket) HasMessage() bool {
+	if o != nil && !IsNil(o.Message) {
+		return true
+	}
+
+	return false
+}
+
+// SetMessage gets a reference to the given string and assigns it to the Message field.
+func (o *OAuthTicket) SetMessage(v string) {
+	o.Message = &v
+}
+
 func (o OAuthTicket) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -165,6 +199,9 @@ func (o OAuthTicket) ToMap() (map[string]interface{}, error) {
 	toSerialize["client_id"] = o.ClientId
 	toSerialize["authorized"] = o.Authorized
 	toSerialize["created_at"] = o.CreatedAt
+	if !IsNil(o.Message) {
+		toSerialize["message"] = o.Message
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -215,6 +252,7 @@ func (o *OAuthTicket) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "client_id")
 		delete(additionalProperties, "authorized")
 		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "message")
 		o.AdditionalProperties = additionalProperties
 	}
 

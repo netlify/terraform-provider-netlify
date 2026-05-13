@@ -100,6 +100,15 @@
             }
           },
           {
+            "name": "active_since",
+            "description": "ISO 8601 date-time. Returns members whose last_activity_at is on or after this time.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "emails",
             "description": "Search for members in email field",
             "required": false,
@@ -111,6 +120,28 @@
               }
             },
             "explode": true
+          },
+          {
+            "name": "inactive_since",
+            "description": "ISO 8601 date-time. Returns members whose last_activity_at is before this time OR who have never been active.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order_by",
+            "description": "Sort direction. Defaults to desc (descending).",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
           },
           {
             "name": "page",
@@ -144,6 +175,29 @@
             "explode": true
           },
           {
+            "name": "search",
+            "description": "Search for members by email or full name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "site_access",
+            "description": "Filter members by site access level",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all",
+                "selected",
+                "none"
+              ]
+            }
+          },
+          {
             "name": "site_id",
             "description": "Filter members by a site",
             "required": false,
@@ -154,7 +208,7 @@
           },
           {
             "name": "sort_by",
-            "description": "Field of member to sort by (descending). When reviewer role is specified self_invite_pending and invite_pending are the defaults.",
+            "description": "Field of member to sort by. When only the reviewer role is specified, self_invite_pending and invite_pending are the defaults.",
             "required": false,
             "in": "query",
             "schema": {
@@ -166,7 +220,8 @@
                 "updated_at",
                 "created_at",
                 "self_invite_pending",
-                "invite_pending"
+                "invite_pending",
+                "last_activity_at"
               ]
             }
           },
@@ -769,6 +824,24 @@
             "description": "The ID of the account",
             "required": true,
             "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "browser_fingerprint",
+            "description": "Browser fingerprint from the client-side fingerprinting library",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "device_fingerprint",
+            "description": "Stable device-level fingerprint identifier from the client",
+            "required": false,
+            "in": "query",
             "schema": {
               "type": "string"
             }
@@ -1395,6 +1468,15 @@
         "operationId": "listSiteBuilds",
         "parameters": [
           {
+            "name": "sha",
+            "description": "Filter builds by commit SHA",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "site_id",
             "description": "The ID of the site",
             "required": true,
@@ -1449,12 +1531,30 @@
             }
           },
           {
+            "name": "commit_sha",
+            "description": "The commit SHA to build; when omitted, fetched from the git host API",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "image",
             "description": "The build image tag to use for the build",
             "required": false,
             "in": "query",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "review_id",
+            "description": "The merge/pull request ID to build; triggers a deploy preview",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer"
             }
           },
           {
@@ -1477,7 +1577,7 @@
           },
           {
             "name": "title",
-            "description": "The title of the build",
+            "description": "The title of the build; overrides any title fetched from the git host",
             "required": false,
             "in": "query",
             "schema": {
@@ -1669,7 +1769,7 @@
             "description": "Not Found - Build zip file not found"
           }
         },
-        "description": "Get a presigned download URL for the build zip file.",
+        "description": "Get a presigned download URL for the source code at this build's\ndeploy. Delegates to Deploy#source_zip_download_url, which is the\nsingle source of truth for source-code zip resolution (cached zip\n→ build's uploaded zip → on-demand generation from git).",
         "x-controller": "api/v1/builds",
         "x-action": "download"
       }
@@ -2073,6 +2173,12 @@
                   "framework": {
                     "type": "string"
                   },
+                  "framework_version": {
+                    "type": "string"
+                  },
+                  "build_version": {
+                    "type": "string"
+                  },
                   "include_upload_url": {
                     "type": "boolean"
                   },
@@ -2104,6 +2210,58 @@
             }
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "Deploys"
+        ],
+        "operationId": "deleteSiteDeploysBySubdomain",
+        "parameters": [
+          {
+            "name": "site_id",
+            "description": "The ID of the site",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subdomain_alias",
+            "description": "The subdomain alias to delete deploys for (e.g. \"deploy-preview-42\" or \"my-branch\")",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Soft-deletes all deploys matching a subdomain alias for a site.\nThis is useful for cleaning up all deploys from a deploy preview\nor branch deploy.",
+        "x-controller": "api/v1/deploys",
+        "x-action": "destroy_by_subdomain"
       }
     },
     "/api/v1/deploys/{deploy_id}": {
@@ -4487,6 +4645,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "message",
+            "description": "Optional message describing the reason for the ticket request",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4502,6 +4669,9 @@
           },
           "401": {
             "description": "OAuth application not found"
+          },
+          "422": {
+            "description": "Validation error"
           }
         },
         "description": "Creates an OAuth ticket with the OAuth application.",
@@ -7805,9 +7975,6 @@
           "billing_name": {
             "type": "string"
           },
-          "billing_period": {
-            "type": "string"
-          },
           "capabilities": {
             "type": "object"
           },
@@ -7832,9 +7999,6 @@
             "items": {
               "type": "string"
             }
-          },
-          "payment_method_id": {
-            "type": "string"
           },
           "role": {
             "type": "string"
@@ -7879,10 +8043,13 @@
           "configurable_limits_exceeded": {
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/ConfigurableLimitRecord"
             }
           },
           "auto_topup_enabled": {
+            "type": "boolean"
+          },
+          "block_site_transfers": {
             "type": "boolean"
           },
           "credit_alert_percentage": {
@@ -7900,19 +8067,30 @@
           "plan_auto_topup_per_unit_cost": {
             "type": "string",
             "description": "Version-specific auto top-up per unit cost"
+          },
+          "swar_auto_topup_credits": {
+            "type": "integer",
+            "description": "SWAR auto top-up credit amount (0 if not eligible)"
+          },
+          "in_operational_mode": {
+            "type": "boolean",
+            "description": "Whether the account is in grace operational mode"
+          },
+          "grace_topup_granted_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the grace credit top-up was granted"
           }
         },
         "required": [
           "billing_email",
           "billing_name",
-          "billing_period",
           "capabilities",
           "created_at",
           "id",
           "member_roles",
           "name",
           "owner_ids",
-          "payment_method_id",
           "role",
           "roles_allowed",
           "slug",
@@ -7926,7 +8104,9 @@
           "ai_usage_limit_enforced",
           "configurable_limits_exceeded",
           "auto_topup_enabled",
-          "credit_alert_percentage"
+          "block_site_transfers",
+          "credit_alert_percentage",
+          "in_operational_mode"
         ],
         "description": "Account model definition"
       },
@@ -7968,6 +8148,27 @@
             "type": "boolean"
           }
         }
+      },
+      "SiteMembership": {
+        "type": "object",
+        "properties": {
+          "site_id": {
+            "type": "string",
+            "description": "The site ID"
+          },
+          "role": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The role name, or null when site uses the account-level role",
+            "nullable": true
+          }
+        },
+        "required": [
+          "site_id",
+          "role"
+        ]
       },
       "AdminSite": {
         "allOf": [
@@ -8171,6 +8372,10 @@
             "type": "string",
             "description": "The URL of the deploy preview from the latest session (if it has one)"
           },
+          "latest_session_deploy_screenshot_url": {
+            "type": "string",
+            "description": "The screenshot URL of the deploy from the latest session (if it has one)"
+          },
           "last_session_created_at": {
             "type": "string",
             "description": "Date of creation of the newest session"
@@ -8188,6 +8393,26 @@
           "has_result_diff": {
             "type": "boolean",
             "description": "Whether result diff exists"
+          },
+          "latest_session_mode": {
+            "type": "string",
+            "description": "The mode of the latest session"
+          },
+          "latest_session_is_published": {
+            "type": "boolean",
+            "description": "Whether the latest session has been published"
+          },
+          "needs_git_sync": {
+            "type": "boolean",
+            "description": "Whether the runner needs a git sync (code origin changed from zip to git)"
+          },
+          "rebase_available": {
+            "type": "boolean",
+            "description": "Whether a deploy-based rebase is available (non-git sites only)"
+          },
+          "merge_target_available": {
+            "type": "boolean",
+            "description": "Whether a git merge-target operation is available (git-backed sites only)"
           }
         }
       },
@@ -8288,11 +8513,14 @@
           },
           "mode": {
             "type": "string",
-            "description": "The mode of the session (normal, redeploy, rebase)"
+            "description": "The mode of the session (normal, redeploy, rebase, conflict_resolution, git_sync, create, ask)"
           },
           "source_session_id": {
             "type": "string",
             "description": "The ID of the source session (for redeploy mode)"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/AgentRunnerSessionUsage"
           }
         }
       },
@@ -8303,6 +8531,12 @@
             "type": "string"
           },
           "message": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "type": {
             "type": "string"
           }
         }
@@ -8315,6 +8549,44 @@
           },
           "model": {
             "type": "string"
+          }
+        }
+      },
+      "AgentRunnerSessionUsage": {
+        "type": "object",
+        "properties": {
+          "total_input_tokens": {
+            "type": "integer"
+          },
+          "total_output_tokens": {
+            "type": "integer"
+          },
+          "total_cached_input_tokens": {
+            "type": "integer"
+          },
+          "total_cached_output_tokens": {
+            "type": "integer"
+          },
+          "total_tokens": {
+            "type": "integer"
+          },
+          "total_input_microcents": {
+            "type": "integer"
+          },
+          "total_output_microcents": {
+            "type": "integer"
+          },
+          "total_cached_input_microcents": {
+            "type": "integer"
+          },
+          "total_cached_output_microcents": {
+            "type": "integer"
+          },
+          "total_tool_calls_microcents": {
+            "type": "integer"
+          },
+          "total_credits_cost": {
+            "type": "number"
           }
         }
       },
@@ -9919,6 +10191,31 @@
         ],
         "description": "Committer model definition"
       },
+      "ConfigurableLimitRecord": {
+        "type": "object",
+        "properties": {
+          "usage_type": {
+            "type": "string",
+            "description": "the type of usage that was exceeded"
+          },
+          "exceeded_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "when the limit was exceeded"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "when the exceeded status expires"
+          }
+        },
+        "required": [
+          "usage_type",
+          "exceeded_at",
+          "expires_at"
+        ],
+        "description": "Tracks when a configurable limit has been exceeded for an account."
+      },
       "ConnectBandwidthUsage": {
         "type": "object",
         "properties": {
@@ -10494,6 +10791,61 @@
             "format": "date-time",
             "description": "The date at which the deploy will be soft-deleted"
           },
+          "database_branch_id": {
+            "type": "string",
+            "description": "The ID of the database branch associated with the deploy"
+          },
+          "database_migrations": {
+            "type": "object",
+            "properties": {
+              "files": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "applied": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "error": {
+                "type": "string"
+              }
+            },
+            "description": "Migration metadata for this deploy including files detected and any error"
+          },
+          "database_snapshots": {
+            "type": "object",
+            "properties": {
+              "snapshots": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "source": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              },
+              "error": {
+                "type": "string"
+              }
+            },
+            "description": "Snapshot metadata for this deploy including snapshots created and any error"
+          },
+          "deploy_source": {
+            "type": "string",
+            "description": "The source that created this deploy (api, cli, drop, git, agent_runner)"
+          },
           "agent_runner_id": {
             "type": "string",
             "description": "The ID of the agent runner associated with the deploy"
@@ -10505,6 +10857,14 @@
           "skew_protection_token": {
             "type": "string",
             "description": "The skew protection token for this deploy"
+          },
+          "has_source_zip": {
+            "type": "boolean",
+            "description": "Whether the deploy has source zip"
+          },
+          "subdomain_alias": {
+            "type": "string",
+            "description": "The subdomain alias for the deploy"
           }
         },
         "required": [
@@ -11252,6 +11612,10 @@
             "type": "string",
             "description": "The name of the domain"
           },
+          "account_id": {
+            "type": "string",
+            "description": "The ID of the account that owns the domain"
+          },
           "user_id": {
             "type": "string",
             "description": "The user ID of the domain creator"
@@ -11306,6 +11670,7 @@
         "required": [
           "id",
           "name",
+          "account_id",
           "user_id",
           "expires_at",
           "registered_at",
@@ -11353,6 +11718,11 @@
             "type": "string",
             "format": "date-time",
             "description": "When the access token expires"
+          },
+          "revoked_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the access token was revoked, if applicable"
           }
         },
         "required": [
@@ -12055,6 +12425,16 @@
           "admin_url": {
             "type": "string"
           },
+          "auto_topup_enabled": {
+            "type": "boolean",
+            "description": "Whether automatic top-up is currently enabled (only for credit-based plans)"
+          },
+          "build_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "build_node_pool": {
             "type": "string"
           },
@@ -12067,23 +12447,15 @@
           "build_timelimit": {
             "type": "integer"
           },
-          "dev_server_resources": {
-            "type": "object"
-          },
           "concurrent_upload_limit": {
             "type": "integer"
           },
-          "functions_config": {
+          "dev_server_resources": {
             "type": "object"
           },
-          ":build_ids": {
-            "type": "string"
-          },
-          "orb_url": {
-            "type": "string"
-          },
-          "sites_count": {
-            "type": "integer"
+          "dev_server_settings": {
+            "type": "object",
+            "description": "The dev server settings for the account"
           },
           "dunning": {
             "type": "boolean"
@@ -12091,20 +12463,21 @@
           "enterprise_features": {
             "$ref": "#/components/schemas/EnterpriseFeatures"
           },
-          "prerender": {
-            "type": "string"
-          },
-          "dev_server_settings": {
-            "type": "object",
-            "description": "The dev server settings for the account"
+          "functions_config": {
+            "type": "object"
           },
           "is_credit_based": {
             "type": "boolean",
             "description": "Whether the account is a credit-based plan"
           },
-          "auto_topup_enabled": {
-            "type": "boolean",
-            "description": "Whether automatic top-up is currently enabled (only for credit-based plans)"
+          "orb_url": {
+            "type": "string"
+          },
+          "prerender": {
+            "type": "string"
+          },
+          "sites_count": {
+            "type": "integer"
           }
         },
         "required": [
@@ -12113,14 +12486,14 @@
           "build_pre_process_timeout",
           "build_resources",
           "build_timelimit",
-          "dev_server_resources",
           "concurrent_upload_limit",
-          "functions_config",
-          "sites_count",
+          "dev_server_resources",
+          "dev_server_settings",
           "dunning",
           "enterprise_features",
+          "functions_config",
           "prerender",
-          "dev_server_settings"
+          "sites_count"
         ],
         "description": "HeroAccount model definition, see AccountUserMembershipSerializer for other fields"
       },
@@ -12448,6 +12821,18 @@
               "type": "object"
             },
             "description": "The list of organization owners"
+          },
+          "is_orb_enabled": {
+            "type": "boolean",
+            "description": "Whether the organization uses Orb billing (feature flag enabled)"
+          },
+          "has_orb_customer": {
+            "type": "boolean",
+            "description": "Whether the organization has an OrbCustomer record"
+          },
+          "has_customer": {
+            "type": "boolean",
+            "description": "Whether the organization has a legacy Customer record"
           }
         },
         "required": [
@@ -12455,7 +12840,10 @@
           "capabilities",
           "is_ax_partner",
           "ax_partner",
-          "owners"
+          "owners",
+          "is_orb_enabled",
+          "has_orb_customer",
+          "has_customer"
         ],
         "description": "HeroOrganization model definition, see OrganizationSerializer for other fields"
       },
@@ -12704,6 +13092,67 @@
         ],
         "description": "Simple HeroUser model definition for basic identification"
       },
+      "HeroUserVisibility": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The identifier for the user"
+          },
+          "email": {
+            "type": "string",
+            "description": "The email of the user"
+          },
+          "full_name": {
+            "type": "string",
+            "description": "The full name of the user"
+          },
+          "slug": {
+            "type": "string",
+            "description": "The slug of the user"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "When the user was created"
+          },
+          "last_login": {
+            "type": "string",
+            "description": "Time of the user's last login"
+          },
+          "disabled": {
+            "type": "boolean",
+            "description": "Whether the user is disabled"
+          },
+          "disabled_reason": {
+            "type": "string",
+            "description": "Reason the user was disabled"
+          },
+          "spam": {
+            "type": "boolean",
+            "description": "Whether the user is marked as spam"
+          },
+          "has_pending_email_verification": {
+            "type": "boolean",
+            "description": "Whether the user has an unverified email"
+          },
+          "managed_by_sso_or_directory_sync": {
+            "type": "boolean",
+            "description": "Whether the user is managed via SSO/SCIM"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "full_name",
+          "slug",
+          "created_at",
+          "disabled",
+          "spam",
+          "has_pending_email_verification",
+          "managed_by_sso_or_directory_sync"
+        ],
+        "description": "Slim HeroUser model definition exposing only base User-table fields and\nstatus flags. Excludes joined/computed attrs (all_accounts, all_organizations,\nsupport_priority, sift_spam_score, etc.) so bulk responses stay fast."
+      },
       "OutgoingHook": {
         "type": "object",
         "properties": {
@@ -12887,6 +13336,45 @@
             "description": "The list of fields this hook type can take"
           }
         }
+      },
+      "Insight": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the insight"
+          },
+          "site_id": {
+            "type": "string",
+            "description": "Site identifier"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the insight was created"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of the insight (nil, done, dismissed)"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Labels associated with the insight"
+          },
+          "payload": {
+            "type": "object",
+            "description": "Insight payload data"
+          }
+        },
+        "required": [
+          "id",
+          "site_id",
+          "created_at"
+        ],
+        "description": "Insight model definition"
       },
       "Invite": {
         "type": "object",
@@ -13142,6 +13630,10 @@
             "type": "string",
             "format": "date-time",
             "description": "When the OAuth ticket was created"
+          },
+          "message": {
+            "type": "string",
+            "description": "Optional message describing the reason for the ticket"
           }
         },
         "required": [
@@ -13150,6 +13642,67 @@
           "authorized",
           "created_at"
         ]
+      },
+      "OrbInvoice": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The Orb ID of the invoice"
+          },
+          "invoice_number": {
+            "type": "string",
+            "description": "The Orb invoice number"
+          },
+          "invoice_date": {
+            "type": "string",
+            "format": "date",
+            "description": "The Orb invoice date"
+          },
+          "due_date": {
+            "type": "string",
+            "format": "date",
+            "description": "The Orb due_date"
+          },
+          "amount": {
+            "type": "integer",
+            "description": "The amount due in Orb"
+          },
+          "invoice_items": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Orb invoice items"
+          },
+          "invoice_url": {
+            "type": "string",
+            "description": "The hosted Orb invoice URL (only for users with manage billing permission)"
+          },
+          "status": {
+            "type": "string",
+            "description": "The invoice status (issued, paid, void, etc.)"
+          },
+          "is_overdue": {
+            "type": "boolean",
+            "description": "Whether the invoice is past its due date and unpaid"
+          },
+          "last_payment_error": {
+            "type": "string",
+            "description": "The last payment error message if payment failed"
+          }
+        },
+        "required": [
+          "id",
+          "invoice_number",
+          "invoice_date",
+          "due_date",
+          "amount",
+          "invoice_items",
+          "status",
+          "is_overdue"
+        ],
+        "description": "OrbInvoice model definition"
       },
       "OrganizationAccount": {
         "type": "object",
@@ -13559,6 +14112,28 @@
           "organization_id"
         ],
         "description": "PaymentMethod model definition"
+      },
+      "PlanChangeTransaction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "account_id": {
+            "type": "string"
+          },
+          "account_slug": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "status"
+        ],
+        "description": "PlanChangeTransaction model definition"
       },
       "PluginRun": {
         "type": "object",

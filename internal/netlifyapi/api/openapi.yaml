@@ -153,6 +153,15 @@ paths:
         schema:
           type: string
         style: simple
+      - description: ISO 8601 date-time. Returns members whose last_activity_at is
+          on or after this time.
+        explode: true
+        in: query
+        name: active_since
+        required: false
+        schema:
+          type: string
+        style: form
       - description: Search for members in email field
         explode: true
         in: query
@@ -162,6 +171,26 @@ paths:
           items:
             type: string
           type: array
+        style: form
+      - description: ISO 8601 date-time. Returns members whose last_activity_at is
+          before this time OR who have never been active.
+        explode: true
+        in: query
+        name: inactive_since
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Sort direction. Defaults to desc (descending).
+        explode: true
+        in: query
+        name: order_by
+        required: false
+        schema:
+          enum:
+          - asc
+          - desc
+          type: string
         style: form
       - description: Number of per_page to skip when returning records
         explode: true
@@ -189,6 +218,26 @@ paths:
             type: string
           type: array
         style: form
+      - description: Search for members by email or full name
+        explode: true
+        in: query
+        name: search
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Filter members by site access level
+        explode: true
+        in: query
+        name: site_access
+        required: false
+        schema:
+          enum:
+          - all
+          - selected
+          - none
+          type: string
+        style: form
       - description: Filter members by a site
         explode: true
         in: query
@@ -197,8 +246,8 @@ paths:
         schema:
           type: string
         style: form
-      - description: Field of member to sort by (descending). When reviewer role is
-          specified self_invite_pending and invite_pending are the defaults.
+      - description: "Field of member to sort by. When only the reviewer role is specified,\
+          \ self_invite_pending and invite_pending are the defaults."
         explode: true
         in: query
         name: sort_by
@@ -212,6 +261,7 @@ paths:
           - created_at
           - self_invite_pending
           - invite_pending
+          - last_activity_at
           type: string
         style: form
       - description: Filter members by invite state(s)
@@ -575,6 +625,22 @@ paths:
         schema:
           type: string
         style: simple
+      - description: Browser fingerprint from the client-side fingerprinting library
+        explode: true
+        in: query
+        name: browser_fingerprint
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Stable device-level fingerprint identifier from the client
+        explode: true
+        in: query
+        name: device_fingerprint
+        required: false
+        schema:
+          type: string
+        style: form
       responses:
         "204":
           description: ""
@@ -1100,6 +1166,14 @@ paths:
     get:
       operationId: listSiteBuilds
       parameters:
+      - description: Filter builds by commit SHA
+        explode: true
+        in: query
+        name: sha
+        required: false
+        schema:
+          type: string
+        style: form
       - description: The ID of the site
         explode: false
         in: path
@@ -1144,6 +1218,15 @@ paths:
         schema:
           type: boolean
         style: form
+      - description: "The commit SHA to build; when omitted, fetched from the git\
+          \ host API"
+        explode: true
+        in: query
+        name: commit_sha
+        required: false
+        schema:
+          type: string
+        style: form
       - description: The build image tag to use for the build
         explode: true
         in: query
@@ -1151,6 +1234,14 @@ paths:
         required: false
         schema:
           type: string
+        style: form
+      - description: The merge/pull request ID to build; triggers a deploy preview
+        explode: true
+        in: query
+        name: review_id
+        required: false
+        schema:
+          type: integer
         style: form
       - description: The ID of the site
         explode: false
@@ -1168,7 +1259,8 @@ paths:
         schema:
           type: string
         style: form
-      - description: The title of the build
+      - description: The title of the build; overrides any title fetched from the
+          git host
         explode: true
         in: query
         name: title
@@ -1272,7 +1364,11 @@ paths:
       x-action: start
   /api/v1/builds/{build_id}/download:
     get:
-      description: Get a presigned download URL for the build zip file.
+      description: |-
+        Get a presigned download URL for the source code at this build's
+        deploy. Delegates to Deploy#source_zip_download_url, which is the
+        single source of truth for source-code zip resolution (cached zip
+        → build's uploaded zip → on-demand generation from git).
       operationId: getBuildZipDownloadUrl
       parameters:
       - description: build_id
@@ -1390,6 +1486,43 @@ paths:
       x-controller: api/v1/deploy_keys
       x-action: show
   /api/v1/sites/{site_id}/deploys:
+    delete:
+      description: |-
+        Soft-deletes all deploys matching a subdomain alias for a site.
+        This is useful for cleaning up all deploys from a deploy preview
+        or branch deploy.
+      operationId: deleteSiteDeploysBySubdomain
+      parameters:
+      - description: The ID of the site
+        explode: false
+        in: path
+        name: site_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: The subdomain alias to delete deploys for (e.g. "deploy-preview-42"
+          or "my-branch")
+        explode: true
+        in: query
+        name: subdomain_alias
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "204":
+          description: ""
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/updateSiteBuildLog_422_response"
+          description: Unprocessable Entity
+      tags:
+      - Deploys
+      x-controller: api/v1/deploys
+      x-action: destroy_by_subdomain
     get:
       description: Lists the deploys of a site.
       operationId: listSiteDeploys
@@ -3262,6 +3395,14 @@ paths:
         schema:
           type: string
         style: form
+      - description: Optional message describing the reason for the ticket request
+        explode: true
+        in: query
+        name: message
+        required: false
+        schema:
+          type: string
+        style: form
       responses:
         "201":
           content:
@@ -3271,6 +3412,8 @@ paths:
           description: Created
         "401":
           description: OAuth application not found
+        "422":
+          description: Validation error
       tags:
       - OAuth tickets
       x-controller: api/v1/oauth/tickets
@@ -5639,12 +5782,15 @@ components:
     Account:
       description: Account model definition
       example:
-        billing_period: billing_period
         type_name: type_name
         role: role
         configurable_limits_exceeded:
-        - configurable_limits_exceeded
-        - configurable_limits_exceeded
+        - exceeded_at: 2000-01-23T04:56:07.000+00:00
+          expires_at: 2000-01-23T04:56:07.000+00:00
+          usage_type: usage_type
+        - exceeded_at: 2000-01-23T04:56:07.000+00:00
+          expires_at: 2000-01-23T04:56:07.000+00:00
+          usage_type: usage_type
         plan_auto_topup_per_unit_cost: plan_auto_topup_per_unit_cost
         created_at: 2000-01-23T04:56:07.000+00:00
         plan_credits: 1
@@ -5656,18 +5802,21 @@ components:
         updated_at: 2000-01-23T04:56:07.000+00:00
         billing_email: billing_email
         id: id
+        swar_auto_topup_credits: 5
         slug: slug
         support_administration_enabled: true
+        block_site_transfers: true
         capabilities: "{}"
         type_slug: type_slug
         auto_topup_enabled: true
         type_id: type_id
         deploy_diagnostics_setting: deploy_diagnostics_setting
+        grace_topup_granted_at: 2000-01-23T04:56:07.000+00:00
         ai_usage_enabled_setting: ai_usage_enabled_setting
         billing_name: billing_name
         ai_usage_limit_credits: 0
+        in_operational_mode: true
         plan_auto_topup_amount: plan_auto_topup_amount
-        payment_method_id: payment_method_id
         roles_allowed:
         - roles_allowed
         - roles_allowed
@@ -5679,8 +5828,6 @@ components:
         billing_email:
           type: string
         billing_name:
-          type: string
-        billing_period:
           type: string
         capabilities:
           type: object
@@ -5699,8 +5846,6 @@ components:
           items:
             type: string
           type: array
-        payment_method_id:
-          type: string
         role:
           type: string
         roles_allowed:
@@ -5730,9 +5875,11 @@ components:
           type: integer
         configurable_limits_exceeded:
           items:
-            type: string
+            $ref: "#/components/schemas/ConfigurableLimitRecord"
           type: array
         auto_topup_enabled:
+          type: boolean
+        block_site_transfers:
           type: boolean
         credit_alert_percentage:
           description: Usage percentage when credit alert is active
@@ -5746,23 +5893,33 @@ components:
         plan_auto_topup_per_unit_cost:
           description: Version-specific auto top-up per unit cost
           type: string
+        swar_auto_topup_credits:
+          description: SWAR auto top-up credit amount (0 if not eligible)
+          type: integer
+        in_operational_mode:
+          description: Whether the account is in grace operational mode
+          type: boolean
+        grace_topup_granted_at:
+          description: When the grace credit top-up was granted
+          format: date-time
+          type: string
       required:
       - ai_usage_enabled_setting
       - ai_usage_limit_enforced
       - auto_topup_enabled
       - billing_email
       - billing_name
-      - billing_period
+      - block_site_transfers
       - capabilities
       - configurable_limits_exceeded
       - created_at
       - credit_alert_percentage
       - deploy_diagnostics_setting
       - id
+      - in_operational_mode
       - member_roles
       - name
       - owner_ids
-      - payment_method_id
       - role
       - roles_allowed
       - slug
@@ -5807,6 +5964,19 @@ components:
           type: boolean
         enforce_mfa:
           type: boolean
+    SiteMembership:
+      properties:
+        site_id:
+          description: The site ID
+          type: string
+        role:
+          description: "The role name, or null when site uses the account-level role"
+          nullable: true
+          type: string
+          nullable: true
+      required:
+      - role
+      - site_id
     AdminSite:
       allOf:
       - $ref: "#/components/schemas/Site"
@@ -5954,6 +6124,10 @@ components:
           description: The URL of the deploy preview from the latest session (if it
             has one)
           type: string
+        latest_session_deploy_screenshot_url:
+          description: The screenshot URL of the deploy from the latest session (if
+            it has one)
+          type: string
         last_session_created_at:
           description: Date of creation of the newest session
           type: string
@@ -5966,6 +6140,23 @@ components:
           type: array
         has_result_diff:
           description: Whether result diff exists
+          type: boolean
+        latest_session_mode:
+          description: The mode of the latest session
+          type: string
+        latest_session_is_published:
+          description: Whether the latest session has been published
+          type: boolean
+        needs_git_sync:
+          description: Whether the runner needs a git sync (code origin changed from
+            zip to git)
+          type: boolean
+        rebase_available:
+          description: Whether a deploy-based rebase is available (non-git sites only)
+          type: boolean
+        merge_target_available:
+          description: Whether a git merge-target operation is available (git-backed
+            sites only)
           type: boolean
     AgentRunnerSession:
       properties:
@@ -6039,16 +6230,23 @@ components:
           description: Whether cumulative diff exists
           type: boolean
         mode:
-          description: "The mode of the session (normal, redeploy, rebase)"
+          description: "The mode of the session (normal, redeploy, rebase, conflict_resolution,\
+            \ git_sync, create, ask)"
           type: string
         source_session_id:
           description: The ID of the source session (for redeploy mode)
           type: string
+        usage:
+          $ref: "#/components/schemas/AgentRunnerSessionUsage"
     AgentRunnerSessionStep:
       properties:
         title:
           type: string
         message:
+          type: string
+        category:
+          type: string
+        type:
           type: string
     AgentRunnerSessionConfig:
       properties:
@@ -6056,6 +6254,30 @@ components:
           type: string
         model:
           type: string
+    AgentRunnerSessionUsage:
+      properties:
+        total_input_tokens:
+          type: integer
+        total_output_tokens:
+          type: integer
+        total_cached_input_tokens:
+          type: integer
+        total_cached_output_tokens:
+          type: integer
+        total_tokens:
+          type: integer
+        total_input_microcents:
+          type: integer
+        total_output_microcents:
+          type: integer
+        total_cached_input_microcents:
+          type: integer
+        total_cached_output_microcents:
+          type: integer
+        total_tool_calls_microcents:
+          type: integer
+        total_credits_cost:
+          type: number
     AgentRunnerUser:
       properties:
         id:
@@ -7266,6 +7488,28 @@ components:
       - provider_id
       - provider_slug
       - user_id
+    ConfigurableLimitRecord:
+      description: Tracks when a configurable limit has been exceeded for an account.
+      example:
+        exceeded_at: 2000-01-23T04:56:07.000+00:00
+        expires_at: 2000-01-23T04:56:07.000+00:00
+        usage_type: usage_type
+      properties:
+        usage_type:
+          description: the type of usage that was exceeded
+          type: string
+        exceeded_at:
+          description: when the limit was exceeded
+          format: date-time
+          type: string
+        expires_at:
+          description: when the exceeded status expires
+          format: date-time
+          type: string
+      required:
+      - exceeded_at
+      - expires_at
+      - usage_type
     ConnectBandwidthUsage:
       properties:
         used:
@@ -7523,31 +7767,61 @@ components:
       description: Deploy model definition
       example:
         review_id: 0
-        agent_runner_id: agent_runner_id
         deploy_url: deploy_url
         source_zip_filename: source_zip_filename
         review_url: review_url
-        created_at: 2000-01-23T04:56:07.000+00:00
-        commit_message: commit_message
         entry_path: entry_path
-        title: title
         branch: branch
         required:
         - required
         - required
-        skipped: true
-        commit_url: commit_url
-        expires_at: 2000-01-23T04:56:07.000+00:00
-        updated_at: 2000-01-23T04:56:07.000+00:00
+        subdomain_alias: subdomain_alias
         committer: committer
         context: production
+        deploy_source: deploy_source
         id: id
         state: new
-        deploy_time: 6
         views_count: 1
         locked: true
         published_at: 2000-01-23T04:56:07.000+00:00
         error_message: error_message
+        database_snapshots:
+          snapshots:
+          - created_at: 2000-01-23T04:56:07.000+00:00
+            source: source
+          - created_at: 2000-01-23T04:56:07.000+00:00
+            source: source
+          error: error
+        admin_url: admin_url
+        manual_deploy: true
+        build_id: build_id
+        user_id: user_id
+        skew_protection_token: skew_protection_token
+        site_id: site_id
+        name: name
+        plugin_state: success
+        required_functions:
+        - required_functions
+        - required_functions
+        screenshot_url: screenshot_url
+        edge_functions_present: true
+        commit_ref: commit_ref
+        agent_runner_id: agent_runner_id
+        created_at: 2000-01-23T04:56:07.000+00:00
+        commit_message: commit_message
+        title: title
+        skipped: true
+        commit_url: commit_url
+        database_migrations:
+          files:
+          - applied: true
+            name: name
+          - applied: true
+            name: name
+          error: error
+        expires_at: 2000-01-23T04:56:07.000+00:00
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        deploy_time: 6
         summary:
           messages:
           - description: description
@@ -7567,25 +7841,13 @@ components:
           name: name
         - cron: cron
           name: name
-        admin_url: admin_url
+        database_branch_id: database_branch_id
         url: url
         skipped_log: true
+        has_source_zip: true
         framework: framework
         ssl_url: ssl_url
-        manual_deploy: true
-        build_id: build_id
         deploy_ssl_url: deploy_ssl_url
-        user_id: user_id
-        skew_protection_token: skew_protection_token
-        site_id: site_id
-        name: name
-        plugin_state: success
-        required_functions:
-        - required_functions
-        - required_functions
-        screenshot_url: screenshot_url
-        edge_functions_present: true
-        commit_ref: commit_ref
       properties:
         id:
           description: The deploy ID
@@ -7749,6 +8011,17 @@ components:
           description: The date at which the deploy will be soft-deleted
           format: date-time
           type: string
+        database_branch_id:
+          description: The ID of the database branch associated with the deploy
+          type: string
+        database_migrations:
+          $ref: "#/components/schemas/Deploy_database_migrations"
+        database_snapshots:
+          $ref: "#/components/schemas/Deploy_database_snapshots"
+        deploy_source:
+          description: "The source that created this deploy (api, cli, drop, git,\
+            \ agent_runner)"
+          type: string
         agent_runner_id:
           description: The ID of the agent runner associated with the deploy
           type: string
@@ -7757,6 +8030,12 @@ components:
           type: string
         skew_protection_token:
           description: The skew protection token for this deploy
+          type: string
+        has_source_zip:
+          description: Whether the deploy has source zip
+          type: boolean
+        subdomain_alias:
+          description: The subdomain alias for the deploy
           type: string
       required:
       - admin_url
@@ -8257,6 +8536,7 @@ components:
           created_at: 2000-01-23T04:56:07.000+00:00
           renewal_price: renewal_price
           auth_code: auth_code
+          account_id: account_id
           expires_at: 2000-01-23T04:56:07.000+00:00
           auto_renew: true
           updated_at: 2000-01-23T04:56:07.000+00:00
@@ -8426,6 +8706,7 @@ components:
         created_at: 2000-01-23T04:56:07.000+00:00
         renewal_price: renewal_price
         auth_code: auth_code
+        account_id: account_id
         expires_at: 2000-01-23T04:56:07.000+00:00
         auto_renew: true
         updated_at: 2000-01-23T04:56:07.000+00:00
@@ -8441,6 +8722,9 @@ components:
           type: string
         name:
           description: The name of the domain
+          type: string
+        account_id:
+          description: The ID of the account that owns the domain
           type: string
         user_id:
           description: The user ID of the domain creator
@@ -8482,6 +8766,7 @@ components:
           description: Status of the most recent domain transaction
           type: string
       required:
+      - account_id
       - auth_code
       - auto_renew
       - auto_renew_at
@@ -8499,6 +8784,7 @@ components:
         access_token: access_token
         refresh_token: refresh_token
         expires_at: 2000-01-23T04:56:07.000+00:00
+        revoked_at: 2000-01-23T04:56:07.000+00:00
         user_id: user_id
         created_at: 2000-01-23T04:56:07.000+00:00
         id: id
@@ -8529,6 +8815,10 @@ components:
           type: string
         expires_at:
           description: When the access token expires
+          format: date-time
+          type: string
+        revoked_at:
+          description: "When the access token was revoked, if applicable"
           format: date-time
           type: string
       required:
@@ -9206,6 +9496,14 @@ components:
       properties:
         admin_url:
           type: string
+        auto_topup_enabled:
+          description: Whether automatic top-up is currently enabled (only for credit-based
+            plans)
+          type: boolean
+        build_ids:
+          items:
+            type: string
+          type: array
         build_node_pool:
           type: string
         build_pre_process_timeout:
@@ -9214,34 +9512,28 @@ components:
           type: object
         build_timelimit:
           type: integer
-        dev_server_resources:
-          type: object
         concurrent_upload_limit:
           type: integer
-        functions_config:
+        dev_server_resources:
           type: object
-        :build_ids:
-          type: string
-        orb_url:
-          type: string
-        sites_count:
-          type: integer
+        dev_server_settings:
+          description: The dev server settings for the account
+          type: object
         dunning:
           type: boolean
         enterprise_features:
           $ref: "#/components/schemas/EnterpriseFeatures"
-        prerender:
-          type: string
-        dev_server_settings:
-          description: The dev server settings for the account
+        functions_config:
           type: object
         is_credit_based:
           description: Whether the account is a credit-based plan
           type: boolean
-        auto_topup_enabled:
-          description: Whether automatic top-up is currently enabled (only for credit-based
-            plans)
-          type: boolean
+        orb_url:
+          type: string
+        prerender:
+          type: string
+        sites_count:
+          type: integer
       required:
       - admin_url
       - build_node_pool
@@ -9492,11 +9784,23 @@ components:
           items:
             type: object
           type: array
+        is_orb_enabled:
+          description: Whether the organization uses Orb billing (feature flag enabled)
+          type: boolean
+        has_orb_customer:
+          description: Whether the organization has an OrbCustomer record
+          type: boolean
+        has_customer:
+          description: Whether the organization has a legacy Customer record
+          type: boolean
       required:
       - admin_url
       - ax_partner
       - capabilities
+      - has_customer
+      - has_orb_customer
       - is_ax_partner
+      - is_orb_enabled
       - owners
     HeroSiteSimple:
       description: Simple HeroSite model definition for basic identification
@@ -9675,6 +9979,55 @@ components:
       - id
       - slug
       - tracking_id
+    HeroUserVisibility:
+      description: |-
+        Slim HeroUser model definition exposing only base User-table fields and
+        status flags. Excludes joined/computed attrs (all_accounts, all_organizations,
+        support_priority, sift_spam_score, etc.) so bulk responses stay fast.
+      properties:
+        id:
+          description: The identifier for the user
+          type: string
+        email:
+          description: The email of the user
+          type: string
+        full_name:
+          description: The full name of the user
+          type: string
+        slug:
+          description: The slug of the user
+          type: string
+        created_at:
+          description: When the user was created
+          type: string
+        last_login:
+          description: Time of the user's last login
+          type: string
+        disabled:
+          description: Whether the user is disabled
+          type: boolean
+        disabled_reason:
+          description: Reason the user was disabled
+          type: string
+        spam:
+          description: Whether the user is marked as spam
+          type: boolean
+        has_pending_email_verification:
+          description: Whether the user has an unverified email
+          type: boolean
+        managed_by_sso_or_directory_sync:
+          description: Whether the user is managed via SSO/SCIM
+          type: boolean
+      required:
+      - created_at
+      - disabled
+      - email
+      - full_name
+      - has_pending_email_verification
+      - id
+      - managed_by_sso_or_directory_sync
+      - slug
+      - spam
     OutgoingHook:
       description: Outgoing hook model definition
       example:
@@ -9848,6 +10201,34 @@ components:
           items:
             $ref: "#/components/schemas/OutgoingHookType_fields_inner"
           type: array
+    Insight:
+      description: Insight model definition
+      properties:
+        id:
+          description: Unique identifier of the insight
+          type: string
+        site_id:
+          description: Site identifier
+          type: string
+        created_at:
+          description: When the insight was created
+          format: date-time
+          type: string
+        status:
+          description: "Status of the insight (nil, done, dismissed)"
+          type: string
+        labels:
+          description: Labels associated with the insight
+          items:
+            type: string
+          type: array
+        payload:
+          description: Insight payload data
+          type: object
+      required:
+      - created_at
+      - id
+      - site_id
     Invite:
       description: Invite model definition
       properties:
@@ -10065,6 +10446,7 @@ components:
         authorized: true
         created_at: 2000-01-23T04:56:07.000+00:00
         id: id
+        message: message
         client_id: client_id
       properties:
         id:
@@ -10080,11 +10462,61 @@ components:
           description: When the OAuth ticket was created
           format: date-time
           type: string
+        message:
+          description: Optional message describing the reason for the ticket
+          type: string
       required:
       - authorized
       - client_id
       - created_at
       - id
+    OrbInvoice:
+      description: OrbInvoice model definition
+      properties:
+        id:
+          description: The Orb ID of the invoice
+          type: string
+        invoice_number:
+          description: The Orb invoice number
+          type: string
+        invoice_date:
+          description: The Orb invoice date
+          format: date
+          type: string
+        due_date:
+          description: The Orb due_date
+          format: date
+          type: string
+        amount:
+          description: The amount due in Orb
+          type: integer
+        invoice_items:
+          description: Orb invoice items
+          items:
+            type: object
+          type: array
+        invoice_url:
+          description: The hosted Orb invoice URL (only for users with manage billing
+            permission)
+          type: string
+        status:
+          description: "The invoice status (issued, paid, void, etc.)"
+          type: string
+        is_overdue:
+          description: Whether the invoice is past its due date and unpaid
+          type: boolean
+        last_payment_error:
+          description: The last payment error message if payment failed
+          type: string
+      required:
+      - amount
+      - due_date
+      - id
+      - invoice_date
+      - invoice_items
+      - invoice_number
+      - is_overdue
+      - status
     OrganizationAccount:
       description: "Account model definition, with more details relating to organizations."
       properties:
@@ -10446,6 +10878,20 @@ components:
       - type
       - updated_at
       - zuora_id
+    PlanChangeTransaction:
+      description: PlanChangeTransaction model definition
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+        account_id:
+          type: string
+        account_slug:
+          type: string
+      required:
+      - id
+      - status
     PluginRun:
       description: PluginRun model definition
       properties:
@@ -12811,6 +13257,10 @@ components:
           type: string
         framework:
           type: string
+        framework_version:
+          type: string
+        build_version:
+          type: string
         include_upload_url:
           type: boolean
         environment:
@@ -13004,6 +13454,59 @@ components:
           items:
             $ref: "#/components/schemas/Deploy_summary_messages_inner"
           type: array
+    Deploy_database_migrations_files_inner:
+      example:
+        applied: true
+        name: name
+      properties:
+        name:
+          type: string
+        applied:
+          type: boolean
+    Deploy_database_migrations:
+      description: Migration metadata for this deploy including files detected and
+        any error
+      example:
+        files:
+        - applied: true
+          name: name
+        - applied: true
+          name: name
+        error: error
+      properties:
+        files:
+          items:
+            $ref: "#/components/schemas/Deploy_database_migrations_files_inner"
+          type: array
+        error:
+          type: string
+    Deploy_database_snapshots_snapshots_inner:
+      example:
+        created_at: 2000-01-23T04:56:07.000+00:00
+        source: source
+      properties:
+        source:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+    Deploy_database_snapshots:
+      description: Snapshot metadata for this deploy including snapshots created and
+        any error
+      example:
+        snapshots:
+        - created_at: 2000-01-23T04:56:07.000+00:00
+          source: source
+        - created_at: 2000-01-23T04:56:07.000+00:00
+          source: source
+        error: error
+      properties:
+        snapshots:
+          items:
+            $ref: "#/components/schemas/Deploy_database_snapshots_snapshots_inner"
+          type: array
+        error:
+          type: string
     Function_ro_inner:
       properties:
         p:

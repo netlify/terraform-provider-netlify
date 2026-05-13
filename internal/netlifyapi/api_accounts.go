@@ -28,6 +28,20 @@ type ApiCancelAccountRequest struct {
 	ctx context.Context
 	ApiService *AccountsAPIService
 	accountId string
+	browserFingerprint *string
+	deviceFingerprint *string
+}
+
+// Browser fingerprint from the client-side fingerprinting library
+func (r ApiCancelAccountRequest) BrowserFingerprint(browserFingerprint string) ApiCancelAccountRequest {
+	r.browserFingerprint = &browserFingerprint
+	return r
+}
+
+// Stable device-level fingerprint identifier from the client
+func (r ApiCancelAccountRequest) DeviceFingerprint(deviceFingerprint string) ApiCancelAccountRequest {
+	r.deviceFingerprint = &deviceFingerprint
+	return r
 }
 
 func (r ApiCancelAccountRequest) Execute() (*http.Response, error) {
@@ -71,6 +85,12 @@ func (a *AccountsAPIService) CancelAccountExecute(r ApiCancelAccountRequest) (*h
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.browserFingerprint != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "browser_fingerprint", r.browserFingerprint, "form", "")
+	}
+	if r.deviceFingerprint != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "device_fingerprint", r.deviceFingerprint, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
