@@ -57,6 +57,9 @@ endif
 		| jq '.components.schemas.EnvVar.required |= map(select(. != "scopes"))' \
 		| jq 'del(.components.schemas.LogDrainServiceConfig.required)' \
 		| jq '.components.schemas.Organization.required |= map(select(. != "billing_period"))' \
+		| jq '.components.schemas.Account.required |= map(select(. != "billing_email"))' \
+		| jq '.components.schemas.Account.required |= map(select(. != "billing_name"))' \
+		| jq '.components.schemas.Account.required |= map(select(. != "auto_topup_enabled"))' \
 		| jq '.components.schemas.Site.required |= map(select(. != "password"))' \
 		| jq '.components.schemas.Site.required |= map(select(. != "password_context"))' \
 		| jq '.components.schemas.Site.required |= map(select(. != "password_hash"))' \

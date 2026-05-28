@@ -135,6 +135,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/AccountBuild"
                 type: array
+                default: null
           description: ""
       tags:
       - Builds
@@ -171,6 +172,7 @@ paths:
           items:
             type: string
           type: array
+          default: null
         style: form
       - description: ISO 8601 date-time. Returns members whose last_activity_at is
           before this time OR who have never been active.
@@ -217,6 +219,7 @@ paths:
           items:
             type: string
           type: array
+          default: null
         style: form
       - description: Search for members by email or full name
         explode: true
@@ -276,6 +279,7 @@ paths:
             - self_invite_pending
             type: string
           type: array
+          default: null
         style: form
       responses:
         "200":
@@ -285,6 +289,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/Member"
                 type: array
+                default: null
           description: ""
       tags:
       - Members
@@ -525,6 +530,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/Site"
                 type: array
+                default: null
           description: ""
       tags:
       - Sites
@@ -585,6 +591,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/Account"
                 type: array
+                default: null
           description: ""
       tags:
       - Accounts
@@ -730,6 +737,7 @@ paths:
             - site
             type: string
           type: array
+          default: null
         style: form
       responses:
         "200":
@@ -739,6 +747,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/AuditLog"
                 type: array
+                default: null
           description: ""
       tags:
       - Accounts
@@ -783,6 +792,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/Asset"
                 type: array
+                default: null
           description: ""
       tags:
       - Site assets
@@ -985,6 +995,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/PaymentMethod"
                 type: array
+                default: null
           description: ""
       tags:
       - Payment Methods
@@ -1011,6 +1022,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/BuildHook"
                 type: array
+                default: null
           description: ""
       tags:
       - Build Hooks
@@ -1190,6 +1202,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/Build"
                 type: array
+                default: null
           description: ""
       tags:
       - Builds
@@ -1422,6 +1435,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/DeployKey"
                 type: array
+                default: null
           description: ""
       tags:
       - Deploy keys
@@ -1635,6 +1649,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/Deploy"
                 type: array
+                default: null
           description: ""
       tags:
       - Deploys
@@ -1978,6 +1993,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/DevServerHook"
                 type: array
+                default: null
           description: ""
       tags:
       - Dev Server Hooks
@@ -2127,6 +2143,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/DnsRecord"
                 type: array
+                default: null
           description: ""
       tags:
       - DNS zones
@@ -2261,6 +2278,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/DnsZone"
                 type: array
+                default: null
           description: ""
       tags:
       - DNS zones
@@ -2407,6 +2425,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/DnsZone"
                 type: array
+                default: null
           description: ""
       tags:
       - DNS zones
@@ -2437,6 +2456,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/DnsZone"
                 type: array
+                default: null
           description: ""
       tags:
       - DNS zones
@@ -2501,6 +2521,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/EnvVar"
                 type: array
+                default: null
           description: ""
         "401":
           description: Unauthorized (not logged in; not on team; not allowed to create
@@ -2549,6 +2570,7 @@ paths:
               items:
                 $ref: "#/components/schemas/EnvVar"
               type: array
+              default: null
         description: The array of environment variables to create
         required: true
       responses:
@@ -2559,6 +2581,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/EnvVar"
                 type: array
+                default: null
           description: ""
         "400":
           description: Bad Request (request structured incorrectly)
@@ -2624,6 +2647,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/EnvVar"
                 type: array
+                default: null
           description: ""
         "401":
           description: Unauthorized (not logged in; not on team; not allowed to create
@@ -2912,6 +2936,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/SiteFile"
                 type: array
+                default: null
           description: ""
       tags:
       - Files
@@ -2971,6 +2996,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/Form"
                 type: array
+                default: null
           description: ""
         "401":
           description: Unauthorized
@@ -3140,6 +3166,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/OutgoingHook"
                 type: array
+                default: null
           description: ""
       tags:
       - Hooks
@@ -3273,6 +3300,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/OutgoingHookType"
                 type: array
+                default: null
           description: ""
       tags:
       - Hooks
@@ -3483,6 +3511,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/Receipt"
                 type: array
+                default: null
           description: ""
         "422":
           content:
@@ -3570,6 +3599,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/Organization"
                 type: array
+                default: null
           description: ""
       tags:
       - Organizations
@@ -3749,6 +3779,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/ServiceInstance"
                 type: array
+                default: null
           description: ""
         "404":
           description: Not Found
@@ -3778,6 +3809,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/Service"
                 type: array
+                default: null
           description: ""
         "401":
           description: Unauthorized
@@ -3873,6 +3905,7 @@ paths:
           items:
             type: string
           type: array
+          default: null
         style: form
       - description: name
         explode: true
@@ -3931,6 +3964,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/Site"
                 type: array
+                default: null
           description: ""
       tags:
       - Sites
@@ -4108,6 +4142,7 @@ paths:
                 items:
                   type: object
                 type: array
+                default: null
           description: ""
       tags:
       - Sites
@@ -4216,6 +4251,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/Snippet"
                 type: array
+                default: null
           description: ""
       tags:
       - Snippets
@@ -4444,6 +4480,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/SniCertificate"
                 type: array
+                default: null
           description: ""
         "404":
           description: Not Found
@@ -4489,6 +4526,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/FormSubmission"
                 type: array
+                default: null
           description: ""
         "404":
           description: Not Found
@@ -4534,6 +4572,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/FormSubmission"
                 type: array
+                default: null
           description: ""
         "404":
           description: Not Found
@@ -4644,6 +4683,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/SplitTest"
                 type: array
+                default: null
           description: ""
         "404":
           description: Not Found
@@ -5526,33 +5566,33 @@ components:
     AccountBuild:
       description: AccountBuild model definition
       example:
-        review_id: review_id
-        deploy_state: deploy_state
-        review_url: review_url
+        id: id
+        sha: sha
         created_at: 2000-01-23T04:56:07.000+00:00
+        started_at: 2000-01-23T04:56:07.000+00:00
+        state: state
         error: error
-        title: title
+        error_message: error_message
+        done: true
+        priority:
+          prioritized_at: 2000-01-23T04:56:07.000+00:00
+          prioritized_by: prioritized_by
+        site_id: site_id
+        subdomain: subdomain
+        custom_domain: custom_domain
+        deploy_id: deploy_id
+        context: context
         branch: branch
+        commit_ref: commit_ref
         commit_url: commit_url
         committer: committer
-        context: context
-        id: id
-        state: state
+        title: title
+        review_id: review_id
+        review_url: review_url
         deploy_time: 2000-01-23T04:56:07.000+00:00
-        custom_domain: custom_domain
+        deploy_state: deploy_state
         deploy_pending_review_reason: deploy_pending_review_reason
-        deploy_id: deploy_id
-        error_message: error_message
-        priority:
-          prioritized_by: prioritized_by
-          prioritized_at: 2000-01-23T04:56:07.000+00:00
-        sha: sha
-        done: true
         deploy_ssl_url: deploy_ssl_url
-        site_id: site_id
-        started_at: 2000-01-23T04:56:07.000+00:00
-        subdomain: subdomain
-        commit_ref: commit_ref
       properties:
         id:
           description: the identifier for the build
@@ -5657,6 +5697,7 @@ components:
           items:
             type: object
           type: array
+          default: null
         created_at:
           description: When the deployed branch was created
           format: date-time
@@ -5674,44 +5715,44 @@ components:
       - updated_at
     CreateAccountFirewallConfig:
       example:
-        published:
-          default: allow
-          rules:
-          - data:
-              key:
-              - data
-              - data
-            action: allow
-            description: description
-            disabled: ""
-            type: geo
-          - data:
-              key:
-              - data
-              - data
-            action: allow
-            description: description
-            disabled: ""
-            type: geo
         unpublished:
           default: allow
           rules:
-          - data:
+          - action: allow
+            type: geo
+            data:
               key:
               - data
               - data
-            action: allow
             description: description
             disabled: ""
+          - action: allow
             type: geo
-          - data:
+            data:
               key:
               - data
               - data
-            action: allow
             description: description
             disabled: ""
+        published:
+          default: allow
+          rules:
+          - action: allow
             type: geo
+            data:
+              key:
+              - data
+              - data
+            description: description
+            disabled: ""
+          - action: allow
+            type: geo
+            data:
+              key:
+              - data
+              - data
+            description: description
+            disabled: ""
       properties:
         unpublished:
           $ref: "#/components/schemas/FirewallRuleSet"
@@ -5782,48 +5823,48 @@ components:
     Account:
       description: Account model definition
       example:
-        type_name: type_name
-        role: role
-        configurable_limits_exceeded:
-        - exceeded_at: 2000-01-23T04:56:07.000+00:00
-          expires_at: 2000-01-23T04:56:07.000+00:00
-          usage_type: usage_type
-        - exceeded_at: 2000-01-23T04:56:07.000+00:00
-          expires_at: 2000-01-23T04:56:07.000+00:00
-          usage_type: usage_type
-        plan_auto_topup_per_unit_cost: plan_auto_topup_per_unit_cost
+        billing_email: billing_email
+        billing_name: billing_name
+        capabilities: "{}"
         created_at: 2000-01-23T04:56:07.000+00:00
-        plan_credits: 1
-        ai_usage_limit_enforced: true
-        credit_alert_percentage: 6
+        id: id
         member_roles:
         - {}
         - {}
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        billing_email: billing_email
-        id: id
-        swar_auto_topup_credits: 5
-        slug: slug
-        support_administration_enabled: true
-        block_site_transfers: true
-        capabilities: "{}"
-        type_slug: type_slug
-        auto_topup_enabled: true
-        type_id: type_id
-        deploy_diagnostics_setting: deploy_diagnostics_setting
-        grace_topup_granted_at: 2000-01-23T04:56:07.000+00:00
-        ai_usage_enabled_setting: ai_usage_enabled_setting
-        billing_name: billing_name
-        ai_usage_limit_credits: 0
-        in_operational_mode: true
-        plan_auto_topup_amount: plan_auto_topup_amount
-        roles_allowed:
-        - roles_allowed
-        - roles_allowed
         name: name
         owner_ids:
         - owner_ids
         - owner_ids
+        role: role
+        roles_allowed:
+        - roles_allowed
+        - roles_allowed
+        slug: slug
+        type_id: type_id
+        type_name: type_name
+        type_slug: type_slug
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        support_administration_enabled: true
+        deploy_diagnostics_setting: deploy_diagnostics_setting
+        ai_usage_enabled_setting: ai_usage_enabled_setting
+        ai_usage_limit_enforced: true
+        ai_usage_limit_credits: 0
+        configurable_limits_exceeded:
+        - usage_type: usage_type
+          exceeded_at: 2000-01-23T04:56:07.000+00:00
+          expires_at: 2000-01-23T04:56:07.000+00:00
+        - usage_type: usage_type
+          exceeded_at: 2000-01-23T04:56:07.000+00:00
+          expires_at: 2000-01-23T04:56:07.000+00:00
+        auto_topup_enabled: true
+        block_site_transfers: true
+        credit_alert_percentage: 6
+        plan_credits: 1
+        plan_auto_topup_amount: plan_auto_topup_amount
+        plan_auto_topup_per_unit_cost: plan_auto_topup_per_unit_cost
+        swar_auto_topup_credits: 5
+        in_operational_mode: true
+        grace_topup_granted_at: 2000-01-23T04:56:07.000+00:00
       properties:
         billing_email:
           type: string
@@ -5840,18 +5881,21 @@ components:
           items:
             $ref: "#/components/schemas/AccountMemberRole"
           type: array
+          default: null
         name:
           type: string
         owner_ids:
           items:
             type: string
           type: array
+          default: null
         role:
           type: string
         roles_allowed:
           items:
             type: string
           type: array
+          default: null
         slug:
           type: string
         type_id:
@@ -5877,6 +5921,7 @@ components:
           items:
             $ref: "#/components/schemas/ConfigurableLimitRecord"
           type: array
+          default: null
         auto_topup_enabled:
           type: boolean
         block_site_transfers:
@@ -5906,9 +5951,6 @@ components:
       required:
       - ai_usage_enabled_setting
       - ai_usage_limit_enforced
-      - auto_topup_enabled
-      - billing_email
-      - billing_name
       - block_site_transfers
       - capabilities
       - configurable_limits_exceeded
@@ -5930,16 +5972,16 @@ components:
       - updated_at
     AccountUpdateParams:
       example:
+        name: name
+        slug: slug
+        type_id: type_id
         payment_method_id: payment_method_id
         period: monthly
-        billing_details: billing_details
-        type_id: type_id
-        billing_email: billing_email
-        name: name
-        enforce_mfa: true
         billing_name: billing_name
-        slug: slug
+        billing_email: billing_email
+        billing_details: billing_details
         free_trial: true
+        enforce_mfa: true
       properties:
         name:
           type: string
@@ -5994,6 +6036,7 @@ components:
             items:
               type: string
             type: array
+            default: null
         required:
         - paid_addons
         - site_build_pre_process_timeout
@@ -6111,6 +6154,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         active_session_created_at:
           description: The creation time of the current active session
           type: string
@@ -6138,6 +6182,7 @@ components:
           items:
             $ref: "#/components/schemas/AgentRunnerUser"
           type: array
+          default: null
         has_result_diff:
           description: Whether result diff exists
           type: boolean
@@ -6213,6 +6258,7 @@ components:
           items:
             $ref: "#/components/schemas/AgentRunnerSessionStep"
           type: array
+          default: null
         user:
           $ref: "#/components/schemas/User"
         attached_file_keys:
@@ -6220,6 +6266,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         is_discarded:
           description: Whether the session has been discarded
           type: boolean
@@ -6295,18 +6342,18 @@ components:
     Asset:
       description: Asset model definition
       example:
-        visibility: visibility
-        created_at: 2000-01-23T04:56:07.000+00:00
-        url: url
+        id: id
+        site_id: site_id
         account_id: account_id
+        name: name
         size: 0
         content_type: content_type
+        created_at: 2000-01-23T04:56:07.000+00:00
         updated_at: 2000-01-23T04:56:07.000+00:00
-        site_id: site_id
-        name: name
-        id: id
         state: state
         key: key
+        url: url
+        visibility: visibility
         uploaded_url: uploaded_url
       properties:
         id:
@@ -6354,12 +6401,12 @@ components:
     AssetCreateParams:
       example:
         account_id: account_id
+        key: key
+        name: name
+        uploaded_url: uploaded_url
         size: 0
         content_type: content_type
         visibility: visibility
-        name: name
-        key: key
-        uploaded_url: uploaded_url
       properties:
         account_id:
           type: string
@@ -6378,23 +6425,23 @@ components:
     AssetCreateResult:
       example:
         form:
+          url: url
           fields:
-            property2: property2
             property1: property1
-          url: url
+            property2: property2
         asset:
-          visibility: visibility
-          created_at: 2000-01-23T04:56:07.000+00:00
-          url: url
+          id: id
+          site_id: site_id
           account_id: account_id
+          name: name
           size: 0
           content_type: content_type
+          created_at: 2000-01-23T04:56:07.000+00:00
           updated_at: 2000-01-23T04:56:07.000+00:00
-          site_id: site_id
-          name: name
-          id: id
           state: state
           key: key
+          url: url
+          visibility: visibility
           uploaded_url: uploaded_url
       properties:
         form:
@@ -6403,10 +6450,10 @@ components:
           $ref: "#/components/schemas/Asset"
     AssetCreateForm:
       example:
-        fields:
-          property2: property2
-          property1: property1
         url: url
+        fields:
+          property1: property1
+          property2: property2
       properties:
         url:
           type: string
@@ -6415,9 +6462,9 @@ components:
     AuditLog:
       description: AuditLog model definition
       example:
+        id: id
         account_id: account_id
         payload: "{}"
-        id: id
       properties:
         id:
           type: string
@@ -6509,14 +6556,14 @@ components:
       - team_logo_url
     BuildHook:
       example:
-        msg: msg
-        draft: true
-        site_id: site_id
-        created_at: 2000-01-23T04:56:07.000+00:00
         id: id
+        site_id: site_id
         title: title
         branch: branch
         url: url
+        draft: true
+        msg: msg
+        created_at: 2000-01-23T04:56:07.000+00:00
       properties:
         id:
           description: The ID of the build hook
@@ -6554,9 +6601,9 @@ components:
       - url
     CreateBuildHook:
       example:
-        draft: true
         title: title
         branch: branch
+        draft: true
       properties:
         title:
           description: The title of the build hook
@@ -6569,9 +6616,9 @@ components:
           type: boolean
     UpdateBuildHook:
       example:
-        draft: true
         title: title
         branch: branch
+        draft: true
       properties:
         title:
           description: The title of the build hook
@@ -6584,13 +6631,13 @@ components:
           type: boolean
     Build:
       example:
-        deploy_state: new
-        created_at: 2000-01-23T04:56:07.000+00:00
         id: id
-        error: error
+        deploy_id: deploy_id
+        deploy_state: new
         sha: sha
         done: true
-        deploy_id: deploy_id
+        error: error
+        created_at: 2000-01-23T04:56:07.000+00:00
       properties:
         id:
           type: string
@@ -6776,6 +6823,7 @@ components:
           items:
             $ref: "#/components/schemas/CDP_TicketData_Member"
           type: array
+          default: null
         author:
           $ref: "#/components/schemas/CDP_TicketData_Member"
         base:
@@ -6793,11 +6841,13 @@ components:
           items:
             type: object
           type: array
+          default: null
         commits:
           description: Array of information about the commits for the PullRequest
           items:
             type: object
           type: array
+          default: null
         comments_count:
           description: The number of comments in the PullRequest
           type: integer
@@ -6809,6 +6859,7 @@ components:
           items:
             $ref: "#/components/schemas/CDP_TicketData_Member"
           type: array
+          default: null
         created_at:
           description: When the PullRequest was created
           format: date-time
@@ -6833,6 +6884,7 @@ components:
           items:
             $ref: "#/components/schemas/CDP_TicketData_Label"
           type: array
+          default: null
         last_commit_at:
           description: When the last commit was authored
           format: date-time
@@ -6851,6 +6903,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         repo_id:
           description: The id of the vcs repository for associated with the PullRequest
           type: integer
@@ -6859,6 +6912,7 @@ components:
           items:
             $ref: "#/components/schemas/CDP_TicketData_Member"
           type: array
+          default: null
         state:
           description: "The state of the PullRequest (open, merged, closed)"
           type: string
@@ -6976,10 +7030,12 @@ components:
           items:
             type: string
           type: array
+          default: null
         states:
           items:
             $ref: "#/components/schemas/CDP_TicketData_State"
           type: array
+          default: null
       required:
       - created_at
       - description
@@ -7136,6 +7192,7 @@ components:
           items:
             $ref: "#/components/schemas/CDP_TicketData_Project_IssueType"
           type: array
+          default: null
       required:
       - archived
       - color
@@ -7264,11 +7321,13 @@ components:
           items:
             type: string
           type: array
+          default: null
         owners:
           description: The IDs for the owners of the ticket
           items:
             type: string
           type: array
+          default: null
         priority:
           description: The priority of the ticket
           type: integer
@@ -7286,6 +7345,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         team:
           description: The team ID of the ticket
           type: string
@@ -7491,9 +7551,9 @@ components:
     ConfigurableLimitRecord:
       description: Tracks when a configurable limit has been exceeded for an account.
       example:
+        usage_type: usage_type
         exceeded_at: 2000-01-23T04:56:07.000+00:00
         expires_at: 2000-01-23T04:56:07.000+00:00
-        usage_type: usage_type
       properties:
         usage_type:
           description: the type of usage that was exceeded
@@ -7688,12 +7748,12 @@ components:
       - title
     SiteFile:
       example:
-        path: path
-        size: 0
-        mime_type: mime_type
-        site_id: site_id
         id: id
+        path: path
         sha: sha
+        mime_type: mime_type
+        size: 0
+        site_id: site_id
         deploy_id: deploy_id
       properties:
         id:
@@ -7745,9 +7805,9 @@ components:
     DeployKey:
       description: DeployKey model definition
       example:
+        id: id
         public_key: public_key
         created_at: 2000-01-23T04:56:07.000+00:00
-        id: id
       properties:
         id:
           description: The deploy key ID
@@ -7766,88 +7826,88 @@ components:
     Deploy:
       description: Deploy model definition
       example:
-        review_id: 0
+        id: id
+        site_id: site_id
+        build_id: build_id
+        state: new
+        name: name
+        url: url
+        ssl_url: ssl_url
+        admin_url: admin_url
         deploy_url: deploy_url
-        source_zip_filename: source_zip_filename
-        review_url: review_url
-        entry_path: entry_path
-        branch: branch
+        deploy_ssl_url: deploy_ssl_url
+        created_at: 2000-01-23T04:56:07.000+00:00
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        user_id: user_id
+        error_message: error_message
         required:
         - required
         - required
-        subdomain_alias: subdomain_alias
-        committer: committer
-        context: production
-        deploy_source: deploy_source
-        id: id
-        state: new
-        views_count: 1
-        locked: true
-        published_at: 2000-01-23T04:56:07.000+00:00
-        error_message: error_message
-        database_snapshots:
-          snapshots:
-          - created_at: 2000-01-23T04:56:07.000+00:00
-            source: source
-          - created_at: 2000-01-23T04:56:07.000+00:00
-            source: source
-          error: error
-        admin_url: admin_url
-        manual_deploy: true
-        build_id: build_id
-        user_id: user_id
-        skew_protection_token: skew_protection_token
-        site_id: site_id
-        name: name
-        plugin_state: success
         required_functions:
         - required_functions
         - required_functions
-        screenshot_url: screenshot_url
-        edge_functions_present: true
         commit_ref: commit_ref
-        agent_runner_id: agent_runner_id
-        created_at: 2000-01-23T04:56:07.000+00:00
-        commit_message: commit_message
-        title: title
-        skipped: true
+        review_id: 0
+        branch: branch
         commit_url: commit_url
-        database_migrations:
-          files:
-          - applied: true
-            name: name
-          - applied: true
-            name: name
-          error: error
-        expires_at: 2000-01-23T04:56:07.000+00:00
-        updated_at: 2000-01-23T04:56:07.000+00:00
+        skipped: true
+        locked: true
+        title: title
+        commit_message: commit_message
+        review_url: review_url
+        published_at: 2000-01-23T04:56:07.000+00:00
+        context: production
         deploy_time: 6
-        summary:
-          messages:
-          - description: description
-            details: details
-            type: type
-            title: title
-          - description: description
-            details: details
-            type: type
-            title: title
-          status: status
         available_functions:
         - available_functions
         - available_functions
-        function_schedules:
-        - cron: cron
-          name: name
-        - cron: cron
-          name: name
-        database_branch_id: database_branch_id
-        url: url
+        screenshot_url: screenshot_url
+        committer: committer
         skipped_log: true
-        has_source_zip: true
+        manual_deploy: true
+        plugin_state: success
         framework: framework
-        ssl_url: ssl_url
-        deploy_ssl_url: deploy_ssl_url
+        entry_path: entry_path
+        summary:
+          status: status
+          messages:
+          - type: type
+            title: title
+            description: description
+            details: details
+          - type: type
+            title: title
+            description: description
+            details: details
+        views_count: 1
+        function_schedules:
+        - name: name
+          cron: cron
+        - name: name
+          cron: cron
+        edge_functions_present: true
+        expires_at: 2000-01-23T04:56:07.000+00:00
+        database_branch_id: database_branch_id
+        database_migrations:
+          files:
+          - name: name
+            applied: true
+          - name: name
+            applied: true
+          error: error
+        database_snapshots:
+          snapshots:
+          - source: source
+            created_at: 2000-01-23T04:56:07.000+00:00
+          - source: source
+            created_at: 2000-01-23T04:56:07.000+00:00
+          error: error
+        deploy_source: deploy_source
+        agent_runner_id: agent_runner_id
+        source_zip_filename: source_zip_filename
+        skew_protection_token: skew_protection_token
+        has_source_zip: true
+        subdomain_alias: subdomain_alias
       properties:
         id:
           description: The deploy ID
@@ -7914,12 +7974,14 @@ components:
           items:
             type: string
           type: array
+          default: null
         required_functions:
           description: An array of required functions that need to be uploaded to
             complete the deploy
           items:
             type: string
           type: array
+          default: null
         commit_ref:
           description: The git commit SHA
           type: string
@@ -7966,6 +8028,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         screenshot_url:
           description: The URL of the screenshot of the deploy
           type: string
@@ -8004,6 +8067,7 @@ components:
           items:
             $ref: "#/components/schemas/createSiteDeploy_request_function_schedules_inner"
           type: array
+          default: null
         edge_functions_present:
           description: Whether the deploy includes at least one Edge Function
           type: boolean
@@ -8091,6 +8155,7 @@ components:
           items:
             $ref: "#/components/schemas/DeploySummaryMessage"
           type: array
+          default: null
       required:
       - messages
       - status
@@ -8122,11 +8187,13 @@ components:
           items:
             type: string
           type: array
+          default: null
         enhancedSecretsScanMatches:
           description: The list of enhanced secrets scan matches
           items:
             type: string
           type: array
+          default: null
     DeployValidationsReport:
       properties:
         id:
@@ -8185,14 +8252,14 @@ components:
       type: object
     DevServerHook:
       example:
-        msg: msg
-        site_id: site_id
-        created_at: 2000-01-23T04:56:07.000+00:00
         id: id
+        site_id: site_id
         title: title
-        type: type
         branch: branch
         url: url
+        msg: msg
+        type: type
+        created_at: 2000-01-23T04:56:07.000+00:00
       properties:
         id:
           description: The ID of the dev server hook
@@ -8231,8 +8298,8 @@ components:
     CreateDevServerHook:
       example:
         title: title
-        type: type
         branch: branch
+        type: type
       properties:
         title:
           description: The title of the dev server hook
@@ -8246,8 +8313,8 @@ components:
     UpdateDevServerHook:
       example:
         title: title
-        type: type
         branch: branch
+        type: type
       properties:
         title:
           description: The title of the dev server hook
@@ -8344,22 +8411,22 @@ components:
       type: object
     DnsRecord:
       example:
-        flag: 5
-        dns_zone_id: dns_zone_id
-        weight: 1
-        type: type
-        priority: 6
-        ttl: 0
-        hostname: hostname
-        port: 5
-        managed: true
-        site_id: site_id
         id: id
-        tag: tag
-        value: value
+        site_id: site_id
+        dns_zone_id: dns_zone_id
         errors:
         - errors
         - errors
+        managed: true
+        value: value
+        hostname: hostname
+        type: type
+        ttl: 0
+        priority: 6
+        weight: 1
+        port: 5
+        flag: 5
+        tag: tag
       properties:
         id:
           description: The ID of the DNS record
@@ -8375,6 +8442,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         managed:
           description: Whether Netlify created (managed) record or the user created
           type: boolean
@@ -8422,18 +8490,18 @@ components:
       - weight
     DnsRecordCreateParams:
       example:
-        hostname: hostname
-        flag: 5
-        port: 5
-        managed: true
         site_id: site_id
-        weight: 1
-        tag: tag
-        type: type
-        priority: 6
+        managed: true
         value: value
+        hostname: hostname
+        type: type
         ttl: 0
+        priority: 6
+        weight: 1
+        port: 5
         target: target
+        flag: 5
+        tag: tag
       properties:
         site_id:
           description: The site ID
@@ -8484,75 +8552,75 @@ components:
           type: string
     DnsZone:
       example:
-        dedicated: true
-        uses_netlify_registrar: true
-        records:
-        - flag: 5
-          dns_zone_id: dns_zone_id
-          weight: 1
-          type: type
-          priority: 6
-          ttl: 0
-          hostname: hostname
-          port: 5
-          managed: true
-          site_id: site_id
-          id: id
-          tag: tag
-          value: value
-          errors:
-          - errors
-          - errors
-        - flag: 5
-          dns_zone_id: dns_zone_id
-          weight: 1
-          type: type
-          priority: 6
-          ttl: 0
-          hostname: hostname
-          port: 5
-          managed: true
-          site_id: site_id
-          id: id
-          tag: tag
-          value: value
-          errors:
-          - errors
-          - errors
-        supported_record_types:
-        - supported_record_types
-        - supported_record_types
-        created_at: 2000-01-23T04:56:07.000+00:00
-        dns_servers:
-        - dns_servers
-        - dns_servers
-        account_slug: account_slug
-        account_id: account_id
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        user_id: user_id
-        account_name: account_name
-        domain:
-          registered_at: 2000-01-23T04:56:07.000+00:00
-          created_at: 2000-01-23T04:56:07.000+00:00
-          renewal_price: renewal_price
-          auth_code: auth_code
-          account_id: account_id
-          expires_at: 2000-01-23T04:56:07.000+00:00
-          auto_renew: true
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          user_id: user_id
-          name: name
-          id: id
-          transferred_at: 2000-01-23T04:56:07.000+00:00
-          auto_renew_at: 2000-01-23T04:56:07.000+00:00
-          status: status
-        name: name
-        site_id: site_id
-        ipv6_enabled: true
         id: id
+        name: name
         errors:
         - errors
         - errors
+        supported_record_types:
+        - supported_record_types
+        - supported_record_types
+        user_id: user_id
+        records:
+        - id: id
+          site_id: site_id
+          dns_zone_id: dns_zone_id
+          errors:
+          - errors
+          - errors
+          managed: true
+          value: value
+          hostname: hostname
+          type: type
+          ttl: 0
+          priority: 6
+          weight: 1
+          port: 5
+          flag: 5
+          tag: tag
+        - id: id
+          site_id: site_id
+          dns_zone_id: dns_zone_id
+          errors:
+          - errors
+          - errors
+          managed: true
+          value: value
+          hostname: hostname
+          type: type
+          ttl: 0
+          priority: 6
+          weight: 1
+          port: 5
+          flag: 5
+          tag: tag
+        dns_servers:
+        - dns_servers
+        - dns_servers
+        account_id: account_id
+        site_id: site_id
+        account_slug: account_slug
+        account_name: account_name
+        domain:
+          id: id
+          name: name
+          account_id: account_id
+          user_id: user_id
+          expires_at: 2000-01-23T04:56:07.000+00:00
+          registered_at: 2000-01-23T04:56:07.000+00:00
+          renewal_price: renewal_price
+          auto_renew: true
+          auth_code: auth_code
+          transferred_at: 2000-01-23T04:56:07.000+00:00
+          auto_renew_at: 2000-01-23T04:56:07.000+00:00
+          created_at: 2000-01-23T04:56:07.000+00:00
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          status: status
+        ipv6_enabled: true
+        dedicated: true
+        created_at: 2000-01-23T04:56:07.000+00:00
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        uses_netlify_registrar: true
       properties:
         id:
           description: The ID of the DNS zone
@@ -8565,11 +8633,13 @@ components:
           items:
             type: string
           type: array
+          default: null
         supported_record_types:
           description: An array of supported DNS record types
           items:
             type: string
           type: array
+          default: null
         user_id:
           description: The user ID of the DNS zone creator
           type: string
@@ -8578,11 +8648,13 @@ components:
           items:
             $ref: "#/components/schemas/DnsRecord"
           type: array
+          default: null
         dns_servers:
           description: The name servers of the DNS zone
           items:
             type: string
           type: array
+          default: null
         account_id:
           description: The account ID
           type: string
@@ -8633,8 +8705,8 @@ components:
       - uses_netlify_registrar
     DnsZoneCreateParams:
       example:
-        account_slug: account_slug
         site_id: site_id
+        account_slug: account_slug
         name: name
         record_txt_value: record_txt_value
       properties:
@@ -8654,8 +8726,8 @@ components:
     DnsZoneTransferParams:
       example:
         account_id: account_id
-        transfer_user_id: transfer_user_id
         transfer_account_id: transfer_account_id
+        transfer_user_id: transfer_user_id
       properties:
         account_id:
           description: The current account ID of the DNS zone
@@ -8685,6 +8757,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         created_at:
           description: When the record was created
           format: date-time
@@ -8702,19 +8775,19 @@ components:
       - updated_at
     Domain:
       example:
-        registered_at: 2000-01-23T04:56:07.000+00:00
-        created_at: 2000-01-23T04:56:07.000+00:00
-        renewal_price: renewal_price
-        auth_code: auth_code
-        account_id: account_id
-        expires_at: 2000-01-23T04:56:07.000+00:00
-        auto_renew: true
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        user_id: user_id
-        name: name
         id: id
+        name: name
+        account_id: account_id
+        user_id: user_id
+        expires_at: 2000-01-23T04:56:07.000+00:00
+        registered_at: 2000-01-23T04:56:07.000+00:00
+        renewal_price: renewal_price
+        auto_renew: true
+        auth_code: auth_code
         transferred_at: 2000-01-23T04:56:07.000+00:00
         auto_renew_at: 2000-01-23T04:56:07.000+00:00
+        created_at: 2000-01-23T04:56:07.000+00:00
+        updated_at: 2000-01-23T04:56:07.000+00:00
         status: status
       properties:
         id:
@@ -8781,16 +8854,16 @@ components:
       - user_id
     Doorkeeper_AccessToken:
       example:
+        id: id
         access_token: access_token
         refresh_token: refresh_token
-        expires_at: 2000-01-23T04:56:07.000+00:00
-        revoked_at: 2000-01-23T04:56:07.000+00:00
         user_id: user_id
-        created_at: 2000-01-23T04:56:07.000+00:00
-        id: id
         scopes:
         - scopes
         - scopes
+        created_at: 2000-01-23T04:56:07.000+00:00
+        expires_at: 2000-01-23T04:56:07.000+00:00
+        revoked_at: 2000-01-23T04:56:07.000+00:00
       properties:
         id:
           description: The ID for the access token (same as access token)
@@ -8809,6 +8882,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         created_at:
           description: When the access token was created
           format: date-time
@@ -8885,6 +8959,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         cache:
           type: boolean
       required:
@@ -8916,26 +8991,26 @@ components:
     EnvVar:
       description: Environment variable model definition
       example:
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        is_secret: true
-        values:
-        - context_parameter: context_parameter
-          context: all
-          id: id
-          value: value
-        - context_parameter: context_parameter
-          context: all
-          id: id
-          value: value
-        updated_by:
-          full_name: full_name
-          avatar_url: avatar_url
-          id: id
-          email: email
+        key: key
         scopes:
         - builds
         - builds
-        key: key
+        values:
+        - id: id
+          value: value
+          context: all
+          context_parameter: context_parameter
+        - id: id
+          value: value
+          context: all
+          context_parameter: context_parameter
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        updated_by:
+          id: id
+          full_name: full_name
+          email: email
+          avatar_url: avatar_url
+        is_secret: true
       properties:
         key:
           description: "The environment variable key, like ALGOLIA_ID (case-sensitive)"
@@ -8951,12 +9026,14 @@ components:
             - post_processing
             type: string
           type: array
+          default: null
         values:
           description: An array of Value objects containing values and metadata
           items:
             $ref: "#/components/schemas/EnvVarValue"
           type: array
           x-faker: internet.password
+          default: null
         updated_at:
           description: The timestamp of when the value was last updated
           format: date-time
@@ -8976,10 +9053,10 @@ components:
     EnvVarValue:
       description: Environment variable value model definition
       example:
-        context_parameter: context_parameter
-        context: all
         id: id
         value: value
+        context: all
+        context_parameter: context_parameter
       properties:
         id:
           description: The environment variable value's universally unique ID
@@ -9008,10 +9085,10 @@ components:
           type: string
     EnvVarUser:
       example:
-        full_name: full_name
-        avatar_url: avatar_url
         id: id
+        full_name: full_name
         email: email
+        avatar_url: avatar_url
       properties:
         id:
           description: The user's unique identifier
@@ -9031,10 +9108,10 @@ components:
           x-faker: internet.avatar
     EnvVarSet:
       example:
-        is_secret: true
-        context_parameter: context_parameter
         context: dev
+        context_parameter: context_parameter
         value: value
+        is_secret: true
       properties:
         context:
           description: The deploy context where this value will be applied
@@ -9059,47 +9136,47 @@ components:
           type: boolean
     SiteFirewallConfig:
       example:
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        created_at: 2000-01-23T04:56:07.000+00:00
         id: id
-        published:
-          default: allow
-          rules:
-          - data:
-              key:
-              - data
-              - data
-            action: allow
-            description: description
-            disabled: ""
-            type: geo
-          - data:
-              key:
-              - data
-              - data
-            action: allow
-            description: description
-            disabled: ""
-            type: geo
         unpublished:
           default: allow
           rules:
-          - data:
+          - action: allow
+            type: geo
+            data:
               key:
               - data
               - data
-            action: allow
             description: description
             disabled: ""
+          - action: allow
             type: geo
-          - data:
+            data:
               key:
               - data
               - data
-            action: allow
             description: description
             disabled: ""
+        published:
+          default: allow
+          rules:
+          - action: allow
             type: geo
+            data:
+              key:
+              - data
+              - data
+            description: description
+            disabled: ""
+          - action: allow
+            type: geo
+            data:
+              key:
+              - data
+              - data
+            description: description
+            disabled: ""
+        created_at: 2000-01-23T04:56:07.000+00:00
+        updated_at: 2000-01-23T04:56:07.000+00:00
       properties:
         id:
           type: string
@@ -9123,44 +9200,44 @@ components:
       - updated_at
     CreateSiteFirewallConfig:
       example:
-        published:
-          default: allow
-          rules:
-          - data:
-              key:
-              - data
-              - data
-            action: allow
-            description: description
-            disabled: ""
-            type: geo
-          - data:
-              key:
-              - data
-              - data
-            action: allow
-            description: description
-            disabled: ""
-            type: geo
         unpublished:
           default: allow
           rules:
-          - data:
+          - action: allow
+            type: geo
+            data:
               key:
               - data
               - data
-            action: allow
             description: description
             disabled: ""
+          - action: allow
             type: geo
-          - data:
+            data:
               key:
               - data
               - data
-            action: allow
             description: description
             disabled: ""
+        published:
+          default: allow
+          rules:
+          - action: allow
             type: geo
+            data:
+              key:
+              - data
+              - data
+            description: description
+            disabled: ""
+          - action: allow
+            type: geo
+            data:
+              key:
+              - data
+              - data
+            description: description
+            disabled: ""
       properties:
         unpublished:
           $ref: "#/components/schemas/FirewallRuleSet"
@@ -9168,14 +9245,14 @@ components:
           $ref: "#/components/schemas/FirewallRuleSet"
     FirewallRule:
       example:
+        action: allow
+        type: geo
         data:
           key:
           - data
           - data
-        action: allow
         description: description
         disabled: ""
-        type: geo
       properties:
         action:
           enum:
@@ -9203,22 +9280,22 @@ components:
       example:
         default: allow
         rules:
-        - data:
+        - action: allow
+          type: geo
+          data:
             key:
             - data
             - data
-          action: allow
           description: description
           disabled: ""
+        - action: allow
           type: geo
-        - data:
+          data:
             key:
             - data
             - data
-          action: allow
           description: description
           disabled: ""
-          type: geo
       properties:
         default:
           enum:
@@ -9229,25 +9306,26 @@ components:
           items:
             $ref: "#/components/schemas/FirewallRule"
           type: array
+          default: null
       required:
       - default
       - rules
     Form:
       example:
-        honeypot: true
-        last_submission_at: 2000-01-23T04:56:07.000+00:00
+        id: id
+        site_id: site_id
+        name: name
         paths:
         - paths
         - paths
         submission_count: 0
-        site_id: site_id
-        name: name
-        recaptcha: true
-        created_at: 2000-01-23T04:56:07.000+00:00
-        id: id
         fields:
         - "{}"
         - "{}"
+        honeypot: true
+        recaptcha: true
+        last_submission_at: 2000-01-23T04:56:07.000+00:00
+        created_at: 2000-01-23T04:56:07.000+00:00
       properties:
         id:
           type: string
@@ -9259,12 +9337,14 @@ components:
           items:
             type: string
           type: array
+          default: null
         submission_count:
           type: integer
         fields:
           items:
             type: object
           type: array
+          default: null
         honeypot:
           type: boolean
         recaptcha:
@@ -9288,21 +9368,21 @@ components:
       - submission_count
     FormSubmission:
       example:
-        summary: summary
-        data: "{}"
+        id: id
         form_id: form_id
-        last_name: last_name
-        created_at: 2000-01-23T04:56:07.000+00:00
-        body: body
+        form_name: form_name
+        site_url: site_url
         site_name: site_name
         number: 0
-        site_url: site_url
-        name: name
-        company: company
-        id: id
-        form_name: form_name
-        first_name: first_name
         email: email
+        name: name
+        first_name: first_name
+        last_name: last_name
+        company: company
+        summary: summary
+        body: body
+        data: "{}"
+        created_at: 2000-01-23T04:56:07.000+00:00
       properties:
         id:
           type: string
@@ -9394,6 +9474,7 @@ components:
           items:
             $ref: "#/components/schemas/Function"
           type: array
+          default: null
         log_type:
           description: The function log type
           enum:
@@ -9434,6 +9515,7 @@ components:
           items:
             $ref: "#/components/schemas/Function_ro_inner"
           type: array
+          default: null
         endpoint:
           description: The endpoint of the function
           type: string
@@ -9504,6 +9586,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         build_node_pool:
           type: string
         build_pre_process_timeout:
@@ -9784,6 +9867,7 @@ components:
           items:
             type: object
           type: array
+          default: null
         is_orb_enabled:
           description: Whether the organization uses Orb billing (feature flag enabled)
           type: boolean
@@ -9872,6 +9956,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         saml_enabled:
           type: boolean
         orb_url:
@@ -9925,10 +10010,12 @@ components:
           items:
             type: string
           type: array
+          default: null
         all_organizations:
           items:
             type: string
           type: array
+          default: null
         sift_spam_score:
           type: number
         safe_to_spam:
@@ -10031,22 +10118,22 @@ components:
     OutgoingHook:
       description: Outgoing hook model definition
       example:
+        id: id
+        site_id: site_id
+        form_id: form_id
+        organization_id: organization_id
+        form_name: form_name
+        user_id: user_id
+        type: email
+        event: deploy_created
         data:
           email: foo@example.com
-        form_id: form_id
-        created_at: 2000-01-23T04:56:07.000+00:00
-        type: email
-        actor: deploy
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        user_id: user_id
         success: true
-        restricted: true
-        organization_id: organization_id
-        site_id: site_id
+        created_at: 2000-01-23T04:56:07.000+00:00
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        actor: deploy
         disabled: true
-        id: id
-        event: deploy_created
-        form_name: form_name
+        restricted: true
       properties:
         id:
           description: The ID of the hook
@@ -10117,13 +10204,13 @@ components:
       - user_id
     CreateOutgoingHook:
       example:
-        data:
-          email: foo@example.com
         site_id: site_id
         form_id: form_id
+        form_name: form_name
         type: email
         event: deploy_created
-        form_name: form_name
+        data:
+          email: foo@example.com
       properties:
         site_id:
           description: The site ID of the hook
@@ -10150,12 +10237,12 @@ components:
           type: object
     UpdateOutgoingHook:
       example:
-        data:
-          email: foo@example.com
         site_id: site_id
         form_id: form_id
-        event: deploy_created
         form_name: form_name
+        event: deploy_created
+        data:
+          email: foo@example.com
       properties:
         site_id:
           description: The site ID of the hook
@@ -10179,14 +10266,14 @@ components:
     OutgoingHookType:
       example:
         name: name
+        events:
+        - events
+        - events
         fields:
         - name: name
           options: "{}"
         - name: name
           options: "{}"
-        events:
-        - events
-        - events
       properties:
         name:
           description: The name of the hook type
@@ -10196,11 +10283,13 @@ components:
           items:
             type: string
           type: array
+          default: null
         fields:
           description: The list of fields this hook type can take
           items:
             $ref: "#/components/schemas/OutgoingHookType_fields_inner"
           type: array
+          default: null
     Insight:
       description: Insight model definition
       properties:
@@ -10222,6 +10311,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         payload:
           description: Insight payload data
           type: object
@@ -10258,22 +10348,22 @@ components:
     LogDrain:
       description: Log Drain model definition
       example:
-        log_types: log_types
+        id: id
         site_id: site_id
+        log_types: log_types
         format: json
         destination: datadog
+        exclude_pii: true
         service_config:
-          integration_name: integration_name
-          path: path
-          bucket_region: bucket_region
-          bucket_name: bucket_name
-          verification_filename: verification_filename
           url: url
-          authorization_header: authorization_header
           tags:
             key: tags
-        id: id
-        exclude_pii: true
+          integration_name: integration_name
+          authorization_header: authorization_header
+          bucket_name: bucket_name
+          bucket_region: bucket_region
+          path: path
+          verification_filename: verification_filename
       properties:
         id:
           description: The ID of the log drain
@@ -10310,15 +10400,15 @@ components:
     LogDrainServiceConfig:
       description: The configuration for sending log drains to the destination service
       example:
-        integration_name: integration_name
-        path: path
-        bucket_region: bucket_region
-        bucket_name: bucket_name
-        verification_filename: verification_filename
         url: url
-        authorization_header: authorization_header
         tags:
           key: tags
+        integration_name: integration_name
+        authorization_header: authorization_header
+        bucket_name: bucket_name
+        bucket_region: bucket_region
+        path: path
+        verification_filename: verification_filename
       properties:
         url:
           description: The URL for the log drain
@@ -10343,31 +10433,31 @@ components:
         Member model definition. Similar to the User model, but includes the information
         of the associated team (account).
       example:
-        committer_match_method:
-          automatic: automatic
-          manual: manual
+        id: id
+        user_id: user_id
+        full_name: full_name
+        email: email
+        avatar: avatar
         role: role
+        mfa_enabled: true
         capabilities: "{}"
         connected_accounts:
           github: github
           gitlab: gitlab
-          google: google
           bitbucket: bitbucket
+          google: google
         site_ids:
         - site_ids
         - site_ids
-        managed_by_directory_sync: true
-        pending: true
-        created_at: 2000-01-23T04:56:07.000+00:00
-        last_activity_date: 2000-01-23
-        avatar: avatar
         site_access: site_access
-        full_name: full_name
+        created_at: 2000-01-23T04:56:07.000+00:00
         updated_at: 2000-01-23T04:56:07.000+00:00
-        user_id: user_id
-        mfa_enabled: true
-        id: id
-        email: email
+        pending: true
+        managed_by_directory_sync: true
+        committer_match_method:
+          automatic: automatic
+          manual: manual
+        last_activity_date: 2000-01-23
       properties:
         id:
           description: the identifier for the member
@@ -10401,6 +10491,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         site_access:
           description: "which site access this member has. either all, selected, or\
             \ none"
@@ -10443,11 +10534,11 @@ components:
       - user_id
     OAuth_Ticket:
       example:
+        id: id
+        client_id: client_id
         authorized: true
         created_at: 2000-01-23T04:56:07.000+00:00
-        id: id
         message: message
-        client_id: client_id
       properties:
         id:
           description: The ID for the OAuth ticket
@@ -10495,6 +10586,7 @@ components:
           items:
             type: object
           type: array
+          default: null
         invoice_url:
           description: The hosted Orb invoice URL (only for users with manage billing
             permission)
@@ -10546,6 +10638,7 @@ components:
           items:
             $ref: "#/components/schemas/AccountMemberRole"
           type: array
+          default: null
         name:
           description: The name for the account
           type: string
@@ -10554,6 +10647,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         slug:
           description: The slug for the account
           type: string
@@ -10585,45 +10679,45 @@ components:
     Organization:
       description: Organization model definition
       example:
-        billing_period: billing_period
-        country: country
-        bill_cycle_day: 6
-        contract_term_months: 1
-        logo_url: logo_url
-        city: city
+        slug: slug
+        id: id
+        name: name
         created_at: 2000-01-23T04:56:07.000+00:00
-        enforce_saml: not_enforced
-        contract_start_date: 2000-01-23T04:56:07.000+00:00
-        contract_end_date: 2000-01-23T04:56:07.000+00:00
-        saml_enabled_at: 2000-01-23T04:56:07.000+00:00
         updated_at: 2000-01-23T04:56:07.000+00:00
         billing_email: billing_email
-        saml_enabled: true
-        id: id
-        state: state
-        first_name: first_name
-        slug: slug
-        support_administration_enabled: true
-        total_member_count: 5
-        capabilities: "{}"
-        payment_term: 0
-        address2: address2
-        address1: address1
-        sandbox: true
-        last_name: last_name
-        enforce_mfa: not_enforced
-        directory_sync_connected_at: 2000-01-23T04:56:07.000+00:00
-        payment_method_id: payment_method_id
-        directory_sync_activated_at: 2000-01-23T04:56:07.000+00:00
-        auto_renew: true
-        ax_partner: true
-        purchase_order: purchase_order
-        company_name: company_name
-        name: name
+        logo_url: logo_url
+        billing_period: billing_period
         invoicing: true
-        directory_sync_deleted_at: 2000-01-23T04:56:07.000+00:00
+        payment_term: 0
+        payment_method_id: payment_method_id
+        sandbox: true
+        bill_cycle_day: 6
+        contract_start_date: 2000-01-23T04:56:07.000+00:00
+        contract_end_date: 2000-01-23T04:56:07.000+00:00
+        contract_term_months: 1
+        auto_renew: true
+        purchase_order: purchase_order
+        first_name: first_name
+        last_name: last_name
+        company_name: company_name
+        address1: address1
+        address2: address2
+        city: city
+        state: state
         postal_code: postal_code
+        country: country
+        saml_enabled: true
+        enforce_saml: not_enforced
+        enforce_mfa: not_enforced
+        capabilities: "{}"
+        support_administration_enabled: true
+        directory_sync_connected_at: 2000-01-23T04:56:07.000+00:00
+        directory_sync_activated_at: 2000-01-23T04:56:07.000+00:00
         directory_sync_deactivated_at: 2000-01-23T04:56:07.000+00:00
+        directory_sync_deleted_at: 2000-01-23T04:56:07.000+00:00
+        saml_enabled_at: 2000-01-23T04:56:07.000+00:00
+        total_member_count: 5
+        ax_partner: true
       properties:
         slug:
           description: "The slug for the organization, a normalized internal identifier\
@@ -10818,19 +10912,19 @@ components:
     PaymentMethod:
       description: PaymentMethod model definition
       example:
-        zuora_id: zuora_id
-        account_id: account_id
-        data:
-          last4: last4
-          name: name
-          card_type: card_type
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        organization_id: organization_id
-        created_at: 2000-01-23T04:56:07.000+00:00
         id: id
-        state: success
         type: type
+        data:
+          name: name
+          last4: last4
+          card_type: card_type
+        state: success
+        created_at: 2000-01-23T04:56:07.000+00:00
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        account_id: account_id
         customer_id: customer_id
+        zuora_id: zuora_id
+        organization_id: organization_id
       properties:
         id:
           description: The payment method ID
@@ -11135,29 +11229,29 @@ components:
       - url
     Receipt:
       example:
-        transaction_id: transaction_id
-        tax_amount: tax_amount
-        html_stored: true
-        amount: amount
-        usage:
-        - usage
-        - usage
-        created_at: 2000-01-23T04:56:07.000+00:00
-        display_amount: display_amount
-        payment_method_last_four: payment_method_last_four
-        payment_method_card_type: payment_method_card_type
-        payment_method_id: payment_method_id
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        user_id: user_id
-        site_id: site_id
         id: id
-        transaction_created_at: 2000-01-23T04:56:07.000+00:00
-        items:
-        - items
-        - items
+        transaction_id: transaction_id
+        amount: amount
         print_fields:
         - print_fields
         - print_fields
+        items:
+        - items
+        - items
+        usage:
+        - usage
+        - usage
+        display_amount: display_amount
+        tax_amount: tax_amount
+        user_id: user_id
+        site_id: site_id
+        payment_method_id: payment_method_id
+        payment_method_last_four: payment_method_last_four
+        payment_method_card_type: payment_method_card_type
+        html_stored: true
+        created_at: 2000-01-23T04:56:07.000+00:00
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        transaction_created_at: 2000-01-23T04:56:07.000+00:00
       properties:
         id:
           type: string
@@ -11169,14 +11263,17 @@ components:
           items:
             type: string
           type: array
+          default: null
         items:
           items:
             type: string
           type: array
+          default: null
         usage:
           items:
             type: string
           type: array
+          default: null
         display_amount:
           type: string
         tax_amount:
@@ -11223,40 +11320,41 @@ components:
     Repo:
       description: Repo model definition
       example:
-        repo_type: repo_type
-        created_at: 2000-01-23T04:56:07.000+00:00
-        installation_id: 0
-        dir: dir
-        repo_branch: repo_branch
-        base_rel_dir: true
-        private_logs: true
-        branch: branch
         allowed_branches:
         - allowed_branches
         - allowed_branches
+        base: base
+        base_rel_dir: true
+        configuration_file_path: configuration_file_path
+        cmd: cmd
+        created_at: 2000-01-23T04:56:07.000+00:00
+        deploy_key_id: deploy_key_id
+        dir: dir
+        env: "{}"
         functions_dir: functions_dir
-        skip_prs: true
-        updated_at: 2000-01-23T04:56:07.000+00:00
+        installation_id: 0
+        installation_coding_id: 6
+        private_logs: true
         provider: provider
         public_repo: true
+        repo_branch: repo_branch
         repo_owner_type: repo_owner_type
-        installation_coding_id: 6
-        repo_url: repo_url
-        stop_builds: true
-        skip_automatic_builds: true
-        package_path: package_path
-        deploy_key_id: deploy_key_id
-        env: "{}"
         repo_path: repo_path
+        repo_type: repo_type
+        repo_url: repo_url
+        skip_automatic_builds: true
+        skip_prs: true
+        stop_builds: true
         untrusted_flow: untrusted_flow
-        cmd: cmd
-        base: base
-        configuration_file_path: configuration_file_path
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        branch: branch
+        package_path: package_path
       properties:
         allowed_branches:
           items:
             type: string
           type: array
+          default: null
         base:
           type: string
         base_rel_dir:
@@ -11385,6 +11483,7 @@ components:
           items:
             type: string
           type: array
+          default: null
     ReviewerInvite:
       properties:
         email:
@@ -11418,18 +11517,18 @@ components:
       - updated_at
     ServiceInstance:
       example:
-        service_slug: service_slug
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        service_name: service_name
-        snippets: "{}"
-        created_at: 2000-01-23T04:56:07.000+00:00
         id: id
-        service_path: service_path
-        auth_url: auth_url
-        env: "{}"
-        config: "{}"
         url: url
+        config: "{}"
+        service_slug: service_slug
+        service_path: service_path
+        service_name: service_name
+        env: "{}"
+        snippets: "{}"
+        auth_url: auth_url
         external_attributes: "{}"
+        created_at: 2000-01-23T04:56:07.000+00:00
+        updated_at: 2000-01-23T04:56:07.000+00:00
       properties:
         id:
           description: the identifier for the service instance
@@ -11476,25 +11575,25 @@ components:
       - url
     Service:
       example:
-        environments:
-        - environments
-        - environments
-        icon: icon
-        description: description
-        created_at: 2000-01-23T04:56:07.000+00:00
-        long_description: long_description
-        tags:
-        - tags
-        - tags
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        name: name
-        manifest_url: manifest_url
         id: id
-        service_path: service_path
+        name: name
         slug: slug
+        service_path: service_path
+        long_description: long_description
+        description: description
         events:
         - "{}"
         - "{}"
+        tags:
+        - tags
+        - tags
+        icon: icon
+        manifest_url: manifest_url
+        environments:
+        - environments
+        - environments
+        created_at: 2000-01-23T04:56:07.000+00:00
+        updated_at: 2000-01-23T04:56:07.000+00:00
       properties:
         id:
           type: string
@@ -11512,10 +11611,12 @@ components:
           items:
             type: object
           type: array
+          default: null
         tags:
           items:
             type: string
           type: array
+          default: null
         icon:
           type: string
         manifest_url:
@@ -11524,6 +11625,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         created_at:
           format: date-time
           type: string
@@ -11575,11 +11677,11 @@ components:
       - primary_create_project
     SiteLabel:
       example:
-        account_id: account_id
-        color: color
+        id: id
         name: name
         description: description
-        id: id
+        color: color
+        account_id: account_id
       properties:
         id:
           description: the id of the label
@@ -11599,93 +11701,93 @@ components:
     Site:
       description: Site model definition
       example:
-        sso_login: true
-        id_domain: id_domain
-        deploy_url: deploy_url
-        deploy_hook: deploy_hook
-        cdp_enabled_contexts:
-        - cdp_enabled_contexts
-        - cdp_enabled_contexts
-        created_at: 2000-01-23T04:56:07.000+00:00
+        id: id
+        plan: plan
+        name: name
+        default_domain: default_domain
+        custom_domain: custom_domain
         record_txt_value: record_txt_value
-        sso_login_context: sso_login_context
-        functions_region: functions_region
+        branch_deploy_custom_domain: branch_deploy_custom_domain
+        deploy_preview_custom_domain: deploy_preview_custom_domain
         domain_aliases:
         - domain_aliases
         - domain_aliases
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        account_name: account_name
-        deploy_retention_in_days: 5.962133916683182
-        id: id
-        state: state
-        plan: plan
-        default_domain: default_domain
-        custom_domain: custom_domain
-        deploy_preview_custom_domain: deploy_preview_custom_domain
-        managed_dns: true
-        force_ssl: true
+        password_context: password_context
+        sso_login: true
+        sso_login_context: sso_login_context
         notification_email: notification_email
-        capabilities: "{}"
-        rum_enabled: true
-        hud_enabled: true
-        prevent_non_git_prod_deploys: true
+        url: url
         admin_url: admin_url
+        deploy_url: deploy_url
+        state: state
+        screenshot_url: screenshot_url
+        created_at: 2000-01-23T04:56:07.000+00:00
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        ssl_url: ssl_url
+        force_ssl: true
         build_settings:
-          repo_type: repo_type
-          created_at: 2000-01-23T04:56:07.000+00:00
-          installation_id: 0
-          dir: dir
-          repo_branch: repo_branch
-          base_rel_dir: true
-          private_logs: true
-          branch: branch
           allowed_branches:
           - allowed_branches
           - allowed_branches
+          base: base
+          base_rel_dir: true
+          configuration_file_path: configuration_file_path
+          cmd: cmd
+          created_at: 2000-01-23T04:56:07.000+00:00
+          deploy_key_id: deploy_key_id
+          dir: dir
+          env: "{}"
           functions_dir: functions_dir
-          skip_prs: true
-          updated_at: 2000-01-23T04:56:07.000+00:00
+          installation_id: 0
+          installation_coding_id: 6
+          private_logs: true
           provider: provider
           public_repo: true
+          repo_branch: repo_branch
           repo_owner_type: repo_owner_type
-          installation_coding_id: 6
-          repo_url: repo_url
-          stop_builds: true
-          skip_automatic_builds: true
-          package_path: package_path
-          deploy_key_id: deploy_key_id
-          env: "{}"
           repo_path: repo_path
+          repo_type: repo_type
+          repo_url: repo_url
+          skip_automatic_builds: true
+          skip_prs: true
+          stop_builds: true
           untrusted_flow: untrusted_flow
-          cmd: cmd
-          base: base
-          configuration_file_path: configuration_file_path
-        password_context: password_context
-        url: url
-        labels:
-        - account_id: account_id
-          color: color
-          name: name
-          description: description
-          id: id
-        - account_id: account_id
-          color: color
-          name: name
-          description: description
-          id: id
-        account_slug: account_slug
-        analytics_instance_id: analytics_instance_id
-        account_id: account_id
-        ssl_url: ssl_url
-        name: name
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          branch: branch
+          package_path: package_path
         processing_settings:
           html:
             pretty_urls: true
           ignore_html_forms: true
+        deploy_hook: deploy_hook
+        managed_dns: true
+        account_id: account_id
+        account_slug: account_slug
+        account_name: account_name
+        capabilities: "{}"
+        id_domain: id_domain
         build_image: build_image
-        branch_deploy_custom_domain: branch_deploy_custom_domain
-        screenshot_url: screenshot_url
         build_timelimit: 1.4658129805029452
+        deploy_retention_in_days: 5.962133916683182
+        labels:
+        - id: id
+          name: name
+          description: description
+          color: color
+          account_id: account_id
+        - id: id
+          name: name
+          description: description
+          color: color
+          account_id: account_id
+        analytics_instance_id: analytics_instance_id
+        cdp_enabled_contexts:
+        - cdp_enabled_contexts
+        - cdp_enabled_contexts
+        functions_region: functions_region
+        hud_enabled: true
+        rum_enabled: true
+        prevent_non_git_prod_deploys: true
       properties:
         id:
           type: string
@@ -11707,6 +11809,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         password_context:
           type: string
         sso_login:
@@ -11763,12 +11866,14 @@ components:
           items:
             $ref: "#/components/schemas/SiteLabel"
           type: array
+          default: null
         analytics_instance_id:
           type: string
         cdp_enabled_contexts:
           items:
             type: string
           type: array
+          default: null
         functions_region:
           type: string
         hud_enabled:
@@ -11854,19 +11959,19 @@ components:
       description: "@property(x-internal:true) other_sites [array<object>] A list\
         \ of sites also using this certificate. Included only in `show` responses."
       example:
-        migrate_to_le_running: true
-        expires_at: 2000-01-23T04:56:07.000+00:00
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        renewable: true
-        renew_running: true
-        custom: true
+        id: id
+        state: state
         domains:
         - domains
         - domains
-        created_at: 2000-01-23T04:56:07.000+00:00
-        id: id
-        state: state
+        expires_at: 2000-01-23T04:56:07.000+00:00
+        custom: true
+        migrate_to_le_running: true
         renewal_error_message: renewal_error_message
+        renewable: true
+        renew_running: true
+        created_at: 2000-01-23T04:56:07.000+00:00
+        updated_at: 2000-01-23T04:56:07.000+00:00
       properties:
         id:
           type: string
@@ -11876,6 +11981,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         expires_at:
           format: date-time
           type: string
@@ -11909,9 +12015,9 @@ components:
       - updated_at
     CertificateInfo:
       example:
-        ca_certificates: ca_certificates
         certificate: certificate
         key: key
+        ca_certificates: ca_certificates
       properties:
         certificate:
           type: string
@@ -11962,11 +12068,13 @@ components:
           items:
             type: string
           type: array
+          default: null
         deploy_states:
           description: The states for the subscription (only set for deploy events)
           items:
             type: string
           type: array
+          default: null
         created_at:
           description: When the subscription was created
           format: date-time
@@ -12031,19 +12139,19 @@ components:
       description: "@property(x-internal:true) other_sites [array<object>] A list\
         \ of sites also using this certificate. Included only in `show` responses."
       example:
-        migrate_to_le_running: true
-        expires_at: 2000-01-23T04:56:07.000+00:00
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        renewable: true
-        renew_running: true
-        custom: true
+        id: id
+        state: state
         domains:
         - domains
         - domains
-        created_at: 2000-01-23T04:56:07.000+00:00
-        id: id
-        state: state
+        expires_at: 2000-01-23T04:56:07.000+00:00
+        custom: true
+        migrate_to_le_running: true
         renewal_error_message: renewal_error_message
+        renewable: true
+        renew_running: true
+        created_at: 2000-01-23T04:56:07.000+00:00
+        updated_at: 2000-01-23T04:56:07.000+00:00
       properties:
         id:
           type: string
@@ -12053,6 +12161,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         expires_at:
           format: date-time
           type: string
@@ -12086,11 +12195,11 @@ components:
       - updated_at
     Snippet:
       example:
-        general: general
-        goal: goal
-        general_position: head
         id: 0
         title: title
+        general: general
+        general_position: head
+        goal: goal
         goal_position: head
       properties:
         id:
@@ -12287,6 +12396,7 @@ components:
           items:
             $ref: "#/components/schemas/RateLimitConfig_AggregateConfig_AggregateKey"
           type: array
+          default: null
       required:
       - keys
     RateLimitConfig:
@@ -12341,6 +12451,7 @@ components:
           items:
             $ref: "#/components/schemas/TrafficRule_Target"
           type: array
+          default: null
       required:
       - conditions
     GeoTargetConfig:
@@ -12397,6 +12508,7 @@ components:
           items:
             $ref: "#/components/schemas/TrafficRule"
           type: array
+          default: null
         created_at:
           description: When the traffic rule config was created
           format: date-time
@@ -12418,16 +12530,16 @@ components:
           type: string
     SplitTest:
       example:
-        path: path
-        updated_at: 2000-01-23T04:56:07.000+00:00
+        id: id
         site_id: site_id
         name: name
-        active: true
-        created_at: 2000-01-23T04:56:07.000+00:00
-        id: id
+        path: path
         branches:
         - "{}"
         - "{}"
+        active: true
+        created_at: 2000-01-23T04:56:07.000+00:00
+        updated_at: 2000-01-23T04:56:07.000+00:00
         unpublished_at: 2000-01-23T04:56:07.000+00:00
       properties:
         id:
@@ -12442,6 +12554,7 @@ components:
           items:
             type: object
           type: array
+          default: null
         active:
           type: boolean
         created_at:
@@ -12479,6 +12592,7 @@ components:
           items:
             type: object
           type: array
+          default: null
         user_id:
           description: The user's ID.
           type: string
@@ -12488,35 +12602,35 @@ components:
     User:
       description: User model definition
       example:
-        connected_accounts:
-          github: github
-          gitlab: gitlab
-          google: google
-          bitbucket: bitbucket
-        last_login: 2000-01-23T04:56:07.000+00:00
-        site_count: 0
-        created_at: 2000-01-23T04:56:07.000+00:00
-        preferred_account_id: preferred_account_id
-        saml_account_id: saml_account_id
-        command_bar_user_id: command_bar_user_id
-        saml_slug: saml_slug
-        access_token: access_token
+        id: id
         uid: uid
-        refresh_token: refresh_token
         account_id: account_id
         full_name: full_name
         avatar_url: avatar_url
-        mfa_enabled: true
-        id: id
-        favorite_sites:
-        - favorite_sites
-        - favorite_sites
         email: email
+        site_count: 0
+        created_at: 2000-01-23T04:56:07.000+00:00
+        last_login: 2000-01-23T04:56:07.000+00:00
         login_providers:
         - login_providers
         - login_providers
         slug: slug
+        connected_accounts:
+          github: github
+          gitlab: gitlab
+          bitbucket: bitbucket
+          google: google
         tracking_id: tracking_id
+        mfa_enabled: true
+        saml_account_id: saml_account_id
+        saml_slug: saml_slug
+        access_token: access_token
+        refresh_token: refresh_token
+        preferred_account_id: preferred_account_id
+        command_bar_user_id: command_bar_user_id
+        favorite_sites:
+        - favorite_sites
+        - favorite_sites
       properties:
         id:
           description: The identifier for the user
@@ -12552,6 +12666,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         slug:
           description: The slug of the user
           type: string
@@ -12587,6 +12702,7 @@ components:
           items:
             type: string
           type: array
+          default: null
       required:
       - access_token
       - account_id
@@ -12627,6 +12743,7 @@ components:
           items:
             type: string
           type: array
+          default: null
     UserSignup:
       properties:
         email:
@@ -12707,6 +12824,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         url:
           type: string
         admin_url:
@@ -12743,6 +12861,7 @@ components:
           items:
             $ref: "#/components/schemas/SiteLabel"
           type: array
+          default: null
       required:
       - account_id
       - account_slug
@@ -12806,6 +12925,7 @@ components:
           items:
             $ref: "#/components/schemas/WafPolicy_rule_sets_inner"
           type: array
+          default: null
       required:
       - description
       - name
@@ -12873,6 +12993,7 @@ components:
           items:
             $ref: "#/components/schemas/ManagedWafRuleSet_rules_inner"
           type: array
+          default: null
     WafPolicy_rule_sets_inner:
       example:
         excluded_patterns:
@@ -12893,6 +13014,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         passive_mode:
           type: boolean
         overall_threshold:
@@ -12937,93 +13059,93 @@ components:
     PartialSite:
       description: Site model definition
       example:
-        sso_login: true
-        id_domain: id_domain
-        deploy_url: deploy_url
-        deploy_hook: deploy_hook
-        cdp_enabled_contexts:
-        - cdp_enabled_contexts
-        - cdp_enabled_contexts
-        created_at: 2000-01-23T04:56:07.000+00:00
+        id: id
+        plan: plan
+        name: name
+        default_domain: default_domain
+        custom_domain: custom_domain
         record_txt_value: record_txt_value
-        sso_login_context: sso_login_context
-        functions_region: functions_region
+        branch_deploy_custom_domain: branch_deploy_custom_domain
+        deploy_preview_custom_domain: deploy_preview_custom_domain
         domain_aliases:
         - domain_aliases
         - domain_aliases
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        account_name: account_name
-        deploy_retention_in_days: 6.027456183070403
-        id: id
-        state: state
-        plan: plan
-        default_domain: default_domain
-        custom_domain: custom_domain
-        deploy_preview_custom_domain: deploy_preview_custom_domain
-        managed_dns: true
-        force_ssl: true
+        password_context: password_context
+        sso_login: true
+        sso_login_context: sso_login_context
         notification_email: notification_email
-        capabilities: "{}"
-        rum_enabled: true
-        hud_enabled: true
-        prevent_non_git_prod_deploys: true
+        url: url
         admin_url: admin_url
+        deploy_url: deploy_url
+        state: state
+        screenshot_url: screenshot_url
+        created_at: 2000-01-23T04:56:07.000+00:00
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        ssl_url: ssl_url
+        force_ssl: true
         build_settings:
-          repo_type: repo_type
-          created_at: 2000-01-23T04:56:07.000+00:00
-          installation_id: 0
-          dir: dir
-          repo_branch: repo_branch
-          base_rel_dir: true
-          private_logs: true
-          branch: branch
           allowed_branches:
           - allowed_branches
           - allowed_branches
+          base: base
+          base_rel_dir: true
+          configuration_file_path: configuration_file_path
+          cmd: cmd
+          created_at: 2000-01-23T04:56:07.000+00:00
+          deploy_key_id: deploy_key_id
+          dir: dir
+          env: "{}"
           functions_dir: functions_dir
-          skip_prs: true
-          updated_at: 2000-01-23T04:56:07.000+00:00
+          installation_id: 0
+          installation_coding_id: 6
+          private_logs: true
           provider: provider
           public_repo: true
+          repo_branch: repo_branch
           repo_owner_type: repo_owner_type
-          installation_coding_id: 6
-          repo_url: repo_url
-          stop_builds: true
-          skip_automatic_builds: true
-          package_path: package_path
-          deploy_key_id: deploy_key_id
-          env: "{}"
           repo_path: repo_path
+          repo_type: repo_type
+          repo_url: repo_url
+          skip_automatic_builds: true
+          skip_prs: true
+          stop_builds: true
           untrusted_flow: untrusted_flow
-          cmd: cmd
-          base: base
-          configuration_file_path: configuration_file_path
-        password_context: password_context
-        url: url
-        labels:
-        - account_id: account_id
-          color: color
-          name: name
-          description: description
-          id: id
-        - account_id: account_id
-          color: color
-          name: name
-          description: description
-          id: id
-        account_slug: account_slug
-        analytics_instance_id: analytics_instance_id
-        account_id: account_id
-        ssl_url: ssl_url
-        name: name
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          branch: branch
+          package_path: package_path
         processing_settings:
           html:
             pretty_urls: true
           ignore_html_forms: true
+        deploy_hook: deploy_hook
+        managed_dns: true
+        account_id: account_id
+        account_slug: account_slug
+        account_name: account_name
+        capabilities: "{}"
+        id_domain: id_domain
         build_image: build_image
-        branch_deploy_custom_domain: branch_deploy_custom_domain
-        screenshot_url: screenshot_url
         build_timelimit: 0.8008281904610115
+        deploy_retention_in_days: 6.027456183070403
+        labels:
+        - id: id
+          name: name
+          description: description
+          color: color
+          account_id: account_id
+        - id: id
+          name: name
+          description: description
+          color: color
+          account_id: account_id
+        analytics_instance_id: analytics_instance_id
+        cdp_enabled_contexts:
+        - cdp_enabled_contexts
+        - cdp_enabled_contexts
+        functions_region: functions_region
+        hud_enabled: true
+        rum_enabled: true
+        prevent_non_git_prod_deploys: true
       properties:
         id:
           type: string
@@ -13045,6 +13167,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         password_context:
           type: string
         sso_login:
@@ -13101,12 +13224,14 @@ components:
           items:
             $ref: "#/components/schemas/SiteLabel"
           type: array
+          default: null
         analytics_instance_id:
           type: string
         cdp_enabled_contexts:
           items:
             type: string
           type: array
+          default: null
         functions_region:
           type: string
         hud_enabled:
@@ -13131,6 +13256,7 @@ components:
           items:
             type: string
           type: array
+          default: null
         self_invite_state:
           enum:
           - pending
@@ -13177,8 +13303,8 @@ components:
           type: string
     createSiteDeploy_request_function_schedules_inner:
       example:
-        cron: cron
         name: name
+        cron: cron
       properties:
         name:
           type: string
@@ -13196,6 +13322,7 @@ components:
           items:
             type: string
           type: array
+          default: null
     createSiteDeploy_request_functions_config_name_excluded_routes_inner:
       properties:
         pattern:
@@ -13216,10 +13343,12 @@ components:
           items:
             $ref: "#/components/schemas/createSiteDeploy_request_functions_config_name_routes_inner"
           type: array
+          default: null
         excluded_routes:
           items:
             $ref: "#/components/schemas/createSiteDeploy_request_functions_config_name_excluded_routes_inner"
           type: array
+          default: null
     createSiteDeploy_request_functions_config:
       properties:
         name:
@@ -13236,6 +13365,7 @@ components:
           items:
             type: string
           type: array
+          default: null
     createSiteDeploy_request:
       properties:
         files:
@@ -13250,6 +13380,7 @@ components:
           items:
             $ref: "#/components/schemas/createSiteDeploy_request_function_schedules_inner"
           type: array
+          default: null
         functions_config:
           $ref: "#/components/schemas/createSiteDeploy_request_functions_config"
         branch:
@@ -13266,6 +13397,7 @@ components:
           items:
             $ref: "#/components/schemas/createSiteDeploy_request_environment_inner"
           type: array
+          default: null
     updateSiteDeploy_request_functions_config_name:
       properties:
         display_name:
@@ -13288,6 +13420,7 @@ components:
           items:
             $ref: "#/components/schemas/createSiteDeploy_request_function_schedules_inner"
           type: array
+          default: null
         functions_config:
           $ref: "#/components/schemas/updateSiteDeploy_request_functions_config"
         branch:
@@ -13309,6 +13442,7 @@ components:
           items:
             $ref: "#/components/schemas/EnvVarValue"
           type: array
+          default: null
         scopes:
           items:
             enum:
@@ -13318,6 +13452,7 @@ components:
             - post_processing
             type: string
           type: array
+          default: null
         is_secret:
           type: boolean
       requiredProperties:
@@ -13349,8 +13484,8 @@ components:
     AccountBuild_priority:
       description: included if the build is prioritized
       example:
-        prioritized_by: prioritized_by
         prioritized_at: 2000-01-23T04:56:07.000+00:00
+        prioritized_by: prioritized_by
       properties:
         prioritized_at:
           format: date-time
@@ -13375,8 +13510,8 @@ components:
       type: object
     AssetCreateForm_fields:
       example:
-        property2: property2
         property1: property1
+        property2: property2
       properties:
         property1:
           type: string
@@ -13407,8 +13542,8 @@ components:
       example:
         github: github
         gitlab: gitlab
-        google: google
         bitbucket: bitbucket
+        google: google
       properties:
         github:
           type: string
@@ -13420,10 +13555,10 @@ components:
           type: string
     Deploy_summary_messages_inner:
       example:
-        description: description
-        details: details
         type: type
         title: title
+        description: description
+        details: details
       properties:
         type:
           type: string
@@ -13436,16 +13571,16 @@ components:
     Deploy_summary:
       description: Information about the summary of the deploy
       example:
-        messages:
-        - description: description
-          details: details
-          type: type
-          title: title
-        - description: description
-          details: details
-          type: type
-          title: title
         status: status
+        messages:
+        - type: type
+          title: title
+          description: description
+          details: details
+        - type: type
+          title: title
+          description: description
+          details: details
       properties:
         status:
           type: string
@@ -13453,10 +13588,11 @@ components:
           items:
             $ref: "#/components/schemas/Deploy_summary_messages_inner"
           type: array
+          default: null
     Deploy_database_migrations_files_inner:
       example:
-        applied: true
         name: name
+        applied: true
       properties:
         name:
           type: string
@@ -13467,22 +13603,23 @@ components:
         any error
       example:
         files:
-        - applied: true
-          name: name
-        - applied: true
-          name: name
+        - name: name
+          applied: true
+        - name: name
+          applied: true
         error: error
       properties:
         files:
           items:
             $ref: "#/components/schemas/Deploy_database_migrations_files_inner"
           type: array
+          default: null
         error:
           type: string
     Deploy_database_snapshots_snapshots_inner:
       example:
-        created_at: 2000-01-23T04:56:07.000+00:00
         source: source
+        created_at: 2000-01-23T04:56:07.000+00:00
       properties:
         source:
           type: string
@@ -13494,16 +13631,17 @@ components:
         any error
       example:
         snapshots:
-        - created_at: 2000-01-23T04:56:07.000+00:00
-          source: source
-        - created_at: 2000-01-23T04:56:07.000+00:00
-          source: source
+        - source: source
+          created_at: 2000-01-23T04:56:07.000+00:00
+        - source: source
+          created_at: 2000-01-23T04:56:07.000+00:00
         error: error
       properties:
         snapshots:
           items:
             $ref: "#/components/schemas/Deploy_database_snapshots_snapshots_inner"
           type: array
+          default: null
         error:
           type: string
     Function_ro_inner:
@@ -13532,8 +13670,8 @@ components:
     PaymentMethod_data:
       description: The payment method data
       example:
-        last4: last4
         name: name
+        last4: last4
         card_type: card_type
       properties:
         name:
@@ -13585,8 +13723,8 @@ components:
       example:
         github: github
         gitlab: gitlab
-        google: google
         bitbucket: bitbucket
+        google: google
       properties:
         github:
           type: string
