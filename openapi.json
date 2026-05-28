@@ -8083,8 +8083,6 @@
           }
         },
         "required": [
-          "billing_email",
-          "billing_name",
           "capabilities",
           "created_at",
           "id",
@@ -8103,7 +8101,6 @@
           "ai_usage_enabled_setting",
           "ai_usage_limit_enforced",
           "configurable_limits_exceeded",
-          "auto_topup_enabled",
           "block_site_transfers",
           "credit_alert_percentage",
           "in_operational_mode"

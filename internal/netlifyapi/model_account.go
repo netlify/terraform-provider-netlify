@@ -21,8 +21,8 @@ var _ MappedNullable = &Account{}
 
 // Account Account model definition
 type Account struct {
-	BillingEmail string `json:"billing_email"`
-	BillingName string `json:"billing_name"`
+	BillingEmail *string `json:"billing_email,omitempty"`
+	BillingName *string `json:"billing_name,omitempty"`
 	Capabilities map[string]interface{} `json:"capabilities"`
 	CreatedAt time.Time `json:"created_at"`
 	Id string `json:"id"`
@@ -42,7 +42,7 @@ type Account struct {
 	AiUsageLimitEnforced bool `json:"ai_usage_limit_enforced"`
 	AiUsageLimitCredits *int64 `json:"ai_usage_limit_credits,omitempty"`
 	ConfigurableLimitsExceeded []ConfigurableLimitRecord `json:"configurable_limits_exceeded"`
-	AutoTopupEnabled bool `json:"auto_topup_enabled"`
+	AutoTopupEnabled *bool `json:"auto_topup_enabled,omitempty"`
 	BlockSiteTransfers bool `json:"block_site_transfers"`
 	// Usage percentage when credit alert is active
 	CreditAlertPercentage int64 `json:"credit_alert_percentage"`
@@ -67,10 +67,8 @@ type _Account Account
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAccount(billingEmail string, billingName string, capabilities map[string]interface{}, createdAt time.Time, id string, memberRoles []map[string]interface{}, name string, ownerIds []string, role string, rolesAllowed []string, slug string, typeId string, typeName string, typeSlug string, updatedAt time.Time, supportAdministrationEnabled bool, deployDiagnosticsSetting string, aiUsageEnabledSetting string, aiUsageLimitEnforced bool, configurableLimitsExceeded []ConfigurableLimitRecord, autoTopupEnabled bool, blockSiteTransfers bool, creditAlertPercentage int64, inOperationalMode bool) *Account {
+func NewAccount(capabilities map[string]interface{}, createdAt time.Time, id string, memberRoles []map[string]interface{}, name string, ownerIds []string, role string, rolesAllowed []string, slug string, typeId string, typeName string, typeSlug string, updatedAt time.Time, supportAdministrationEnabled bool, deployDiagnosticsSetting string, aiUsageEnabledSetting string, aiUsageLimitEnforced bool, configurableLimitsExceeded []ConfigurableLimitRecord, blockSiteTransfers bool, creditAlertPercentage int64, inOperationalMode bool) *Account {
 	this := Account{}
-	this.BillingEmail = billingEmail
-	this.BillingName = billingName
 	this.Capabilities = capabilities
 	this.CreatedAt = createdAt
 	this.Id = id
@@ -89,7 +87,6 @@ func NewAccount(billingEmail string, billingName string, capabilities map[string
 	this.AiUsageEnabledSetting = aiUsageEnabledSetting
 	this.AiUsageLimitEnforced = aiUsageLimitEnforced
 	this.ConfigurableLimitsExceeded = configurableLimitsExceeded
-	this.AutoTopupEnabled = autoTopupEnabled
 	this.BlockSiteTransfers = blockSiteTransfers
 	this.CreditAlertPercentage = creditAlertPercentage
 	this.InOperationalMode = inOperationalMode
@@ -104,52 +101,68 @@ func NewAccountWithDefaults() *Account {
 	return &this
 }
 
-// GetBillingEmail returns the BillingEmail field value
+// GetBillingEmail returns the BillingEmail field value if set, zero value otherwise.
 func (o *Account) GetBillingEmail() string {
-	if o == nil {
+	if o == nil || IsNil(o.BillingEmail) {
 		var ret string
 		return ret
 	}
-
-	return o.BillingEmail
+	return *o.BillingEmail
 }
 
-// GetBillingEmailOk returns a tuple with the BillingEmail field value
+// GetBillingEmailOk returns a tuple with the BillingEmail field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Account) GetBillingEmailOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.BillingEmail) {
 		return nil, false
 	}
-	return &o.BillingEmail, true
+	return o.BillingEmail, true
 }
 
-// SetBillingEmail sets field value
+// HasBillingEmail returns a boolean if a field has been set.
+func (o *Account) HasBillingEmail() bool {
+	if o != nil && !IsNil(o.BillingEmail) {
+		return true
+	}
+
+	return false
+}
+
+// SetBillingEmail gets a reference to the given string and assigns it to the BillingEmail field.
 func (o *Account) SetBillingEmail(v string) {
-	o.BillingEmail = v
+	o.BillingEmail = &v
 }
 
-// GetBillingName returns the BillingName field value
+// GetBillingName returns the BillingName field value if set, zero value otherwise.
 func (o *Account) GetBillingName() string {
-	if o == nil {
+	if o == nil || IsNil(o.BillingName) {
 		var ret string
 		return ret
 	}
-
-	return o.BillingName
+	return *o.BillingName
 }
 
-// GetBillingNameOk returns a tuple with the BillingName field value
+// GetBillingNameOk returns a tuple with the BillingName field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Account) GetBillingNameOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.BillingName) {
 		return nil, false
 	}
-	return &o.BillingName, true
+	return o.BillingName, true
 }
 
-// SetBillingName sets field value
+// HasBillingName returns a boolean if a field has been set.
+func (o *Account) HasBillingName() bool {
+	if o != nil && !IsNil(o.BillingName) {
+		return true
+	}
+
+	return false
+}
+
+// SetBillingName gets a reference to the given string and assigns it to the BillingName field.
 func (o *Account) SetBillingName(v string) {
-	o.BillingName = v
+	o.BillingName = &v
 }
 
 // GetCapabilities returns the Capabilities field value
@@ -616,28 +629,36 @@ func (o *Account) SetConfigurableLimitsExceeded(v []ConfigurableLimitRecord) {
 	o.ConfigurableLimitsExceeded = v
 }
 
-// GetAutoTopupEnabled returns the AutoTopupEnabled field value
+// GetAutoTopupEnabled returns the AutoTopupEnabled field value if set, zero value otherwise.
 func (o *Account) GetAutoTopupEnabled() bool {
-	if o == nil {
+	if o == nil || IsNil(o.AutoTopupEnabled) {
 		var ret bool
 		return ret
 	}
-
-	return o.AutoTopupEnabled
+	return *o.AutoTopupEnabled
 }
 
-// GetAutoTopupEnabledOk returns a tuple with the AutoTopupEnabled field value
+// GetAutoTopupEnabledOk returns a tuple with the AutoTopupEnabled field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Account) GetAutoTopupEnabledOk() (*bool, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.AutoTopupEnabled) {
 		return nil, false
 	}
-	return &o.AutoTopupEnabled, true
+	return o.AutoTopupEnabled, true
 }
 
-// SetAutoTopupEnabled sets field value
+// HasAutoTopupEnabled returns a boolean if a field has been set.
+func (o *Account) HasAutoTopupEnabled() bool {
+	if o != nil && !IsNil(o.AutoTopupEnabled) {
+		return true
+	}
+
+	return false
+}
+
+// SetAutoTopupEnabled gets a reference to the given bool and assigns it to the AutoTopupEnabled field.
 func (o *Account) SetAutoTopupEnabled(v bool) {
-	o.AutoTopupEnabled = v
+	o.AutoTopupEnabled = &v
 }
 
 // GetBlockSiteTransfers returns the BlockSiteTransfers field value
@@ -882,8 +903,12 @@ func (o Account) MarshalJSON() ([]byte, error) {
 
 func (o Account) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["billing_email"] = o.BillingEmail
-	toSerialize["billing_name"] = o.BillingName
+	if !IsNil(o.BillingEmail) {
+		toSerialize["billing_email"] = o.BillingEmail
+	}
+	if !IsNil(o.BillingName) {
+		toSerialize["billing_name"] = o.BillingName
+	}
 	toSerialize["capabilities"] = o.Capabilities
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["id"] = o.Id
@@ -905,7 +930,9 @@ func (o Account) ToMap() (map[string]interface{}, error) {
 		toSerialize["ai_usage_limit_credits"] = o.AiUsageLimitCredits
 	}
 	toSerialize["configurable_limits_exceeded"] = o.ConfigurableLimitsExceeded
-	toSerialize["auto_topup_enabled"] = o.AutoTopupEnabled
+	if !IsNil(o.AutoTopupEnabled) {
+		toSerialize["auto_topup_enabled"] = o.AutoTopupEnabled
+	}
 	toSerialize["block_site_transfers"] = o.BlockSiteTransfers
 	toSerialize["credit_alert_percentage"] = o.CreditAlertPercentage
 	if !IsNil(o.PlanCredits) {
@@ -937,8 +964,6 @@ func (o *Account) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
-		"billing_email",
-		"billing_name",
 		"capabilities",
 		"created_at",
 		"id",
@@ -957,7 +982,6 @@ func (o *Account) UnmarshalJSON(data []byte) (err error) {
 		"ai_usage_enabled_setting",
 		"ai_usage_limit_enforced",
 		"configurable_limits_exceeded",
-		"auto_topup_enabled",
 		"block_site_transfers",
 		"credit_alert_percentage",
 		"in_operational_mode",
